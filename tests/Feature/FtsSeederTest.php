@@ -88,6 +88,20 @@ class FtsSeederTest extends TestCase
         $this->assertEqualsWithDelta(1200000, $thirtyDays, 6000, 'thirty daily prices should add up to about one monthly fee');
     }
 
+    public function test_every_plan_can_be_requested_for_a_thirty_day_period_starting_today(): void
+    {
+        $this->seed(FtsSeeder::class);
+
+        $today = now('Asia/Jakarta')->startOfDay();
+
+        foreach (['website-5-pages', 'website-10-pages', 'website-15-pages'] as $slug) {
+            $this->postJson('/fts/reservation/quote', [
+                'room_type_slug' => $slug, 'check_in' => $today->toDateString(), 'check_out' => $today->addDays(30)->toDateString(),
+                'adults' => 1, 'children' => 0, 'rooms' => 1, 'locale' => 'id',
+            ])->assertOk();
+        }
+    }
+
     public function test_seeding_twice_does_not_duplicate_anything(): void
     {
         $this->seed(FtsSeeder::class);

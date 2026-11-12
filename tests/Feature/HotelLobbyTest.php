@@ -267,7 +267,7 @@ class HotelLobbyTest extends TestCase
             ->assertOk()
             ->assertSee('data-scene="reservation"', false)
             ->assertSee('data-tour-line="Let me walk you back to the lobby."', false)
-            ->assertSee('data-step="5"', false)
+            ->assertSee('data-step="3"', false)
             ->assertSee('value="deluxe-king"', false)
             ->assertSee('Step :current of :total', false)
             ->assertSee(route('reservation.store', 'demo'), false);

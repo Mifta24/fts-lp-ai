@@ -11,6 +11,7 @@
         data-currency="{{ $hotel->currency }}"
         data-today="{{ $today }}"
         data-max-nights="{{ \App\Services\Reservation\ReservationService::MAX_NIGHTS }}"
+        data-period-days="30"
         data-preselect-room="{{ $preselectedRoom ?? '' }}"
     >
         <div data-wizard-flow>
@@ -26,34 +27,7 @@
             </div>
 
             <form data-wizard-form novalidate autocomplete="on">
-                <div data-step="1" class="wizard-step">
-                    <label class="wizard-field">
-                        <span>{{ $wizard['check_in'] }}</span>
-                        <input type="date" name="check_in" min="{{ $today }}" required>
-                    </label>
-                    <label class="wizard-field">
-                        <span>{{ $wizard['check_out'] }}</span>
-                        <input type="date" name="check_out" min="{{ $today }}" required>
-                    </label>
-                    <p class="wizard-hint" data-nights-hint aria-live="polite"></p>
-                </div>
-
-                <div data-step="2" class="wizard-step" hidden>
-                    <label class="wizard-field">
-                        <span>{{ $wizard['adults'] }}</span>
-                        <input type="number" name="adults" min="1" max="20" value="2" inputmode="numeric" required>
-                    </label>
-                    <label class="wizard-field">
-                        <span>{{ $wizard['children'] }}</span>
-                        <input type="number" name="children" min="0" max="10" value="0" inputmode="numeric">
-                    </label>
-                    <label class="wizard-field">
-                        <span>{{ $wizard['rooms'] }}</span>
-                        <input type="number" name="rooms" min="1" max="10" value="1" inputmode="numeric" required>
-                    </label>
-                </div>
-
-                <div data-step="3" class="wizard-step wizard-step-wide" hidden>
+                <div data-step="1" class="wizard-step wizard-step-wide">
                     <fieldset>
                         <legend>{{ $wizard['choose_room'] }}</legend>
                         <div class="wizard-rooms">
@@ -79,9 +53,19 @@
                         <input type="checkbox" name="extra_bed" value="1">
                         <span>{{ $wizard['extra_bed'] }}</span>
                     </label>
+
+                    <label class="wizard-field max-w-xs">
+                        <span>{{ $wizard['check_in'] }}</span>
+                        <input type="date" name="check_in" min="{{ $today }}" value="{{ $today }}" required>
+                    </label>
+                    <input type="hidden" name="check_out" value="">
+                    <input type="hidden" name="adults" value="1">
+                    <input type="hidden" name="children" value="0">
+                    <input type="hidden" name="rooms" value="1">
+                    <p class="wizard-hint" data-nights-hint aria-live="polite">{{ $wizard['period_hint'] }}</p>
                 </div>
 
-                <div data-step="4" class="wizard-step" hidden>
+                <div data-step="2" class="wizard-step" hidden>
                     <label class="wizard-field wizard-field-wide">
                         <span>{{ $wizard['name'] }}</span>
                         <input type="text" name="guest_name" maxlength="100" autocomplete="name" value="{{ $prefill['name'] ?? '' }}" required>
@@ -104,7 +88,7 @@
                     </label>
                 </div>
 
-                <div data-step="5" class="wizard-step wizard-step-wide" hidden>
+                <div data-step="3" class="wizard-step wizard-step-wide" hidden>
                     <dl class="wizard-summary" data-summary></dl>
                     <p class="wizard-total"><span>{{ $wizard['estimated_total'] }}</span> <strong data-summary-total></strong></p>
                     <p class="wizard-hint">{{ $wizard['disclaimer'] }}</p>

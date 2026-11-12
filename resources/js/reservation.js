@@ -1,7 +1,8 @@
 /**
- * Guided reservation wizard: five short steps in its own scene — dates,
- * guests, room, contact, summary — then a reference number and
- * WhatsApp / phone / email hand-over. Progress survives leaving the page and
+ * Guided project-request wizard: three short steps in its own scene — plan and
+ * start date, contact, summary — then a reference number and WhatsApp / phone /
+ * email hand-over. The period is fixed at 30 days (one monthly fee) and the
+ * user, website and end-date fields are filled in for the visitor. Progress survives leaving the page and
  * switching language (sessionStorage), and every rule is enforced again on the
  * server, which is the only source of price and availability.
  */
@@ -34,13 +35,14 @@ function initReservationWizard() {
         currency: root.dataset.currency,
         today: root.dataset.today,
         maxNights: Number(root.dataset.maxNights),
+        periodDays: Number(root.dataset.periodDays) || 30,
         draftKey: `reservation_draft_${root.dataset.hotelSlug}`,
         tokenKey: `concierge_token_${root.dataset.hotelSlug}`,
     };
 
     const fieldStep = {
-        check_in: 1, check_out: 1, adults: 2, children: 2, rooms: 2, room_type_slug: 3, extra_bed: 3,
-        guest_name: 4, contact_type: 4, contact_value: 4, special_request: 4,
+        check_in: 1, check_out: 1, adults: 1, children: 1, rooms: 1, room_type_slug: 1, extra_bed: 1,
+        guest_name: 2, contact_type: 2, contact_value: 2, special_request: 2,
     };
 
     let current = 1;
@@ -60,6 +62,17 @@ function initReservationWizard() {
         const [y1, m1, d1] = checkIn.split('-').map(Number);
         const [y2, m2, d2] = checkOut.split('-').map(Number);
         return Math.round((Date.UTC(y2, m2 - 1, d2) - Date.UTC(y1, m1 - 1, d1)) / 86400000);
+    }
+
+    function addDays(iso, days) {
+        const [year, month, day] = iso.split('-').map(Number);
+        return new Date(Date.UTC(year, month - 1, day + days)).toISOString().slice(0, 10);
+    }
+
+    /** The end date is always the start date plus the fixed period. */
+    function syncPeriod() {
+        const start = form.elements.check_in.value;
+        form.elements.check_out.value = start ? addDays(start, config.periodDays) : '';
     }
 
     function values() {
@@ -96,14 +109,14 @@ function initReservationWizard() {
             const draft = JSON.parse(sessionStorage.getItem(config.draftKey) || 'null');
             if (!draft) return;
             const { values: saved } = draft;
-            ['check_in', 'check_out', 'adults', 'children', 'rooms', 'guest_name', 'contact_value', 'special_request'].forEach((name) => {
+            ['check_in', 'guest_name', 'contact_value', 'special_request'].forEach((name) => {
                 if (saved[name] !== undefined && saved[name] !== '' && saved[name] !== 0) form.elements[name].value = saved[name];
             });
-            if (saved.children === 0) form.elements.children.value = 0;
             if (saved.contact_type) form.elements.contact_type.value = saved.contact_type;
             if (saved.room_type_slug) form.elements.room_type_slug.value = saved.room_type_slug;
             form.elements.extra_bed.checked = Boolean(saved.extra_bed);
             current = Math.min(Math.max(Number(draft.step) || 1, 1), steps.length);
+            syncPeriod();
         } catch { /* ignore a corrupt draft */ }
     }
 
@@ -166,31 +179,25 @@ function initReservationWizard() {
     }
 
     function refreshNights() {
-        const nights = nightsBetween(form.elements.check_in.value, form.elements.check_out.value);
-        nightsHint.textContent = nights > 0 ? `${nights} ${labels.nights}` : '';
+        const start = form.elements.check_in.value;
+        const end = form.elements.check_out.value;
+        nightsHint.textContent = start && end
+            ? `${labels.period_hint} (${formatDate(start)} → ${formatDate(end)})`
+            : labels.period_hint;
     }
 
     function validate(step) {
         const data = values();
 
         if (step === 1) {
-            if (!data.check_in || data.check_in < config.today) return { field: 'check_in', message: labels.check_in_past };
-            if (!data.check_out || data.check_out <= data.check_in) return { field: 'check_out', message: labels.check_out_after };
-            if (nightsBetween(data.check_in, data.check_out) > config.maxNights) return { field: 'check_out', message: text(labels.too_long, { max: config.maxNights }) };
-        }
-
-        if (step === 2) {
-            if (data.adults < 1) return { field: 'adults', message: labels.invalid };
-            if (data.rooms < 1) return { field: 'rooms', message: labels.invalid };
-        }
-
-        if (step === 3) {
             const chosen = selectedOption();
             if (!chosen) return { field: 'room_type_slug', message: labels.select_room };
             if (!fits(chosen, data)) return { field: 'room_type_slug', message: labels.too_small };
+            if (!data.check_in || data.check_in < config.today) return { field: 'check_in', message: labels.check_in_past };
+            if (nightsBetween(data.check_in, data.check_out) > config.maxNights) return { field: 'check_in', message: text(labels.too_long, { max: config.maxNights }) };
         }
 
-        if (step === 4) {
+        if (step === 2) {
             if (!data.guest_name) return { field: 'guest_name', message: labels.invalid };
             const valid = data.contact_type === 'email'
                 ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.contact_value)
@@ -222,8 +229,8 @@ function initReservationWizard() {
         nextButton.hidden = step === steps.length;
         submitButton.hidden = step !== steps.length;
 
-        if (step === 2 || step === 3) refreshRooms();
-        if (step === 3 && roomOptions.every((option) => option.classList.contains('is-disabled'))) showError(labels.capacity);
+        if (step === 1) refreshRooms();
+        if (step === 1 && roomOptions.every((option) => option.classList.contains('is-disabled'))) showError(labels.capacity);
         if (step === steps.length) renderSummary();
         if (focus) steps[step - 1].querySelector('input:not([disabled]), textarea')?.focus({ preventScroll: true });
         saveDraft();
@@ -269,7 +276,7 @@ function initReservationWizard() {
             return;
         }
 
-        if (current === 3) {
+        if (current === 1) {
             setBusy(true, labels.checking);
             try {
                 const result = await post(config.quoteUrl, stayPayload());
@@ -309,19 +316,15 @@ function initReservationWizard() {
         const data = values();
         const chosen = selectedOption();
         const nights = nightsBetween(data.check_in, data.check_out);
-        const guests = [`${data.adults} ${labels.adults.toLowerCase()}`];
-        if (data.children > 0) guests.push(`${data.children} ${labels.children.toLowerCase()}`);
-
         const room = `${chosen ? chosen.dataset.name : ''}${data.extra_bed ? ` + ${labels.extra_bed.toLowerCase()}` : ''}`;
         const rows = [
+            summaryRow(labels.room, room, 1),
             summaryRow(labels.dates, `${formatDate(data.check_in)} → ${formatDate(data.check_out)} (${nights} ${labels.nights})`, 1),
-            summaryRow(labels.guests, `${guests.join(', ')} · ${labels.rooms}: ${data.rooms}`, 2),
-            summaryRow(labels.room, room, 3),
-            summaryRow(labels.contact, `${data.guest_name} · ${labels[data.contact_type]}: ${data.contact_value}`, 4),
+            summaryRow(labels.contact, `${data.guest_name} · ${labels[data.contact_type]}: ${data.contact_value}`, 2),
         ];
-        if (data.special_request) rows.push(summaryRow(labels.special, data.special_request, 4));
+        if (data.special_request) rows.push(summaryRow(labels.special, data.special_request, 2));
         if (quote && quote.member_discount_percent > 0) {
-            rows.push(summaryRow(labels.member_discount, `${quote.member_discount_percent}% (−${money(quote.discount_amount)})`, 3));
+            rows.push(summaryRow(labels.member_discount, `${quote.member_discount_percent}% (−${money(quote.discount_amount)})`, 1));
         }
 
         root.querySelector('[data-summary]').replaceChildren(...rows);
@@ -346,7 +349,7 @@ function initReservationWizard() {
         if (busy || current !== steps.length) return;
         clearError();
 
-        const problem = [1, 2, 3, 4].map(validate).find(Boolean);
+        const problem = [1, 2].map(validate).find(Boolean);
         if (problem) {
             showError(problem.message);
             goToField(problem.field);
@@ -388,6 +391,7 @@ function initReservationWizard() {
         done.hidden = true;
         flow.hidden = false;
         clearDraft();
+        syncPeriod();
         refreshNights();
         showStep(1, true);
     }
@@ -404,7 +408,7 @@ function initReservationWizard() {
         }
     }
 
-    form.addEventListener('input', () => { refreshNights(); if (current <= 3) refreshRooms(); saveDraft(); });
+    form.addEventListener('input', () => { syncPeriod(); refreshNights(); if (current === 1) refreshRooms(); saveDraft(); });
     form.addEventListener('change', () => { refreshRooms(); saveDraft(); });
     form.addEventListener('submit', submit);
     nextButton.addEventListener('click', next);
@@ -418,6 +422,7 @@ function initReservationWizard() {
     });
 
     restoreDraft();
+    syncPeriod();
     refreshNights();
     refreshRooms();
     showStep(current);

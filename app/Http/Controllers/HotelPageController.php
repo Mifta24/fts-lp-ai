@@ -591,7 +591,7 @@ class HotelPageController extends Controller
         return [...ReservationController::MESSAGES[$locale], 'member_discount' => MemberLabels::for($locale)['member_discount'], ...match ($locale) {
             'en' => [
                 'title' => 'Project request', 'intro' => 'A few quick steps. Final scope and rates are confirmed by our team.',
-                'step_of' => 'Step :current of :total', 'steps' => ['Period', 'Users', 'Plan', 'Your details', 'Summary'],
+                'step_of' => 'Step :current of :total', 'steps' => ['Plan & start', 'Your details', 'Summary'], 'period_hint' => 'Each request covers 30 days, the same as one monthly fee.',
                 'check_in' => 'Start', 'check_out' => 'End', 'nights' => 'day(s)', 'adults' => 'Users', 'children' => 'Extra users', 'rooms' => 'Websites',
                 'choose_room' => 'Choose a plan', 'fits' => 'Up to :count users per plan', 'too_small' => 'Too small for your team',
                 'extra_bed' => 'Add an extra bed', 'name' => 'Full name', 'contact_method' => 'How should we contact you?',
@@ -609,7 +609,7 @@ class HotelPageController extends Controller
             ],
             'ja' => [
                 'title' => 'プロジェクトのご相談', 'intro' => 'かんたんな手順です。範囲と料金はスタッフが最終確認いたします。',
-                'step_of' => 'ステップ :current / :total', 'steps' => ['期間', '利用者', 'プラン', 'ご連絡先', '確認'],
+                'step_of' => 'ステップ :current / :total', 'steps' => ['プランと開始日', 'ご連絡先', '確認'], 'period_hint' => '1件の相談は30日分で、月額1回分に相当します。',
                 'check_in' => '開始', 'check_out' => '終了', 'nights' => '日', 'adults' => '利用者', 'children' => '追加の利用者', 'rooms' => 'サイト数',
                 'choose_room' => 'プランを選ぶ', 'fits' => '1プランあたり最大:count名', 'too_small' => '人数に対応できません',
                 'extra_bed' => 'エキストラベッドを追加', 'name' => 'お名前', 'contact_method' => 'ご連絡方法',
@@ -627,7 +627,7 @@ class HotelPageController extends Controller
             ],
             default => [
                 'title' => 'Permintaan proyek', 'intro' => 'Hanya beberapa langkah singkat. Lingkup dan biaya final dikonfirmasi oleh tim kami.',
-                'step_of' => 'Langkah :current dari :total', 'steps' => ['Periode', 'Pengguna', 'Paket', 'Data Anda', 'Ringkasan'],
+                'step_of' => 'Langkah :current dari :total', 'steps' => ['Paket & mulai', 'Data Anda', 'Ringkasan'], 'period_hint' => 'Setiap permintaan mencakup 30 hari, sama dengan satu biaya bulanan.',
                 'check_in' => 'Mulai', 'check_out' => 'Selesai', 'nights' => 'hari', 'adults' => 'Pengguna', 'children' => 'Pengguna tambahan', 'rooms' => 'Jumlah website',
                 'choose_room' => 'Pilih paket', 'fits' => 'Maks. :count pengguna per paket', 'too_small' => 'Tidak cukup untuk tim Anda',
                 'extra_bed' => 'Tambah extra bed', 'name' => 'Nama lengkap', 'contact_method' => 'Bagaimana kami menghubungi Anda?',
