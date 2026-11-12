@@ -19,11 +19,8 @@
 
         <nav class="hidden items-center gap-7 lg:flex" aria-label="Main">
             @foreach ($links as $key => $href)
-                <a href="{{ $href }}" @class([
-                    'border-b-2 py-1 text-sm font-medium transition-colors hover:text-primary',
-                    'border-primary text-primary' => $key === 'home',
-                    'border-transparent text-ink' => $key !== 'home',
-                ])>{{ __('landing.nav.'.$key) }}</a>
+                <a href="{{ $href }}" data-nav-link data-active="{{ $key === 'home' ? 'true' : 'false' }}"
+                   class="border-b-2 border-transparent py-1 text-sm font-medium text-ink transition-colors hover:text-primary data-[active=true]:border-primary data-[active=true]:text-primary">{{ __('landing.nav.'.$key) }}</a>
             @endforeach
         </nav>
 
