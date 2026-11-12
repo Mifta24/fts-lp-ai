@@ -1,22 +1,20 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "mifta24/fts-lp-ai",
+    "name": "laravel/laravel",
     "type": "project",
-    "description": "FTS AI landing page: AI automation, AI agent, web development and offshore development.",
-    "keywords": [
-        "laravel",
-        "landing-page",
-        "fts"
-    ],
+    "description": "The skeleton application for the Laravel framework.",
+    "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "anthropic-ai/sdk": "^0.49.0",
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0",
         "plesk/ext-laravel-integration": "^8.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "laravel/boost": "^2.9",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
         "laravel/pint": "^1.27",
@@ -41,6 +39,7 @@
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
+            "@php artisan migrate --force",
             "npm install --ignore-scripts",
             "npm run build"
         ],
@@ -63,7 +62,9 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "@php artisan key:generate --ansi"
+            "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan migrate --graceful --ansi"
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
