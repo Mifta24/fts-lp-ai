@@ -1,4 +1,8 @@
-# FTS Hotel AI
+# FTS AI Concierge
+
+Situs interaktif dengan **AI Concierge** untuk Fujiyama Technology Solutions (FTS). Aplikasinya berasal dari `fts-hotel-ai`, dan datanya diisi dari web [fts-tech.co.id](https://fts-tech.co.id/): layanan, paket harga, tim, nilai perusahaan, kebijakan, FAQ, dan kontak. Karena struktur aplikasinya untuk hotel, data FTS ditempatkan di tempat yang sama: perusahaan sebagai "hotel", paket website sebagai "tipe kamar", layanan sebagai "fasilitas", dan tim serta nilai sebagai info. Label tampilan (mis. "Kamar & Suite") masih memakai istilah hotel.
+
+Berikut penjelasan aplikasi aslinya.
 
 Situs hotel interaktif dengan **AI Concierge**. Tamu menjelajahi hotel seperti berjalan di lobi (lobi, resepsionis, kamar, fasilitas, informasi, reservasi) sambil mengobrol dengan concierge AI. Concierge menjawab dari data hotel yang terkontrol, mengecek ketersediaan kamar, membuat permintaan booking, dan menyerahkan percakapan ke staf bila perlu. Staf mengelola semuanya lewat panel admin.
 
@@ -70,7 +74,7 @@ Isi data demo (hanya jalan di environment `local` dan `testing`):
 php artisan db:seed
 ```
 
-Seeder membuat hotel demo **FTS Hotel AI** (slug `fts-hotel-ai`) dengan beberapa tipe kamar, fasilitas, dan knowledge items.
+Seeder ([FtsSeeder](database/seeders/FtsSeeder.php)) mengisi data FTS (slug `fts`): 3 paket website, 6 layanan, tim, nilai, kebijakan, FAQ, dan kantor, masing-masing dalam Indonesia, Inggris, dan Jepang. Untuk mengubah isinya, edit seeder itu atau lewat panel admin.
 
 ### Menjalankan
 
@@ -83,13 +87,13 @@ Perintah ini menjalankan semua proses development lewat `php artisan dev`. Dafta
 | Halaman | URL |
 |---|---|
 | Halaman pembuka | `http://localhost:8000/` |
-| Hotel demo | `http://localhost:8000/fts-hotel-ai` |
+| Halaman FTS | `http://localhost:8000/fts` |
 | Admin | `http://localhost:8000/admin` |
 
 Akun admin demo (hanya untuk lokal, jangan dipakai di produksi):
 
 ```
-email    : owner@ftshotel.test
+email    : owner@fts-tech.test
 password : password
 ```
 
@@ -110,7 +114,7 @@ Kalau perlu, ubah juga `APP_NAME`, `APP_URL`, dan `APP_TIMEZONE` (bawaan `Asia/J
 ### Mencoba concierge dari terminal
 
 ```bash
-php artisan concierge:chat fts-hotel-ai --locale=id
+php artisan concierge:chat fts --locale=id
 ```
 
 Pilihan `--locale` adalah `id`, `en`, atau `ja`. Cara ini berguna untuk menguji loop tool-calling tanpa membuka browser.
@@ -142,7 +146,7 @@ app/
   Services/Reservation/ ReservationService, ReservationHandover
 database/
   migrations/           skema (hotel, kamar, knowledge, percakapan, booking, handover)
-  seeders/              DemoHotelSeeder
+  seeders/              FtsSeeder (data dari fts-tech.co.id)
 resources/
   js/                   stage, narrator, concierge, reservation, sound
   views/                halaman tamu (hotel/), admin (admin/), komponen

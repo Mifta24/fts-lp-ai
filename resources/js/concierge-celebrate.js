@@ -69,10 +69,10 @@ export function calendarFile(booking, hotelName) {
     const lines = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//FTS Hotel AI//Reservation//EN',
+        'PRODID:-//FTS AI Concierge//Inquiry//EN',
         'CALSCALE:GREGORIAN',
         'BEGIN:VEVENT',
-        `UID:${booking.booking_reference}@fts-hotel-ai`,
+        `UID:${booking.booking_reference}@fts-tech.co.id`,
         `DTSTAMP:${stamp}`,
         `DTSTART;VALUE=DATE:${icsDate(booking.check_in)}`,
         `DTEND;VALUE=DATE:${icsDate(booking.check_out)}`,

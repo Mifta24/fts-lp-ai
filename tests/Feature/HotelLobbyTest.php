@@ -18,7 +18,7 @@ class HotelLobbyTest extends TestCase
 
         $this->get('/?lang=en')
             ->assertOk()
-            ->assertSee('FTS Hotel AI')
+            ->assertSee('FTS AI Concierge')
             ->assertSee('Enter Demo')
             ->assertSee('href="'.route('hotel.rooms', ['hotelSlug' => 'demo', 'lang' => 'en']).'"', false)
             ->assertSee('href="'.route('hotel.facilities', ['hotelSlug' => 'demo', 'lang' => 'en']).'"', false)
