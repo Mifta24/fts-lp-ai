@@ -28,6 +28,11 @@
                 <span class="hotel-monogram" aria-hidden="true">@if ($hotel->logoUrl())<img src="{{ $hotel->logoUrl() }}" alt="">@else{{ mb_substr($hotel->name, 0, 1) }}@endif</span>
                 <span class="min-w-0"><span class="block truncate font-semibold tracking-tight">{{ $hotel->name }}</span><span class="block truncate text-xs opacity-75">{{ $hotel->city }} · {{ $hotel->country }}</span></span>
             </a>
+            <nav class="stage-nav" aria-label="{{ $lobby['explore'] }}">
+                @foreach ($menuItems as $item)
+                    <a href="{{ $item['href'] }}" data-stage-exit @if($item['tour']) data-tour-line="{{ $item['tour'] }}" @endif data-topic="{{ $item['topic'] }}" @if($item['key'] === $scene || ($scene === 'room' && $item['key'] === 'rooms')) aria-current="page" @endif>{{ $item['label'] }}</a>
+                @endforeach
+            </nav>
             <div class="stage-tools">
                 <x-sound-toggle :on="$lobby['sound_on']" :off="$lobby['sound_off']" />
                 <nav aria-label="Language" class="stage-lang">
@@ -44,7 +49,7 @@
 @elseif($sidebar)
         {{ $sidebar }}
 @else
-        <aside class="stage-menu" aria-label="{{ $lobby['explore'] }}">
+        <aside class="stage-menu stage-menu--main" aria-label="{{ $lobby['explore'] }}">
             <p class="lobby-eyebrow">{{ $lobby['explore'] }}</p>
             <nav class="lobby-navigation">
                 @foreach ($menuItems as $item)
