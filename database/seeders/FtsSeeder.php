@@ -72,7 +72,7 @@ class FtsSeeder extends Seeder
                 [
                     ...$plan,
                     'size_sqm' => null,
-                    'max_adults' => 1,
+                    'max_adults' => 5,
                     'max_children' => 0,
                     'bed_config' => [],
                     'view_type' => null,

@@ -202,11 +202,11 @@ class HotelLobbyTest extends TestCase
 
         $this->get('/demo/rooms/deluxe-king?lang=en')
             ->assertOk()
-            ->assertSee('Room 1 / 2')
+            ->assertSee('Plan 1 / 2')
             ->assertSee('King bed')
             ->assertSee('Garden view')
             ->assertSee('https://example.test/two.jpg', false)
-            ->assertSee('Final availability and rates are confirmed by hotel staff.')
+            ->assertSee('Final scope and rates are confirmed by the FTS team.')
             // the big photo is marked so stage.js can name it for the transition from the previous scene
             ->assertSee('data-room-photo', false)
             // both neighbours wrap around to the only other room
@@ -223,7 +223,7 @@ class HotelLobbyTest extends TestCase
         $hotel->roomTypes()->create(['name' => 'Hidden', 'slug' => 'hidden', 'base_price' => 1, 'max_adults' => 1, 'max_children' => 0, 'is_active' => false]);
         Hotel::create(['name' => 'Draft', 'slug' => 'draft']);
 
-        $this->get('/demo/rooms?lang=en')->assertOk()->assertSee('Room information will be available soon.');
+        $this->get('/demo/rooms?lang=en')->assertOk()->assertSee('Plan information will be available soon.');
         $this->get('/demo/rooms/hidden')->assertNotFound();
         $this->get('/draft/rooms')->assertNotFound();
     }
@@ -236,9 +236,9 @@ class HotelLobbyTest extends TestCase
         $this->get('/demo?lang=id')
             ->assertOk()
             ->assertSee('href="'.route('hotel.rooms', ['hotelSlug' => 'demo', 'lang' => 'id']).'"', false)
-            ->assertSee('data-tour-line="Mari, saya antar ke kamar-kamar kami."', false)
+            ->assertSee('data-tour-line="Mari, saya antar ke paket website kami."', false)
             ->assertSee('href="'.route('hotel.facilities', ['hotelSlug' => 'demo', 'lang' => 'id']).'"', false)
-            ->assertSee('data-tour-line="Mari, saya antar ke fasilitas hotel kami."', false)
+            ->assertSee('data-tour-line="Mari, saya antar melihat layanan kami."', false)
             ->assertDontSee('data-lobby-panel="rooms"', false)
             ->assertDontSee('data-lobby-panel="facilities"', false);
 
@@ -259,7 +259,7 @@ class HotelLobbyTest extends TestCase
         $this->get('/demo?lang=en')
             ->assertOk()
             ->assertSee('href="'.route('hotel.reservation', ['hotelSlug' => 'demo', 'lang' => 'en']).'"', false)
-            ->assertSee('data-tour-line="Let me help you plan your stay."', false)
+            ->assertSee('data-tour-line="Let me help you plan your project."', false)
             ->assertSee('href="'.route('hotel.staff', ['hotelSlug' => 'demo', 'lang' => 'en']).'"', false)
             ->assertSee('data-tour-line="Let me bring you to our team."', false);
 
@@ -348,9 +348,9 @@ class HotelLobbyTest extends TestCase
 
         $this->get($url($pool))
             ->assertOk()
-            ->assertSee('Facility 1 / 2')
+            ->assertSee('Service 1 / 2')
             ->assertSee('Open 07:00 to 20:00.')
-            ->assertSee('Ask about this facility')
+            ->assertSee('Ask about this service')
             // both neighbours wrap around to the only other facility
             ->assertSee('rel="prev"', false)
             ->assertSee($url($gym), false);
@@ -375,7 +375,7 @@ class HotelLobbyTest extends TestCase
         $this->get('/demo?lang=en')
             ->assertOk()
             ->assertSee('href="'.route('hotel.info', ['hotelSlug' => 'demo', 'lang' => 'en']).'"', false)
-            ->assertSee('data-tour-line="Let me tell you more about the hotel."', false)
+            ->assertSee('data-tour-line="Let me tell you more about FTS."', false)
             ->assertDontSee('data-lobby-panel="info"', false)
             ->assertDontSee('Free until 48 hours before arrival.');
 
@@ -395,8 +395,8 @@ class HotelLobbyTest extends TestCase
     {
         Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published']);
 
-        $this->get('/demo?lang=id')->assertOk()->assertSee('data-stage-loader', false)->assertSee('Menyiapkan pengalaman hotel Anda');
-        $this->get('/?lang=en')->assertOk()->assertSee('data-stage-exit', false)->assertSee('Preparing your hotel experience');
+        $this->get('/demo?lang=id')->assertOk()->assertSee('data-stage-loader', false)->assertSee('Menyiapkan pengalaman FTS');
+        $this->get('/?lang=en')->assertOk()->assertSee('data-stage-exit', false)->assertSee('Preparing the FTS experience');
     }
 
     public function test_the_concierge_introduces_rooms_using_only_stored_hotel_data(): void
@@ -411,17 +411,17 @@ class HotelLobbyTest extends TestCase
         $this->get('/demo/rooms?lang=en')
             ->assertOk()
             ->assertSee('data-narrator', false)
-            ->assertSee('We have 2 room types, from IDR 950.000 per night.');
+            ->assertSee('We have 2 plans, from IDR 950.000 per month.');
 
         $this->get('/demo/rooms/deluxe-king?lang=en')
             ->assertOk()
-            ->assertSee('Deluxe King. A calm room with a garden outlook. It offers 32 m² for up to 3 guests. Garden view. Breakfast is included. Rates start from IDR 950.000 per night.');
+            ->assertSee('Deluxe King. A calm room with a garden outlook. It offers 32 m² for up to 3 users. Garden view. Breakfast is included. The fee starts from IDR 950.000 per month.');
 
         $this->get('/demo/rooms/family-suite?lang=en')
             ->assertOk()
-            ->assertSee('Family Suite. It welcomes up to 4 guests. Rates start from IDR 2.200.000 per night. Final availability and rates are confirmed by our team.');
+            ->assertSee('Family Suite. It supports up to 4 users. The fee starts from IDR 2.200.000 per month. Final scope and rates are confirmed by our team.');
 
-        $this->get('/demo/rooms?lang=id')->assertOk()->assertSee('Ada 2 tipe kamar, mulai dari IDR 950.000 per malam.');
+        $this->get('/demo/rooms?lang=id')->assertOk()->assertSee('Ada 2 paket, mulai dari IDR 950.000 per bulan.');
     }
 
     public function test_no_rooms_narration_is_shown_when_the_hotel_has_no_rooms(): void
@@ -445,7 +445,7 @@ class HotelLobbyTest extends TestCase
 
         $this->get('/demo/facilities?lang=en')
             ->assertOk()
-            ->assertSee('We have 2 facilities and services, including Garden pool; Gym.')
+            ->assertSee('We offer 2 services, including Garden pool; Gym.')
             ->assertDontSee('including Garden pool; Gym; Hidden spa');
 
         $this->get(route('hotel.facility', ['hotelSlug' => 'demo', 'facilityId' => $pool->id, 'lang' => 'en']))
@@ -455,7 +455,7 @@ class HotelLobbyTest extends TestCase
 
         $this->get('/demo/info?lang=en')
             ->assertOk()
-            ->assertSee('Welcome to Demo. We are located in Bali, Indonesia. Check-in is from 14:00 and check-out is at 12:00.');
+            ->assertSee('Welcome to Demo. We are located in Bali, Indonesia. Our office is open from 14:00 to 12:00, Monday to Friday.');
 
         $this->get('/demo/info?lang=id')->assertOk()->assertSee('Selamat datang di Demo. Kami berada di Bali, Indonesia.');
     }
@@ -466,7 +466,7 @@ class HotelLobbyTest extends TestCase
 
         $this->get('/bare/info?lang=en')
             ->assertOk()
-            ->assertSee('Welcome to Bare. Check-in is from 14:00 and check-out is at 12:00. Below you will find the address')
+            ->assertSee('Welcome to Bare. Our office is open from 14:00 to 12:00, Monday to Friday. Below you will find the address')
             ->assertDontSee('We are located in');
     }
 
@@ -494,7 +494,7 @@ class HotelLobbyTest extends TestCase
         $this->get('/demo/rooms/family-suite?lang=id')
             ->assertOk()
             ->assertSee('class="room-nav"', false)
-            ->assertSee('mulai dari IDR 950.000 / malam')
+            ->assertSee('mulai dari IDR 950.000 / bulan')
             ->assertDontSee('Retired Room')
             // the way back to the main menu stays in the card
             ->assertSee('class="stage-menu-back"', false)
@@ -573,11 +573,11 @@ class HotelLobbyTest extends TestCase
         Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published']);
 
         $scenes = [
-            'hotel.rooms' => 'Saya ingin melihat pilihan kamar yang tersedia.',
+            'hotel.rooms' => 'Saya ingin melihat paket website yang tersedia.',
             'hotel.facilities' => 'Apa saja fasilitas yang tersedia di hotel ini?',
             'hotel.info' => 'Apa kebijakan check-in, check-out, dan pembatalan?',
             'hotel.reservation' => 'Saya ingin reservasi kamar. Bantu saya cek ketersediaan.',
-            'hotel.staff' => 'Saya ingin bicara dengan staf hotel.',
+            'hotel.staff' => 'Saya ingin bicara dengan tim FTS.',
         ];
 
         $response = $this->get('/demo?lang=id')->assertOk();
@@ -589,8 +589,8 @@ class HotelLobbyTest extends TestCase
             $this->get($url)->assertOk();
         }
 
-        $response->assertSee('data-topic="Saya ingin melihat pilihan kamar yang tersedia."', false)
-            ->assertSeeInOrder(['class="chat-chips"', 'data-stage-exit', 'data-topic="Saya ingin melihat pilihan kamar yang tersedia."'], false)
-            ->assertSee('data-topic="Saya ingin bicara dengan staf hotel."', false);
+        $response->assertSee('data-topic="Saya ingin melihat paket website yang tersedia."', false)
+            ->assertSeeInOrder(['class="chat-chips"', 'data-stage-exit', 'data-topic="Saya ingin melihat paket website yang tersedia."'], false)
+            ->assertSee('data-topic="Saya ingin bicara dengan tim FTS."', false);
     }
 }
