@@ -1,0 +1,202 @@
+<?php
+
+namespace App\Services\Reservation;
+
+use App\Core\Member\Models\Member;
+use App\Models\Booking;
+use App\Models\Conversation;
+use App\Models\Hotel;
+use App\Models\RoomInventory;
+use App\Models\RoomType;
+use App\Notifications\NewBookingRequest;
+use Carbon\CarbonImmutable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification as NotificationFacade;
+
+/**
+ * The single place where stay prices, availability and reservation requests
+ * are computed. Both the AI concierge tools and the guest-facing reservation
+ * wizard go through here, so they can never disagree.
+ */
+class ReservationService
+{
+    public const MAX_NIGHTS = 30;
+
+    public const PHONE_PATTERN = '/^\+?[0-9\s\-().]{6,20}$/';
+
+    public function __construct(private readonly MemberBookings $memberBookings = new MemberBookings) {}
+
+    /**
+     * Whether the requested party fits the room type across the requested rooms.
+     */
+    public function fitsOccupancy(RoomType $roomType, int $adults, int $children, int $rooms): bool
+    {
+        return $adults <= $roomType->max_adults * $rooms
+            && ($adults + $children) <= $roomType->maxOccupancy() * $rooms;
+    }
+
+    /**
+     * Prices a stay across every night in range. Returns null if any night
+     * lacks enough free units — this is the one place price and availability
+     * truth comes from, never the model.
+     *
+     * @return array{nights: int, nightly: list<array{date: string, price: float}>, room_total: float, extra_bed_total: float, subtotal: float, discount_percent: float, discount_amount: float, grand_total: float, min_available_units: int}|null
+     */
+    public function quote(
+        RoomType $roomType,
+        CarbonImmutable $checkIn,
+        CarbonImmutable $checkOut,
+        int $rooms = 1,
+        bool $extraBed = false,
+        bool $lockForUpdate = false,
+        float $discountPercent = 0.0,
+    ): ?array {
+        $nights = $checkIn->diffInDays($checkOut);
+
+        if ($nights < 1) {
+            return null;
+        }
+
+        $query = RoomInventory::where('room_type_id', $roomType->id)
+            ->whereDate('stay_date', '>=', $checkIn->toDateString())
+            ->whereDate('stay_date', '<=', $checkOut->subDay()->toDateString())
+            ->orderBy('stay_date');
+
+        if ($lockForUpdate) {
+            $query->lockForUpdate();
+        }
+
+        $inventory = $query->get();
+
+        if ($inventory->count() < $nights) {
+            return null;
+        }
+
+        $nightly = [];
+        $perRoomTotal = 0.0;
+        $minAvailable = PHP_INT_MAX;
+
+        foreach ($inventory as $night) {
+            if ($night->availableUnits() < $rooms) {
+                return null;
+            }
+
+            $nightly[] = ['date' => $night->stay_date->toDateString(), 'price' => (float) $night->price];
+            $perRoomTotal += (float) $night->price;
+            $minAvailable = min($minAvailable, $night->availableUnits());
+        }
+
+        $roomTotal = $perRoomTotal * $rooms;
+        $extraBedTotal = $extraBed && $roomType->extra_bed_available
+            ? (float) $roomType->extra_bed_price * $nights * $rooms
+            : 0.0;
+
+        $subtotal = $roomTotal + $extraBedTotal;
+        $discountAmount = round($subtotal * $discountPercent / 100, 2);
+
+        return [
+            'nights' => $nights,
+            'nightly' => $nightly,
+            'room_total' => $roomTotal,
+            'extra_bed_total' => $extraBedTotal,
+            'subtotal' => $subtotal,
+            'discount_percent' => $discountPercent,
+            'discount_amount' => $discountAmount,
+            'grand_total' => $subtotal - $discountAmount,
+            'min_available_units' => $minAvailable,
+        ];
+    }
+
+    /**
+     * Creates a pending reservation request and holds the inventory for it.
+     * Returns null when the room is no longer available for those nights.
+     *
+     * @param  array{check_in: CarbonImmutable, check_out: CarbonImmutable, adults: int, children?: int, rooms?: int, extra_bed?: bool, guest_name: string, guest_email?: ?string, guest_phone?: ?string, contact_type?: ?string, notes?: ?string, member_id?: ?int}  $data
+     */
+    public function createRequest(Hotel $hotel, RoomType $roomType, array $data, ?Conversation $conversation = null): ?Booking
+    {
+        $rooms = $data['rooms'] ?? 1;
+        $extraBed = (bool) ($data['extra_bed'] ?? false);
+
+        $member = filled($data['member_id'] ?? null) ? Member::find($data['member_id']) : null;
+        $discountPercent = $this->memberBookings->discountFor($hotel, $member);
+
+        $booking = DB::transaction(function () use ($hotel, $roomType, $data, $conversation, $rooms, $extraBed, $discountPercent) {
+            $quote = $this->quote($roomType, $data['check_in'], $data['check_out'], $rooms, $extraBed, lockForUpdate: true, discountPercent: $discountPercent);
+
+            if (! $quote) {
+                return null;
+            }
+
+            $booking = Booking::create([
+                'reference' => Booking::generateReference(),
+                'hotel_id' => $hotel->id,
+                'room_type_id' => $roomType->id,
+                'conversation_id' => $conversation?->id,
+                'member_id' => $data['member_id'] ?? null,
+                'guest_name' => $data['guest_name'],
+                'guest_email' => $data['guest_email'] ?? null,
+                'guest_phone' => $data['guest_phone'] ?? null,
+                'contact_type' => $data['contact_type'] ?? null,
+                'check_in' => $data['check_in']->toDateString(),
+                'check_out' => $data['check_out']->toDateString(),
+                'adults' => $data['adults'],
+                'children' => $data['children'] ?? 0,
+                'room_count' => $rooms,
+                'extra_bed' => $extraBed && $roomType->extra_bed_available,
+                'total_price' => $quote['grand_total'],
+                'discount_percent' => $quote['discount_percent'],
+                'discount_amount' => $quote['discount_amount'],
+                'status' => Booking::STATUS_PENDING,
+                'notes' => $data['notes'] ?? null,
+            ]);
+
+            $this->adjustInventory($booking, +1);
+
+            return $booking;
+        });
+
+        if ($booking) {
+            $this->notifyStaff($hotel, new NewBookingRequest($booking));
+        }
+
+        return $booking;
+    }
+
+    /**
+     * A mail problem must never undo or hide a reservation the guest has already made.
+     */
+    public function notifyStaff(Hotel $hotel, Notification $notification): void
+    {
+        try {
+            NotificationFacade::send($hotel->notifiableStaff(), $notification);
+        } catch (\Throwable $e) {
+            report($e);
+        }
+    }
+
+    /**
+     * Gives the units held by a booking back to the inventory.
+     */
+    public function releaseInventory(Booking $booking): void
+    {
+        $this->adjustInventory($booking, -1);
+    }
+
+    /**
+     * Takes the booking's rooms out of the inventory again (used when its stay moves).
+     */
+    public function holdInventory(Booking $booking): void
+    {
+        $this->adjustInventory($booking, +1);
+    }
+
+    private function adjustInventory(Booking $booking, int $direction): void
+    {
+        RoomInventory::where('room_type_id', $booking->room_type_id)
+            ->whereDate('stay_date', '>=', $booking->check_in->toDateString())
+            ->whereDate('stay_date', '<=', $booking->check_out->copy()->subDay()->toDateString())
+            ->{$direction > 0 ? 'increment' : 'decrement'}('booked_units', $booking->room_count);
+    }
+}
