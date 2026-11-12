@@ -39,6 +39,11 @@ class LandingHeroTest extends TestCase
             ->assertSee('https://wa.me/6289529336179', false);
     }
 
+    public function test_avatar_hides_itself_when_the_image_fails_to_load(): void
+    {
+        $this->get('/')->assertSee('onerror="this.hidden = true"', false);
+    }
+
     public function test_avatar_and_logo_files_exist(): void
     {
         $this->assertFileExists(public_path('images/avatar.webp'));

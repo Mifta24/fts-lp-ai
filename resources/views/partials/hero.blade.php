@@ -55,6 +55,7 @@
                 alt="{{ __('landing.hero.avatar_alt') }}"
                 width="1024" height="1536"
                 fetchpriority="high"
+                onerror="this.hidden = true"
                 class="avatar relative z-10 h-auto max-h-[480px] w-auto object-contain lg:max-h-[82vh]"
             >
             <div class="glass-dark absolute bottom-6 left-0 z-20 hidden max-w-[16rem] rounded-2xl p-4 text-sm sm:block lg:-left-6">

@@ -1,183 +1,74 @@
-# FTS Hotel AI
+# FTS AI Landing Page
 
-Situs hotel interaktif dengan **AI Concierge**. Tamu menjelajahi hotel seperti berjalan di lobi (lobi, resepsionis, kamar, fasilitas, informasi, reservasi) sambil mengobrol dengan concierge AI. Concierge menjawab dari data hotel yang terkontrol, mengecek ketersediaan kamar, membuat permintaan booking, dan menyerahkan percakapan ke staf bila perlu. Staf mengelola semuanya lewat panel admin.
+Landing page Fujiyama Technology Solutions (FTS) untuk layanan AI automation, AI agent, web development, dan offshore development. Satu halaman dengan hero avatar AI, dalam tiga bahasa (Indonesia, Inggris, Jepang). Tampilannya mengikuti tema [fts-tech.co.id](https://fts-tech.co.id/) dan susunan hero seperti [hotel-ai.fts-tech.co.id](https://hotel-ai.fts-tech.co.id/).
 
-Satu aplikasi bisa melayani beberapa hotel. Setiap hotel punya halaman sendiri di `/{hotelSlug}`.
-
-## Fitur
-
-### Sisi tamu
-- **Halaman bertema "stage"**: lobi, kamar, detail kamar, fasilitas, info hotel, staf, dan reservasi, dengan narrator dan efek suara (tombol bisa dimatikan).
-- **Tiga bahasa**: Indonesia (`id`), Inggris (`en`), dan Jepang (`ja`), dipilih lewat parameter `?lang=`.
-- **Chat dengan AI Concierge**
-  - Tahu di halaman mana tamu berada (kamar atau fasilitas yang sedang dilihat, form reservasi yang sedang diisi), jadi bisa menjawab "kamar ini".
-  - Menjawab dalam bahasa yang ditulis tamu.
-  - Menampilkan kartu kamar atau fasilitas langsung di dalam chat.
-- **Reservasi**: quote harga per kamar dan tanggal, lalu kirim permintaan booking (status awal `pending`).
-
-### Sisi admin (`/admin`)
-- Dashboard ringkasan.
-- CRUD **tipe kamar** (termasuk gambar dan inventori).
-- CRUD **knowledge items**, yaitu basis pengetahuan yang menjadi sumber jawaban concierge (kebijakan, fasilitas, restoran, transportasi, FAQ).
-- Daftar **booking** dan ubah statusnya (`pending`, `confirmed`, `cancelled`).
-- **Handover**: percakapan yang diserahkan concierge ke staf. Staf bisa membalas langsung ke tamu dan menandainya selesai.
-- Peran pengguna per hotel: `owner` dan `staff`.
-
-## Cara kerja AI Concierge
-
-Kode ada di [app/Services/Concierge/](app/Services/Concierge).
-
-- **[ConciergeService](app/Services/Concierge/ConciergeService.php)** menjalankan satu giliran percakapan. Ia memanggil endpoint chat yang kompatibel dengan OpenAI (LM Studio atau Ollama yang di-host sendiri) dan menjalankan loop tool-calling (maksimal 6 putaran per giliran). Riwayat percakapan disimpan di database. Request dikirim dengan `reasoning_effort=none` agar model tidak melakukan fase berpikir panjang. Seluruh giliran dibatasi 85 detik supaya muat dalam batas 100 detik Cloudflare.
-- **[HotelConciergeTools](app/Services/Concierge/HotelConciergeTools.php)** berisi alat yang bisa dipanggil model. Semua fakta hotel, kamar, harga, dan ketersediaan harus lewat sini, karena model sendiri tidak dipercaya menyimpan data apa pun.
-
-  | Tool | Fungsi |
-  |---|---|
-  | `search_knowledge` | Mencari di knowledge base hotel |
-  | `search_rooms` | Mencari kamar sesuai tanggal dan jumlah tamu, lengkap dengan ketersediaan dan total harga |
-  | `get_room_detail` | Detail satu tipe kamar |
-  | `check_availability` | Cek ketersediaan kamar untuk tanggal tertentu |
-  | `create_booking_request` | Membuat permintaan booking |
-  | `request_human_handover` | Menyerahkan percakapan ke staf |
-
-- **[ContentGuard](app/Services/Concierge/ContentGuard.php)** adalah pengaman deterministik di kode. Pesan yang kasar, bersifat seksual, atau ilegal (Indonesia, Inggris, Jepang) dijawab dengan balasan baku tanpa sampai ke model. Balasan model yang masih memuat kata-kata tersebut juga diganti. Pola dibuat sempit supaya pertanyaan hotel yang wajar tidak ikut terblokir.
-- **Harga tanpa sumber ditolak**: balasan yang memuat angka harga atau placeholder yang tidak berasal dari tool akan ditantang, supaya model tidak mengarang harga.
-- **Handover**: alasan yang didukung adalah `special_request`, `complaint`, `group_booking`, `negotiated_rate`, `unusual_cancellation`, `payment_issue`, dan `low_confidence`.
+Dibuat dari kode `fts-hotel-ai` yang sudah dipangkas. Semua fitur hotel, admin, booking, member, dan chat AI sudah dihapus. Tidak ada database.
 
 ## Teknologi
 
-- PHP 8.3+ (dikembangkan di 8.4), Laravel 13
-- SQLite sebagai database bawaan. Session, cache, dan queue memakai driver `database`
-- Vite 8 dan Tailwind CSS 4 untuk frontend, dengan JavaScript vanilla (tanpa framework) di `resources/js/`
-- LLM lokal lewat HTTP (endpoint kompatibel OpenAI)
-- PHPUnit 12 untuk tes, Laravel Pint untuk format kode
+- PHP 8.3+ (diuji di 8.4) dan Laravel 13
+- Vite 8, Tailwind CSS 4, JavaScript vanilla
+- PHPUnit untuk sisi server, `node --test` untuk fungsi JavaScript
 
 ## Memulai
 
-### Prasyarat
-PHP 8.3+ dengan ekstensi SQLite, Composer, dan Node.js 20.19+ (atau 22.12+) dengan npm. Untuk fitur chat AI, Anda juga perlu server LLM yang kompatibel dengan OpenAI (lihat bagian berikutnya).
-
-### Instalasi
+Butuh PHP 8.3+, Composer, dan Node.js 20.19+ (atau 22.12+).
 
 ```bash
-composer setup
+composer install
+cp .env.example .env
+php artisan key:generate
+npm install
+npm run build
+php artisan serve
 ```
 
-Perintah itu menjalankan `composer install`, menyalin `.env.example` ke `.env`, membuat `APP_KEY`, menjalankan migrasi, lalu `npm install` dan `npm run build`.
+Buka http://127.0.0.1:8000. Untuk pengembangan dengan hot reload, jalankan `npm run dev` di terminal lain.
 
-Isi data demo (hanya jalan di environment `local` dan `testing`):
+## Bahasa
+
+- `?lang=id`, `?lang=en`, atau `?lang=ja`. Pilihan disimpan di cookie `fts_lang` selama setahun.
+- Nilai yang tidak dikenal diabaikan, dan halaman tampil dalam bahasa bawaan (`APP_LOCALE`, default `id`).
+- Semua teks ada di `lang/{id,en,ja}/landing.php`. Ketiga file harus punya kunci yang sama (dijaga oleh tes).
+
+## Yang biasa diubah
+
+| Yang diubah | Di mana |
+|-------------|---------|
+| Nomor WhatsApp, email, telepon, kurs USD | `.env`: `FTS_WHATSAPP`, `FTS_EMAIL`, `FTS_PHONE`, `FTS_USD_RATE` |
+| Gambar avatar | `public/images/avatar.webp`. Pakai potret transparan (PNG/WebP) dengan wajah di tengah atas |
+| Logo | `public/images/logo.webp` |
+| Teks halaman | `lang/*/landing.php` |
+| Harga paket | `resources/views/partials/pricing.blade.php` (array `$plans`) |
+| Anggota tim | `resources/views/partials/team.blade.php` (array `$members`) dan `lang/*/landing.php` |
+| Warna dan font | `resources/css/app.css` (blok `@theme`) |
+
+## Cara kerja singkat
+
+- `routes/web.php` hanya punya satu route (`/`) ke `LandingController`.
+- `app/Http/Middleware/SetLocale.php` menentukan bahasa.
+- `resources/views/landing.blade.php` menyusun partial di `resources/views/partials/`.
+- `resources/js/landing.js` menangani menu mobile, penanda menu aktif saat scroll, toggle IDR/USD, dan form kontak. Form membuka aplikasi email pengunjung lewat `mailto:`, tanpa mengirim data ke server.
+- `resources/js/starfield.js` menggambar bintang di hero. Animasi berhenti kalau pengunjung memilih `prefers-reduced-motion`.
+
+## Tes
 
 ```bash
-php artisan db:seed
+php artisan test
+npm test
 ```
 
-Seeder membuat hotel demo **FTS Hotel AI** (slug `fts-hotel-ai`) dengan beberapa tipe kamar, fasilitas, dan knowledge items.
+CI di `.github/workflows/ci.yml` menjalankan keduanya dan build Vite pada setiap push dan pull request ke `main`.
 
-### Menjalankan
+## Deploy
 
-```bash
-composer dev
-```
+1. Di server: `composer install --no-dev --optimize-autoloader`, lalu `npm ci && npm run build` (atau unggah folder `public/build` hasil build lokal).
+2. Salin `.env.example` menjadi `.env`, isi `APP_KEY` (`php artisan key:generate`), set `APP_ENV=production`, `APP_DEBUG=false`, dan `APP_URL`.
+3. Arahkan document root ke folder `public/`.
+4. `php artisan config:cache && php artisan route:cache && php artisan view:cache`.
 
-Perintah ini menjalankan semua proses development lewat `php artisan dev`. Daftar prosesnya bisa dilihat dengan `php artisan dev:list`.
+Paket `plesk/ext-laravel-integration` tetap dipasang dari proyek asal supaya mudah di-deploy di Plesk. Hapus dengan `composer remove plesk/ext-laravel-integration` kalau tidak dipakai.
 
-| Halaman | URL |
-|---|---|
-| Halaman pembuka | `http://localhost:8000/` |
-| Hotel demo | `http://localhost:8000/fts-hotel-ai` |
-| Admin | `http://localhost:8000/admin` |
+## Dokumen desain
 
-Akun admin demo (hanya untuk lokal, jangan dipakai di produksi):
-
-```
-email    : owner@ftshotel.test
-password : password
-```
-
-### Konfigurasi LLM
-
-Atur di `.env`:
-
-```dotenv
-LOCAL_LLM_BASE_URL=   # mis. http://127.0.0.1:1234/v1 (LM Studio) atau http://127.0.0.1:11434/v1 (Ollama)
-LOCAL_LLM_API_KEY=    # kosongkan jika server tidak memakai autentikasi
-LOCAL_LLM_MODEL=      # nama model yang dimuat di server
-```
-
-Model harus mendukung function calling. Tanpa konfigurasi ini, halaman hotel tetap jalan tetapi chat concierge tidak bisa menjawab.
-
-Kalau perlu, ubah juga `APP_NAME`, `APP_URL`, dan `APP_TIMEZONE` (bawaan `Asia/Jakarta`).
-
-### Mencoba concierge dari terminal
-
-```bash
-php artisan concierge:chat fts-hotel-ai --locale=id
-```
-
-Pilihan `--locale` adalah `id`, `en`, atau `ja`. Cara ini berguna untuk menguji loop tool-calling tanpa membuka browser.
-
-## Endpoint utama
-
-| Method | Path | Keterangan |
-|---|---|---|
-| GET | `/{hotelSlug}` | Lobi hotel |
-| GET | `/{hotelSlug}/rooms`, `/rooms/{roomSlug}` | Daftar dan detail kamar |
-| GET | `/{hotelSlug}/facilities`, `/facilities/{id}` | Fasilitas |
-| GET | `/{hotelSlug}/info`, `/staff`, `/reservation` | Info, staf, reservasi |
-| POST | `/{hotelSlug}/reservation/quote` | Hitung harga |
-| POST | `/{hotelSlug}/reservation` | Kirim permintaan booking |
-| POST | `/{hotelSlug}/concierge/start` | Mulai percakapan |
-| POST | `/{hotelSlug}/concierge/message` | Kirim pesan ke concierge |
-| GET | `/{hotelSlug}/concierge/history` | Riwayat percakapan |
-
-Endpoint concierge dan reservasi dibatasi laju (rate limit). Pembatas concierge didefinisikan di [AppServiceProvider](app/Providers/AppServiceProvider.php), dan login admin dibatasi 5 percobaan per menit.
-
-## Struktur proyek
-
-```
-app/
-  Console/Commands/     concierge:chat
-  Http/Controllers/     halaman tamu, chat, reservasi, dan Admin/
-  Models/               Hotel, RoomType, Booking, Conversation, HandoverRequest, ...
-  Services/Concierge/   ConciergeService, HotelConciergeTools, ContentGuard
-  Services/Reservation/ ReservationService, ReservationHandover
-database/
-  migrations/           skema (hotel, kamar, knowledge, percakapan, booking, handover)
-  seeders/              DemoHotelSeeder
-resources/
-  js/                   stage, narrator, concierge, reservation, sound
-  views/                halaman tamu (hotel/), admin (admin/), komponen
-tests/
-  Feature/ dan Unit/
-```
-
-## Pengujian
-
-```bash
-composer test
-```
-
-Atau jalankan satu berkas:
-
-```bash
-php artisan test --compact tests/Feature/ConciergeChatTest.php
-```
-
-Cakupan tes: akses admin, chat concierge, tool booking, permintaan reservasi, halaman lobi, dan `ContentGuard`.
-
-## Gaya kode
-
-```bash
-vendor/bin/pint --dirty
-```
-
-## Deployment
-
-- Jalankan `npm run build` dan `php artisan migrate --force`.
-- Set `APP_ENV=production` dan `APP_DEBUG=false`.
-- Seeder demo tidak jalan di produksi. Buat akun owner dan hotel Anda sendiri.
-- Pastikan server aplikasi bisa menjangkau `LOCAL_LLM_BASE_URL`. Pada setup saat ini endpoint LLM diakses lewat Tailscale.
-- Karena ada batas 100 detik dari Cloudflare, jangan menaikkan batas waktu respons concierge melebihi 85 detik.
-
-## Lisensi
-
-Project ini dibangun di atas [Laravel](https://laravel.com), yang berlisensi [MIT](https://opensource.org/licenses/MIT).
+Spec dan rencana kerja ada di `docs/superpowers/`.
