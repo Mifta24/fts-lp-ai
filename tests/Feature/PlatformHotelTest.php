@@ -91,7 +91,7 @@ class PlatformHotelTest extends TestCase
         $first->users()->attach($user->id, ['role' => 'owner', 'status' => 'active']);
         $second->users()->attach($user->id, ['role' => 'staff', 'status' => 'active']);
 
-        $this->actingAs($user)->get(route('admin.dashboard'))->assertOk()->assertSee('Switch hotel', false);
+        $this->actingAs($user)->get(route('admin.dashboard'))->assertOk()->assertSee('Switch company', false);
 
         $this->actingAs($user)->post(route('admin.switch-hotel'), ['hotel_id' => $second->id])->assertRedirect(route('admin.dashboard'));
         $this->assertSame($second->id, $user->currentHotel()->id);

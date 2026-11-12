@@ -1,6 +1,6 @@
 # FTS AI Concierge
 
-Situs interaktif dengan **AI Concierge** untuk Fujiyama Technology Solutions (FTS). Aplikasinya berasal dari `fts-hotel-ai`, dan datanya diisi dari web [fts-tech.co.id](https://fts-tech.co.id/): layanan, paket harga, tim, nilai perusahaan, kebijakan, FAQ, dan kontak. Karena struktur aplikasinya untuk hotel, data FTS ditempatkan di tempat yang sama: perusahaan sebagai "hotel", paket website sebagai "tipe kamar", layanan sebagai "fasilitas", dan tim serta nilai sebagai info. Label tampilan (mis. "Kamar & Suite") masih memakai istilah hotel.
+Situs interaktif dengan **AI Concierge** untuk Fujiyama Technology Solutions (FTS). Aplikasinya berasal dari `fts-hotel-ai`, dan datanya diisi dari web [fts-tech.co.id](https://fts-tech.co.id/): layanan, paket harga, tim, nilai perusahaan, kebijakan, FAQ, dan kontak. Karena struktur aplikasinya untuk hotel, data FTS ditempatkan di tempat yang sama: perusahaan sebagai "hotel", paket website sebagai "tipe kamar", layanan sebagai "fasilitas", dan tim serta nilai sebagai info. Semua label tampilan, narasi, formulir, dan prompt AI sudah memakai istilah FTS: "kamar" menjadi paket website, "per malam" menjadi per bulan, dan "reservasi" menjadi permintaan proyek. Harga harian di inventori adalah 1/30 harga bulanan, sehingga perkiraan total untuk periode 30 hari kira-kira sama dengan satu biaya bulanan. Nama kunci di kode (mis. `room`, `booking`) dan halaman admin bagian dalam masih memakai istilah hotel.
 
 Berikut penjelasan aplikasi aslinya.
 

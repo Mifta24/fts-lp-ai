@@ -140,7 +140,7 @@ class GuestBookingTest extends TestCase
 
     public function test_the_management_page_opens_in_the_guests_language(): void
     {
-        $this->get('/demo/booking?lang=ja')->assertOk()->assertSee('ご予約の確認・変更');
-        $this->get('/demo/booking?lang=id')->assertOk()->assertSee('Kelola reservasi saya');
+        $this->get('/demo/booking?lang=ja')->assertOk()->assertSee('ご相談内容の確認・変更');
+        $this->get('/demo/booking?lang=id')->assertOk()->assertSee('Kelola permintaan proyek saya');
     }
 }

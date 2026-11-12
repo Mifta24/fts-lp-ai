@@ -20,7 +20,7 @@
                 @if ($myHotels->count() > 1)
                     <form method="POST" action="{{ route('admin.switch-hotel') }}" class="mt-2">
                         @csrf
-                        <select name="hotel_id" onchange="this.form.submit()" aria-label="Switch hotel" class="w-full rounded-lg border border-stone-300 bg-white px-2 py-1 text-xs">
+                        <select name="hotel_id" onchange="this.form.submit()" aria-label="Switch company" class="w-full rounded-lg border border-stone-300 bg-white px-2 py-1 text-xs">
                             @foreach ($myHotels as $option)<option value="{{ $option->id }}" @selected($option->id === auth()->user()->currentHotel()?->id)>{{ $option->name }}</option>@endforeach
                         </select>
                     </form>
@@ -35,19 +35,19 @@
                     ] : [];
                     $navItems = [
                         ['route' => 'admin.dashboard', 'label' => 'Dashboard', 'ability' => null],
-                        ['route' => 'admin.room-types.index', 'label' => 'Rooms', 'ability' => 'content'],
+                        ['route' => 'admin.room-types.index', 'label' => 'Plans', 'ability' => 'content'],
                         ['route' => 'admin.inventory.index', 'label' => 'Availability', 'ability' => 'inventory'],
                         ['route' => 'admin.knowledge-items.index', 'label' => 'Knowledge base', 'ability' => 'content'],
-                        ['route' => 'admin.bookings.index', 'label' => 'Bookings', 'ability' => 'bookings.view'],
+                        ['route' => 'admin.bookings.index', 'label' => 'Project requests', 'ability' => 'bookings.view'],
                         ['route' => 'admin.handovers.index', 'label' => 'Handovers', 'ability' => 'handovers'],
                         ['route' => 'admin.members.index', 'label' => 'Members', 'ability' => 'members', 'feature' => 'member'],
                         ['route' => 'admin.loyalty.edit', 'label' => 'Points & tiers', 'ability' => 'settings', 'feature' => 'member_plus'],
                         ['route' => 'admin.analytics.index', 'label' => 'Analytics', 'ability' => 'analytics'],
                         ['route' => 'admin.team.index', 'label' => 'Team', 'ability' => 'team'],
-                        ['route' => 'admin.settings.edit', 'label' => 'Hotel settings', 'ability' => 'settings'],
+                        ['route' => 'admin.settings.edit', 'label' => 'Company settings', 'ability' => 'settings'],
                         ['route' => 'admin.activity.index', 'label' => 'Activity', 'ability' => 'activity'],
                         ['route' => 'admin.account.edit', 'label' => 'My account', 'ability' => null],
-                        ['route' => 'platform.hotels.index', 'label' => 'All hotels', 'ability' => 'platform'],
+                        ['route' => 'platform.hotels.index', 'label' => 'All companies', 'ability' => 'platform'],
                     ];
                 @endphp
                 @foreach ($navItems as $item)

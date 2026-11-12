@@ -100,11 +100,11 @@ class ReservationRequestTest extends TestCase
 
         $this->postJson('/demo/reservation/quote', $this->stay(['check_in' => $yesterday, 'locale' => 'id']))
             ->assertUnprocessable()
-            ->assertJsonPath('errors.check_in.0', 'Tanggal check-in tidak boleh di masa lalu.');
+            ->assertJsonPath('errors.check_in.0', 'Tanggal mulai tidak boleh di masa lalu.');
 
         $this->postJson('/demo/reservation/quote', $this->stay(['check_out' => $this->checkIn]))
             ->assertUnprocessable()
-            ->assertJsonPath('errors.check_out.0', 'Check-out must be after check-in.');
+            ->assertJsonPath('errors.check_out.0', 'The end date must be after the start date.');
     }
 
     public function test_quote_rejects_stays_longer_than_the_limit(): void
@@ -120,7 +120,7 @@ class ReservationRequestTest extends TestCase
     {
         $this->postJson('/demo/reservation/quote', $this->stay(['adults' => 3]))
             ->assertUnprocessable()
-            ->assertJsonPath('errors.adults.0', 'This room does not fit that many guests. Choose another room or add rooms.');
+            ->assertJsonPath('errors.adults.0', 'This plan does not fit that many users. Choose another plan or add websites.');
 
         $this->postJson('/demo/reservation/quote', $this->stay(['adults' => 3, 'rooms' => 2]))->assertOk();
     }
@@ -139,7 +139,7 @@ class ReservationRequestTest extends TestCase
 
         $this->postJson('/demo/reservation/quote', $this->stay())
             ->assertUnprocessable()
-            ->assertJsonPath('errors.room_type_slug.0', 'This room is not available for those dates.')
+            ->assertJsonPath('errors.room_type_slug.0', 'This plan is not available for that period.')
             ->assertJsonPath('alternatives.0.slug', 'family-suite')
             ->assertJsonPath('alternatives.0.total', 6000000);
     }
@@ -148,7 +148,7 @@ class ReservationRequestTest extends TestCase
     {
         $this->postJson('/demo/reservation/quote', $this->stay(['room_type_slug' => 'family-suite', 'rooms' => 2, 'adults' => 2]))
             ->assertUnprocessable()
-            ->assertJsonPath('errors.room_type_slug.0', 'This room is not available for those dates.');
+            ->assertJsonPath('errors.room_type_slug.0', 'This plan is not available for that period.');
     }
 
     public function test_submitting_creates_a_pending_request_holds_inventory_and_returns_handover_links(): void
@@ -176,9 +176,9 @@ class ReservationRequestTest extends TestCase
         $this->assertStringStartsWith('https://wa.me/6281234567890?text=', $whatsapp);
         $message = urldecode(substr($whatsapp, strlen('https://wa.me/6281234567890?text=')));
         $this->assertStringContainsString('Name: John Tan', $message);
-        $this->assertStringContainsString('Rooms: 2', $message);
-        $this->assertStringContainsString('Room Type: Deluxe King', $message);
-        $this->assertStringContainsString('Special Request: High floor', $message);
+        $this->assertStringContainsString('Websites: 2', $message);
+        $this->assertStringContainsString('Plan: Deluxe King', $message);
+        $this->assertStringContainsString('Notes: High floor', $message);
         $this->assertStringContainsString("Reference: {$booking->reference}", $message);
         $this->assertStringStartsWith('mailto:front@demo.test?subject=', $response->json('handover.email_url'));
     }
@@ -206,7 +206,7 @@ class ReservationRequestTest extends TestCase
 
         $this->postJson('/demo/reservation', $this->request(['room_type_slug' => 'family-suite', 'guest_name' => 'Late Guest']))
             ->assertUnprocessable()
-            ->assertJsonPath('errors.room_type_slug.0', 'This room is not available for those dates.');
+            ->assertJsonPath('errors.room_type_slug.0', 'This plan is not available for that period.');
 
         $this->assertSame(1, Booking::count());
     }

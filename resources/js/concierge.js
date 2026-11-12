@@ -974,7 +974,7 @@ function initConcierge() {
             const roomCard = button.closest('[data-room-card]');
             const roomName = roomCard?.dataset.roomName || '';
             openPanel();
-            sendMessage(`Tell me more about the ${roomName}`);
+            sendMessage(`Tell me more about ${roomName}`);
         });
     });
 

@@ -51,9 +51,9 @@ class ContentGuard
     ];
 
     private const REFUSALS = [
-        'id' => 'Maaf, saya tidak bisa membantu dengan hal itu. Saya siap membantu soal kamar, fasilitas, reservasi, atau menghubungkan Anda dengan staf hotel.',
-        'en' => 'Sorry, I cannot help with that. I am happy to help with rooms, facilities, reservations, or connecting you with the hotel team.',
-        'ja' => '申し訳ございませんが、そのご依頼にはお応えできません。お部屋、施設、ご予約、スタッフへのご連絡でしたらお手伝いいたします。',
+        'id' => 'Maaf, saya tidak bisa membantu dengan hal itu. Saya siap membantu soal paket website, layanan, permintaan proyek, atau menghubungkan Anda dengan tim FTS.',
+        'en' => 'Sorry, I cannot help with that. I am happy to help with website plans, services, project requests, or connecting you with the FTS team.',
+        'ja' => '申し訳ございませんが、そのご依頼にはお応えできません。Webサイトのプラン、サービス、プロジェクトのご相談、スタッフへのご連絡でしたらお手伝いいたします。',
     ];
 
     /**

@@ -49,9 +49,9 @@ class ReservationHandover
         $booking->loadMissing('roomType');
 
         $labels = match ($locale) {
-            'en' => ['Hello, I would like to request a reservation.', 'Name', 'Check-in', 'Check-out', 'Guests', 'Rooms', 'Room Type', 'Special Request', 'Reference'],
-            'ja' => ['こんにちは。宿泊のご予約をリクエストしたいです。', 'お名前', 'チェックイン', 'チェックアウト', '人数', '客室数', '客室タイプ', 'ご要望', '予約番号'],
-            default => ['Halo, saya ingin mengajukan reservasi.', 'Nama', 'Check-in', 'Check-out', 'Tamu', 'Kamar', 'Tipe Kamar', 'Permintaan Khusus', 'Referensi'],
+            'en' => ['Hello, I would like to start a project.', 'Name', 'Start', 'End', 'Users', 'Websites', 'Plan', 'Notes', 'Reference'],
+            'ja' => ['こんにちは。プロジェクトについて相談したいです。', 'お名前', '開始', '終了', '利用者数', 'サイト数', 'プラン', 'ご要望', '受付番号'],
+            default => ['Halo, saya ingin mengajukan proyek.', 'Nama', 'Mulai', 'Selesai', 'Pengguna', 'Jumlah website', 'Paket', 'Catatan', 'Referensi'],
         };
 
         $guests = $booking->adults + $booking->children;
@@ -74,9 +74,9 @@ class ReservationHandover
     private function subject(string $key, string $locale): string
     {
         return [
-            'en' => ['reservation' => 'Reservation request', 'staff' => 'Question for hotel staff', 'staff_message' => 'Hello, I would like to speak with hotel staff.'],
-            'ja' => ['reservation' => '予約リクエスト', 'staff' => 'スタッフへのご相談', 'staff_message' => 'こんにちは。ホテルのスタッフとお話ししたいです。'],
-            'id' => ['reservation' => 'Permintaan reservasi', 'staff' => 'Pertanyaan untuk staf hotel', 'staff_message' => 'Halo, saya ingin bicara dengan staf hotel.'],
+            'en' => ['reservation' => 'Project request', 'staff' => 'Question for the FTS team', 'staff_message' => 'Hello, I would like to speak with the FTS team.'],
+            'ja' => ['reservation' => 'プロジェクトのご相談', 'staff' => 'スタッフへのご相談', 'staff_message' => 'こんにちは。FTSのスタッフとお話ししたいです。'],
+            'id' => ['reservation' => 'Permintaan proyek', 'staff' => 'Pertanyaan untuk tim FTS', 'staff_message' => 'Halo, saya ingin bicara dengan tim FTS.'],
         ][$locale][$key];
     }
 }
