@@ -142,8 +142,9 @@ class FtsSeeder extends Seeder
     }
 
     /**
-     * Slots stay open every day at the monthly price, because a website plan
-     * has no nightly rate or weekend surcharge.
+     * Slots stay open every day. The quote adds up one price per day, so each
+     * day carries one thirtieth of the monthly fee, and a 30-day period costs
+     * about one month. A website plan has no weekend surcharge.
      */
     private function seedInventory(RoomType $roomType, int $totalUnits): void
     {
@@ -155,7 +156,7 @@ class FtsSeeder extends Seeder
                 [
                     'total_units' => $totalUnits,
                     'booked_units' => min(($i * 5 + $roomType->id * 3) % ($totalUnits + 3), $totalUnits),
-                    'price' => (float) $roomType->base_price,
+                    'price' => round((float) $roomType->base_price / 30),
                 ]
             );
         }

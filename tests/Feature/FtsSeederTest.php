@@ -78,6 +78,16 @@ class FtsSeederTest extends TestCase
         }
     }
 
+    public function test_a_thirty_day_period_costs_about_one_monthly_fee(): void
+    {
+        $this->seed(FtsSeeder::class);
+
+        $plan = Hotel::where('slug', 'fts')->firstOrFail()->roomTypes()->where('slug', 'website-10-pages')->firstOrFail();
+        $thirtyDays = (float) $plan->inventory()->orderBy('stay_date')->limit(30)->pluck('price')->sum();
+
+        $this->assertEqualsWithDelta(1200000, $thirtyDays, 6000, 'thirty daily prices should add up to about one monthly fee');
+    }
+
     public function test_seeding_twice_does_not_duplicate_anything(): void
     {
         $this->seed(FtsSeeder::class);
