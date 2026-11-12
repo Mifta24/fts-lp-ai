@@ -22,6 +22,14 @@
 
     <main>
         @include('partials.hero')
+        @include('partials.about')
+        @include('partials.services')
+        @include('partials.how')
+        @include('partials.pricing')
+        @include('partials.team')
+        @include('partials.contact')
     </main>
+
+    @include('partials.footer')
 </body>
 </html>
