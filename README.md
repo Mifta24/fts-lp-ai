@@ -185,3 +185,7 @@ vendor/bin/pint --dirty
 ## Lisensi
 
 Project ini dibangun di atas [Laravel](https://laravel.com), yang berlisensi [MIT](https://opensource.org/licenses/MIT).
+
+## Gambar latar dan avatar
+
+Daftar file, ukuran, dan cara menggantinya ada di [docs/stage-images.md](docs/stage-images.md).
