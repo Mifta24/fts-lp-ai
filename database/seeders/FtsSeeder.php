@@ -267,17 +267,6 @@ class FtsSeeder extends Seeder
         ];
     }
 
-    /** @return array<int, array<string, mixed>> */
-    private function serviceItems(): array
-    {
-        $aiTitles = ['AI Automation', 'AI Agent Development', 'Otomasi Bisnis & Digital Marketing'];
-
-        return array_map(
-            fn (array $item) => in_array($item['title'], $aiTitles, true) ? [...$item, 'category' => HotelKnowledgeItem::CATEGORY_AI] : $item,
-            $this->allServiceItems()
-        );
-    }
-
     /**
      * The sixteen live demos listed on ai-solutions.fts-tech.co.id, each a
      * sample business run by an AI assistant.
@@ -331,8 +320,13 @@ class FtsSeeder extends Seeder
         }, $rows);
     }
 
-    /** @return array<int, array<string, mixed>> */
-    private function allServiceItems(): array
+    /**
+     * The services listed on fts-tech.co.id, AI services included: the AI
+     * Solutions room is kept for the live demos.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function serviceItems(): array
     {
         $service = function (string $title, string $enTitle, string $jaTitle, string $id, string $en, string $ja, string $imageId, array $features, array $tags): array {
             return [

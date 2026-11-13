@@ -82,7 +82,8 @@ class FtsSeederTest extends TestCase
             $this->assertContains($title, $demos->pluck('title')->all());
         }
 
-        $this->get('/fts/solutions?lang=en')->assertOk()->assertSee('Cafe AI')->assertSee('AI Automation');
+        $this->assertCount(16, Hotel::where('slug', 'fts')->firstOrFail()->knowledgeItems->where('category', 'ai'), 'AI Solutions holds only the live demos');
+        $this->get('/fts/solutions?lang=en')->assertOk()->assertSee('Cafe AI')->assertDontSee('AI Automation')->assertDontSee('AI Agent Development');
     }
 
     public function test_services_team_policies_and_faq_are_in_the_knowledge_base(): void
@@ -92,13 +93,8 @@ class FtsSeederTest extends TestCase
         $items = Hotel::where('slug', 'fts')->firstOrFail()->knowledgeItems;
 
         $services = $items->where('category', 'facilities')->pluck('title')->all();
-        foreach (['Web Development', 'Offshore Development', 'Website Restoran'] as $title) {
+        foreach (['Web Development', 'Offshore Development', 'Website Restoran', 'AI Automation', 'AI Agent Development', 'Otomasi Bisnis & Digital Marketing'] as $title) {
             $this->assertContains($title, $services);
-        }
-
-        $ai = $items->where('category', 'ai')->pluck('title')->all();
-        foreach (['AI Automation', 'AI Agent Development', 'Otomasi Bisnis & Digital Marketing'] as $title) {
-            $this->assertContains($title, $ai);
         }
 
         $projects = $items->where('category', 'portfolio');
@@ -184,8 +180,8 @@ class FtsSeederTest extends TestCase
         $this->get('/fts/rooms?lang=id')->assertOk()->assertSee('Website Hingga 5 Halaman')->assertSee('700.000');
         $this->get('/fts/rooms?lang=en')->assertOk()->assertSee('Website up to 5 pages');
         $this->get('/fts/rooms?lang=ja')->assertOk()->assertSee('Webサイト 5ページまで');
-        $this->get('/fts/facilities?lang=id')->assertOk()->assertSee('Web Development')->assertDontSee('AI Automation');
-        $this->get('/fts/solutions?lang=id')->assertOk()->assertSee('AI Automation')->assertSee('AI Agent Development');
+        $this->get('/fts/facilities?lang=id')->assertOk()->assertSee('Web Development')->assertSee('AI Automation')->assertSee('AI Agent Development');
+        $this->get('/fts/solutions?lang=id')->assertOk()->assertSee('Cafe AI')->assertDontSee('AI Automation');
         $this->get('/fts/portfolio?lang=id')->assertOk()->assertSee('EDEPA World')->assertSee('Thai Travel');
         $this->get('/fts/info?lang=id')->assertOk()->assertSee('Neo Soho Mall')->assertSee('Yoshihiro Nakagawa');
         $this->get('/fts/staff?lang=id')->assertOk()->assertSee('info@fts-tech.co.id');
