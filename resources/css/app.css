@@ -1122,104 +1122,30 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
 }
 
 /* ==========================================================================
-   Scene panels in dark glass, matching the header, chips and cards: About,
-   Talk to our team, Start a project, plan and service details. Everything
-   inside is recoloured for the dark ground; contents fade up in turn.
+   Scene panels (About, Talk to our team, Start a project, plan and service
+   details): bright frosted glass with blue accents; contents fade up in turn.
    ========================================================================== */
 .stage .lobby-content:not(.float-field) {
-    border: 1px solid #ffffff1f; color: #e3ecf6;
-    background: linear-gradient(165deg, #142d4cf0, #0a1729f5 70%);
-    backdrop-filter: blur(22px) saturate(1.2);
-    box-shadow: 0 30px 70px -18px #000000b3, inset 0 1px 0 #ffffff1a;
+    border: 1px solid #ffffffd9;
+    background: linear-gradient(165deg, #ffffffeb, #f1f7fde6 70%);
+    backdrop-filter: blur(22px) saturate(1.3);
+    box-shadow: 0 30px 70px -22px #0b2a4a4d, inset 0 1px 0 #ffffff;
 }
-.stage .lobby-content:not(.float-field) :is(h1, h2, h3, strong) { color: white; }
-.stage .lobby-content:not(.float-field) .lobby-eyebrow,
-.stage .lobby-content:not(.float-field) .room-scene .lobby-eyebrow,
-.stage .lobby-content:not(.float-field) .wizard-done > .lobby-eyebrow { color: #8fd3ff; }
-.stage .lobby-content:not(.float-field) .panel-close { border-color: #ffffff33; background: #ffffff14; color: white; }
-.stage .lobby-content:not(.float-field) .panel-close:hover { border-color: #1490e2; background: #1490e2; }
-.stage .lobby-content:not(.float-field) :is(.text-stone-500, .text-stone-600) { color: #b7c7d9; }
-.stage .lobby-content:not(.float-field) .text-stone-900 { color: white; }
-.stage .lobby-content:not(.float-field) .bg-white { background: #ffffff10; }
-.stage .lobby-content:not(.float-field) .bg-stone-200 { background: #ffffff12; }
-.stage .lobby-content:not(.float-field) .border-stone-300 { border-color: #ffffff2e; }
-
-/* The concierge's spoken intro inside a panel. */
-.stage .lobby-content:not(.float-field) .narrator { border-color: #ffffff1f; background: #ffffff0d; }
-.stage .lobby-content:not(.float-field) .narrator-inline { border: 0; background: none; }
-.stage .lobby-content:not(.float-field) .narrator-text { color: #e3ecf6; }
-.stage .lobby-content:not(.float-field) .narrator-name, .stage .lobby-content:not(.float-field) .narrator-actions button { color: #8fd3ff; }
-.stage .lobby-content:not(.float-field) .narrator-avatar { border-color: #5cc1ff80; }
-
-/* Buttons. */
+.stage .lobby-content:not(.float-field) .lobby-eyebrow { color: #1278c9; }
+.stage .lobby-content:not(.float-field) .panel-close { border-color: #d5e2ef; background: white; }
+.stage .lobby-content:not(.float-field) .panel-close:hover { border-color: #1490e2; background: #1490e2; color: white; }
 .stage .lobby-content:not(.float-field) .lobby-action { background: linear-gradient(135deg, #2aa4f4, #1278c9); box-shadow: 0 8px 22px #1490e240; }
 .stage .lobby-content:not(.float-field) .lobby-action:hover { background: linear-gradient(135deg, #48b4f7, #1490e2); }
-.stage .lobby-content:not(.float-field) :is(.room-scene-step, .wizard-secondary) { border-color: #ffffff2e; background: #ffffff0f; color: white; }
-.stage .lobby-content:not(.float-field) :is(.room-scene-step, .wizard-secondary):hover { border-color: #5cc1ff80; background: #ffffff1f; }
-
-/* Plan and service details. */
-.stage .lobby-content:not(.float-field) .room-scene-thumb { background: #ffffff12; }
-.stage .lobby-content:not(.float-field) .room-scene-facts { border-color: #ffffff1a; }
-.stage .lobby-content:not(.float-field) .room-scene-facts dt { color: #8fa6c0; }
-.stage .lobby-content:not(.float-field) .rc-menu li { border-color: #ffffff1f; }
-.stage .lobby-content:not(.float-field) .rc-menu-name { color: white; }
-.stage .lobby-content:not(.float-field) .rc-menu-price, .stage .lobby-content:not(.float-field) .facility-hours { color: #5cc1ff; }
-.stage .lobby-content:not(.float-field) .rc-menu-desc { color: #9fb3c9; }
 .stage .lobby-content:not(.float-field) .facility-menu { max-width: 520px; }
 .stage .lobby-content:not(.float-field) .facility-menu li { position: relative; padding-left: 18px; }
-.stage .lobby-content:not(.float-field) .facility-menu li::before { content: ''; position: absolute; left: 0; top: 5px; width: 7px; height: 7px; border-radius: 50%; background: #5cc1ff; box-shadow: 0 0 10px #5cc1ffb3; }
-.stage .lobby-content:not(.float-field) .facility-hero img { box-shadow: inset 0 0 0 1px #ffffff1a; }
+.stage .lobby-content:not(.float-field) .facility-menu li::before { content: ''; position: absolute; left: 0; top: 5px; width: 7px; height: 7px; border-radius: 50%; background: #1490e2; box-shadow: 0 0 10px #5cc1ff99; }
 .stage .lobby-content:not(.float-field) .facility-hero .facility-card-icon { display: none; }
-
-/* About FTS. */
-.stage .lobby-content:not(.float-field) .info-stay { border-color: #ffffff26; background: linear-gradient(135deg, #ffffff12, #5cc1ff24); }
-.stage .lobby-content:not(.float-field) .info-stay-label { color: #8fd3ff; }
-.stage .lobby-content:not(.float-field) .info-stay-time { color: white; }
-.stage .lobby-content:not(.float-field) .info-fact { border-color: #ffffff26; background: #ffffff0d; color: #e3ecf6; }
-.stage .lobby-content:not(.float-field) a.info-fact:hover { border-color: #5cc1ff80; background: #ffffff1f; }
-.stage .lobby-content:not(.float-field) .info-fact svg { color: #5cc1ff; }
-.stage .lobby-content:not(.float-field) .info-address { color: #9fb3c9; }
-.stage .lobby-content:not(.float-field) .info-section-heading { color: white; }
-.stage .lobby-content:not(.float-field) .info-tablist { background: #ffffff12; }
-.stage .lobby-content:not(.float-field) .info-tablist label { color: #9fb3c9; }
+.stage .lobby-content:not(.float-field) .wizard-progress li.is-done::before, .stage .lobby-content:not(.float-field) .wizard-progress li.is-current::before { background: linear-gradient(90deg, #5cc1ff, #1490e2); }
+.stage .lobby-content:not(.float-field) .wizard-room-body { transition: border-color .2s ease, background .2s ease, translate .3s cubic-bezier(.34, 1.45, .5, 1); }
+.stage .lobby-content:not(.float-field) .wizard-room:hover .wizard-room-body { translate: 0 -2px; }
 .stage .lobby-content:not(.float-field) #info-tab-general:checked ~ .info-tablist label[for="info-tab-general"],
 .stage .lobby-content:not(.float-field) #info-tab-policies:checked ~ .info-tablist label[for="info-tab-policies"],
-.stage .lobby-content:not(.float-field) #info-tab-faq:checked ~ .info-tablist label[for="info-tab-faq"] { background: #1490e2; color: white; box-shadow: 0 4px 14px #1490e266; }
-.stage .lobby-content:not(.float-field) .info-row, .stage .lobby-content:not(.float-field) .info-list .info-row:last-child { border-color: #ffffff1a; }
-.stage .lobby-content:not(.float-field) .info-row summary { color: white; }
-.stage .lobby-content:not(.float-field) .info-row-chevron { color: #8fa6c0; }
-.stage .lobby-content:not(.float-field) .info-row p { color: #b7c7d9; }
-
-/* Talk to our team. */
-.stage .lobby-content:not(.float-field) .staff-location { border-color: #ffffff1a; }
-.stage .lobby-content:not(.float-field) .staff-location h3 { color: #8fd3ff; }
-.stage .lobby-content:not(.float-field) .staff-location p { color: #b7c7d9; }
-
-/* Start a project. */
-.stage .lobby-content:not(.float-field) .wizard-step-label { color: #8fd3ff; }
-.stage .lobby-content:not(.float-field) .wizard-progress li::before { background: #ffffff1f; }
-.stage .lobby-content:not(.float-field) .wizard-progress li.is-done::before, .stage .lobby-content:not(.float-field) .wizard-progress li.is-current::before { background: linear-gradient(90deg, #5cc1ff, #1490e2); box-shadow: 0 0 10px #1490e280; }
-.stage .lobby-content:not(.float-field) .wizard-progress li span { color: #8fa6c0; }
-.stage .lobby-content:not(.float-field) .wizard-progress li.is-current span { color: white; }
-.stage .lobby-content:not(.float-field) :is(.wizard-field > span, .wizard-step legend) { color: #b7c7d9; }
-.stage .lobby-content:not(.float-field) :is(.wizard-field input, .wizard-field textarea) { border-color: #ffffff2e; background: #ffffff0d; color: white; color-scheme: dark; }
-.stage .lobby-content:not(.float-field) :is(.wizard-field input, .wizard-field textarea)::placeholder { color: #8fa6c0; }
-.stage .lobby-content:not(.float-field) :is(.wizard-field input, .wizard-field textarea):focus { border-color: #5cc1ff; outline-color: #5cc1ff59; }
-.stage .lobby-content:not(.float-field) .wizard-hint { color: #9fb3c9; }
-.stage .lobby-content:not(.float-field) .wizard-room-body { border-color: #ffffff26; background: #ffffff0a; color: #b7c7d9; transition: border-color .2s ease, background .2s ease, translate .3s cubic-bezier(.34, 1.45, .5, 1); }
-.stage .lobby-content:not(.float-field) .wizard-room:hover .wizard-room-body { translate: 0 -2px; background: #ffffff12; }
-.stage .lobby-content:not(.float-field) :is(.wizard-room-body strong, .wizard-room-price) { color: white; }
-.stage .lobby-content:not(.float-field) .wizard-room input:checked + .wizard-room-body { border-color: #5cc1ff; background: #1490e21f; box-shadow: 0 0 0 2px #5cc1ff59, 0 0 24px #1490e233; }
-.stage .lobby-content:not(.float-field) .wizard-room-hint { color: #ffb59c; }
-.stage .lobby-content:not(.float-field) .wizard-pills span { border-color: #ffffff2e; background: #ffffff0d; color: #e3ecf6; }
-.stage .lobby-content:not(.float-field) .wizard-pills input:checked + span { border-color: #1490e2; background: #1490e2; color: white; }
-.stage .lobby-content:not(.float-field) .wizard-check input { accent-color: #1490e2; }
-.stage .lobby-content:not(.float-field) :is(.wizard-summary, .wizard-summary > div) { border-color: #ffffff1a; }
-.stage .lobby-content:not(.float-field) .wizard-summary dt, .stage .lobby-content:not(.float-field) .wizard-reference-label { color: #9fb3c9; }
-.stage .lobby-content:not(.float-field) .wizard-summary dd button { color: #8fd3ff; }
-.stage .lobby-content:not(.float-field) .wizard-total { color: #b7c7d9; }
-.stage .lobby-content:not(.float-field) .wizard-error { border-color: #ff9d8a59; background: #7a2e1c4d; color: #ffd6c9; }
-.stage .lobby-content:not(.float-field) .wizard-status { background: #1490e233; color: #8fd3ff; }
+.stage .lobby-content:not(.float-field) #info-tab-faq:checked ~ .info-tablist label[for="info-tab-faq"] { background: #1490e2; color: white; box-shadow: 0 4px 14px #1490e24d; }
 
 @media (prefers-reduced-motion: no-preference) {
     .stage .lobby-content:not(.float-field) > :not(.panel-close),
@@ -1232,22 +1158,16 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
 }
 
 /* ==========================================================================
-   Chat: a navy header over the light conversation, a glowing edge while
-   open, and on wide screens the message box sits directly under the
-   conversation in the same column instead of spreading across the stage.
+   Chat: a bright card with a glowing edge while open, and on wide screens
+   the message box sits directly under the conversation in the same column.
    ========================================================================== */
-.stage-chat .chat-log { border: 1px solid #ffffff2b; background: #f5f9fd; box-shadow: 0 30px 70px -18px #000000b3, 0 0 0 1px #5cc1ff26; }
-.stage-chat .chat-log-header { border-bottom: 0; background: linear-gradient(120deg, #17375c, #0b1b30); color: white; }
-.stage-chat .chat-log-header .chat-log-close { color: #dbe7f3; }
-.stage-chat .chat-log-header .chat-log-close:hover { background: #ffffff1f; color: white; }
+.stage-chat .chat-log { border: 1px solid #ffffffd9; background: #f8fbfef5; box-shadow: 0 30px 70px -18px #0b2a4a59, 0 0 0 1px #5cc1ff33; }
+.stage-chat .chat-log-header { border-bottom: 1px solid #e1ebf5; background: linear-gradient(120deg, #e9f5fe, #ffffff); }
 .stage-chat .chat-log-header .chat-log-close[data-chat-voice][aria-pressed="true"] { background: #1490e2; color: white; }
-.stage-chat .chat-log-header :is(.text-stone-500, .text-stone-600, .text-xs) { color: #a9bdd3; }
-.stage-chat .chat-log-header .text-stone-900 { color: white; }
 .stage-chat .chat-host-avatar { border-color: #5cc1ff; box-shadow: 0 0 0 2px #5cc1ff40; }
-.stage-chat .chat-bar { border: 1px solid #ffffff2b; box-shadow: 0 18px 40px -10px #0009; }
+.stage-chat .chat-bar { border: 1px solid #ffffffd9; box-shadow: 0 18px 40px -10px #0b2a4a59; }
 .stage-chat .chat-bar button:not(.chat-mic) { background: linear-gradient(135deg, #2aa4f4, #1278c9); transition: filter .2s ease, translate .3s cubic-bezier(.34, 1.45, .5, 1); }
 .stage-chat .chat-bar button:not(.chat-mic):hover { filter: brightness(1.1); translate: 0 -1px; }
-
 @media (min-width: 900px) {
     /* Transcript in the right column: message box right under it. */
     .stage:not([data-chat-dock]) .chat-log,
@@ -1293,3 +1213,135 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
 
 /* Concierge replies keep their line breaks (lists come one item per line). */
 .showcase-bubble { white-space: pre-line; }
+
+/* ==========================================================================
+   Light theme. The rooms stay bright: only a soft white veil where text sits,
+   and every surface is white frosted glass with navy text and blue accents.
+   ========================================================================== */
+.stage-page { background: #eef4fa; color: #0f2a48; }
+.stage-shade { background: linear-gradient(0deg, #ffffffb3 0, #ffffff40 22%, transparent 44%), linear-gradient(90deg, #ffffff8c, transparent 46%); }
+@media (max-width: 899px) {
+    .stage-shade { background: linear-gradient(0deg, #ffffffd9 0, #ffffff66 26%, transparent 48%), linear-gradient(180deg, #ffffffa6, transparent 26%); }
+}
+@media (min-width: 900px) {
+    .stage[data-scene="lobby"] .stage-shade { background: linear-gradient(0deg, #ffffffcc 0, #ffffff4d 24%, transparent 46%), linear-gradient(90deg, #ffffffe0 0, #ffffffa6 30%, transparent 56%); }
+}
+.stage[data-page="rooms"] .stage-image, .stage[data-page="room"] .stage-image { filter: brightness(1.02) saturate(1.05); }
+.stage.is-leaving .stage-image { filter: brightness(1.08); }
+
+/* Glass surfaces shared by the header, chips, tiles, dock and side menus. */
+.stage-nav, .stage-lang, .sound-toggle, .stage-menu, .opening-panel, .tour-bar,
+.stage-chat .chat-chips a, .stage-chat .chat-chips button, .stage-chat .chat-launcher, .narrator-on-stage {
+    border-color: #ffffffd9;
+    background: #ffffffc7;
+    color: #0f2a48;
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 10px 30px -8px #0b2a4a33, inset 0 1px 0 #ffffff;
+}
+
+/* Header. */
+.stage-header > a { color: #0f2a48; }
+.stage-header > a .opacity-75 { color: #4a5d73; opacity: 1; }
+.stage-header .hotel-monogram:has(img) { box-shadow: 0 0 0 1px #d5e2ef, 0 6px 18px #0b2a4a26; }
+@media (min-width: 900px) {
+    .stage-nav a { color: #23405f; }
+    .stage-nav.has-glider a:hover, .stage-nav.has-glider a[aria-current] { color: #0f2a48; }
+    .stage-nav.has-glider a.is-lit { color: white; }
+    .stage-nav-glider { box-shadow: 0 6px 18px #1490e259, inset 0 1px 0 #ffffffa6; }
+}
+.stage-lang a:not([aria-current]):hover { background: #1490e214; }
+.stage-lang a[aria-current] { background: #0f2a48; color: white; }
+.sound-toggle:hover { background: white; }
+.sound-toggle.is-muted { color: #4a5d73; }
+
+/* Lobby headline and the scene titles over the photo. */
+.stage-welcome { text-shadow: none; color: #0f2a48; }
+.stage-welcome .lobby-eyebrow { color: #1278c9; }
+.stage-welcome h1 em, .stage[data-scene="lobby"] .stage-welcome h1 em { color: #1f5e98; }
+.stage-welcome p, .stage[data-scene="lobby"] .stage-welcome p { color: #2b4057; }
+.stage-welcome h1 { text-shadow: 0 1px 18px #ffffffb3; }
+.stage-tour { color: #0f2a48; text-shadow: 0 1px 16px #ffffffe6; }
+
+/* Chips, lobby tiles and the scene dock. */
+.stage-chat .chat-chips a:hover, .stage-chat .chat-chips button:hover,
+.stage-chat .chat-chips a:focus-visible, .stage-chat .chat-chips button:focus-visible { border-color: #5cc1ff; background: white; color: #0f2a48; box-shadow: 0 14px 30px -6px #0b2a4a40, 0 0 24px #5cc1ff4d; }
+.chat-chips :hover > .chip-icon, .chat-chips :focus-visible > .chip-icon { box-shadow: 0 0 0 1px #ffffff, 0 0 16px #5cc1ffb3; }
+.chip-icon { box-shadow: 0 0 0 1px #ffffff, 0 4px 12px #1490e252; }
+@media (min-width: 900px) {
+    .stage:not([data-scene="lobby"]) .stage-chat .chat-chips .chip-label { border-color: #ffffff; background: #0f2a48; }
+}
+
+/* Chat launcher. */
+.stage-chat .chat-launcher:hover { border-color: #5cc1ff; box-shadow: 0 16px 38px -8px #0b2a4a4d, 0 0 26px #5cc1ff40; }
+.stage-chat .chat-launcher-dot { background: #1490e2; }
+
+/* The concierge's spoken intro on the photo, and the plan menu beside it. */
+.narrator-on-stage .narrator-name { color: #1278c9; }
+.narrator-on-stage .narrator-text { color: #23405f; }
+.narrator-on-stage .narrator-actions button { color: #1278c9; }
+.narrator-on-stage .narrator-wave i { background: #1490e2; }
+.stage-menu > .lobby-eyebrow, .stage-menu-back { color: #1278c9; }
+.lobby-navigation a, .room-nav a { border-bottom-color: #0b2a4a14; }
+.lobby-navigation a:hover, .room-nav a:hover { background: #1490e212; }
+.lobby-navigation a[aria-current], .room-nav a[aria-current] { background: #1490e21f; }
+.room-nav-price { color: #4a5d73; }
+.room-nav-thumb { background: #e3edf7; }
+.stage-menu-footer { color: #6b7d91; }
+.room-nav { scrollbar-color: #0b2a4a33 transparent; }
+@media (max-width: 899px) {
+    .stage-menu { background: none; box-shadow: none; backdrop-filter: none; }
+    .stage-menu-back, .room-nav a { border-color: #ffffffd9; background: #ffffffc7; color: #0f2a48; backdrop-filter: blur(14px); }
+    .room-nav a:last-child { border-bottom-color: #ffffffd9; }
+}
+
+/* Floating cards in Services, AI Solutions and Portfolio. */
+.lobby-content.float-field { color: #0f2a48; }
+.float-field > .lobby-eyebrow { color: #1278c9; text-shadow: none; }
+.float-field > h2 { color: #0f2a48; text-shadow: 0 1px 18px #ffffffcc; }
+.float-field .narrator-inline { border-color: #ffffffd9; background: #ffffffc7; box-shadow: 0 12px 34px -8px #0b2a4a33; }
+.float-field .narrator-inline .narrator-text { color: #23405f; }
+.float-field .narrator-actions button { color: #1278c9; }
+.float-field .panel-close { border-color: #d5e2ef; background: white; color: #0f2a48; }
+.float-field .panel-close:hover { border-color: #1490e2; background: #1490e2; color: white; }
+.float-field .facility-card { border-color: #ffffffe6; background: linear-gradient(170deg, #ffffffeb, #f3f8fde6 70%); box-shadow: 0 18px 44px -12px #0b2a4a40, inset 0 1px 0 #ffffff; }
+.float-field .facility-card:hover, .float-field .facility-card:focus-visible { border-color: #5cc1ff; box-shadow: 0 28px 60px -14px #0b2a4a59, 0 0 0 1px #5cc1ff59, 0 0 40px #5cc1ff33; }
+.float-field .facility-card::after { background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), #5cc1ff1f, transparent 50%); }
+.float-field .facility-card-photo { background: #e3edf7; box-shadow: inset 0 0 0 1px #0b2a4a0f; }
+.float-field .facility-card-photo .facility-card-icon { background: white; color: #1278c9; box-shadow: 0 0 0 1px #d5e2ef; }
+.float-field .facility-card-title { color: #0f2a48; }
+.float-field .facility-card-text { color: #4a5d73; }
+.facility-card-more { border-top-color: #0b2a4a14; color: #1278c9; }
+.float-field .facility-card-go { border-color: #c9d8e8; color: #0f2a48; }
+.float-field .facility-card:hover .facility-card-go { color: white; }
+.card-badge { border-color: #1490e240; background: #1490e214; color: #1278c9; }
+
+/* Loading screen and opening screen. */
+.stage-loader { background: #eef4fa; color: #1278c9; }
+.opening-panel .lobby-eyebrow { color: #1278c9; }
+.opening-panel h1 em { color: #1f5e98; }
+.opening-links a { border-color: #ffffffd9; background: #ffffffc7; color: #0f2a48; }
+.tour-bar button { background: #1490e214; color: #0f2a48; }
+
+/* Light theme: readability where text meets a busy photo. */
+.stage-header > a span { text-shadow: 0 0 10px #ffffff, 0 0 18px #ffffffcc; }
+/* A scene title (Website plans) sits on a frosted label, so it reads even over the concierge. */
+.stage-welcome-scene > .lobby-eyebrow,
+.stage-welcome-scene > h1 { display: inline-block; width: fit-content; padding: 4px 14px; border: 1px solid #ffffffd9; border-radius: 12px; background: #ffffffd1; backdrop-filter: blur(14px); box-shadow: 0 8px 24px -8px #0b2a4a40; text-shadow: none; }
+.stage-welcome-scene > .lobby-eyebrow { padding: 3px 10px; border-radius: 999px; font-size: 11px; }
+.stage-welcome-scene > h1 { display: table; margin-top: 8px; }
+.stage-welcome-scene .narrator-on-stage { background: #ffffffe0; }
+/* Floating-room heading and intro sit on the photo too. */
+.float-field > h2 { display: table; padding: 2px 14px 6px; border-radius: 14px; background: #ffffffb8; backdrop-filter: blur(12px); text-shadow: none; }
+.float-field > .lobby-eyebrow { display: table; padding: 3px 10px; border-radius: 999px; background: #ffffffc7; backdrop-filter: blur(12px); }
+.float-field .narrator-inline { background: #ffffffe6; }
+.float-field .facility-card { background: linear-gradient(170deg, #fffffff2, #f3f8fdee 70%); }
+/* Phones: the menu row under the header is a row of white glass pills. */
+@media (max-width: 899px) {
+    .lobby-navigation a { border-color: #ffffffd9; background: #ffffffd1; color: #0f2a48; backdrop-filter: blur(14px); box-shadow: 0 6px 16px -6px #0b2a4a40; }
+    .lobby-navigation a[aria-current] { border-color: #1490e2; background: #1490e2; color: white; }
+}
+/* Phones: the lobby greeting overlaps the concierge, so it sits on a frosted card. */
+@media (max-width: 899px) {
+    .stage[data-scene="lobby"] .stage-welcome { width: fit-content; max-width: calc(100% - 40px); padding: 10px 16px 12px; border: 1px solid #ffffffd9; border-radius: 16px; background: #ffffffcc; backdrop-filter: blur(14px); box-shadow: 0 10px 28px -10px #0b2a4a4d; }
+    .stage[data-scene="lobby"] .stage-welcome h1 { margin-top: 0; text-shadow: none; }
+}
