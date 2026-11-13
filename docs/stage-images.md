@@ -4,21 +4,21 @@ Semua gambar ada di `public/images/`. Tiap adegan membaca file dengan nama tetap
 
 ## Dua cara pakai
 
-1. **Satu gambar dengan avatar di dalamnya** (cara paling sederhana). Tiga adegan memakai cara ini: lobi, paket, dan layanan.
-2. **Latar polos + potongan avatar terpisah** (lebih fleksibel). Avatar dilapis di atas latar, jadi bisa dipindah dan dipakai ulang. Info, tim, dan mulai proyek memakai cara ini. Lobi, paket, dan layanan otomatis ikut cara ini jika Anda menyediakan `character.png` dan file `*-bg.png` yang sesuai.
+1. **Satu gambar dengan avatar di dalamnya** (cara paling sederhana). Dua adegan memakai cara ini: paket dan layanan.
+2. **Latar polos + potongan avatar terpisah** (lebih fleksibel). Avatar dilapis di atas latar, jadi bisa dipindah dan dipakai ulang. Info, tim, dan mulai proyek memakai cara ini. Paket dan layanan otomatis ikut cara ini jika Anda menyediakan `character.png` dan file `*-bg.png` yang sesuai.
 
 ## Daftar file
 
 | Adegan | Gambar bawaan (avatar di dalam) | Latar polos (opsional, mode 2) | Potongan avatar |
 |--------|----------------------------------|--------------------------------|-----------------|
-| Lobi | `concierge-lobby.webp` | `lobby-bg.png` | `character.png` |
+| Lobi | `concierge-lobby.webp` | `lobby-bg.webp` (sudah terpasang: lobi kantor FTS) | `character/character right hand.webp` (sudah terpasang) |
 | Paket website | `suite.webp` | `rooms-bg.png` | `character.png` |
 | Layanan | `facility.webp` | `facilities-bg.png` | `character.png` |
 | Tentang FTS | `information.webp` (latar polos) | `information.webp` | `character/character greeting.webp` |
 | Bicara dengan tim | `talk to staff.webp` (latar polos) | `talk to staff.webp` | `character/character grateful.webp` |
 | Mulai proyek | `reservation.webp` (latar polos) | `reservation.webp` | `character/character reservation.webp` |
 
-Mode 2 untuk lobi, paket, dan layanan hanya aktif kalau **dua** file ada: `character.png` dan file `*-bg.png` adegan itu. Kalau salah satu tidak ada, dipakai gambar bawaan.
+Mode 2 untuk paket dan layanan hanya aktif kalau **dua** file ada: `character.png` dan file `*-bg.png` adegan itu. Kalau salah satu tidak ada, dipakai gambar bawaan. Lobi sudah memakai mode 2.
 
 ## Ukuran dan format
 

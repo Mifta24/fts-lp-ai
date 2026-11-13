@@ -409,14 +409,16 @@ class HotelPageController extends Controller
                 'avatarFocus' => '42% 14%',
             ],
             'lobby' => [
+                // The FTS office lobby, with her presenting from the right.
                 'combined' => 'images/concierge-lobby.webp',
-                'background' => 'images/lobby-bg.png',
-                'focus' => 'center 22%',
-                'focusMobile' => '50% 15%',
-                'anchor' => 'center',
-                'text' => 'top',
-                'avatarZoom' => '315%',
-                'avatarFocus' => '51% 19%',
+                'background' => 'images/lobby-bg.webp',
+                'character' => 'images/character/character right hand.webp',
+                'focus' => 'center 45%',
+                'focusMobile' => '30% 50%',
+                'anchor' => 'right',
+                'text' => 'bottom',
+                'avatarZoom' => '300%',
+                'avatarFocus' => '69% 20%',
             ],
         ];
 

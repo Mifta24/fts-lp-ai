@@ -542,11 +542,13 @@ class HotelLobbyTest extends TestCase
                 ->assertSee('images/character.png', false)
                 ->assertDontSee('images/suite.webp', false);
 
-            // The lobby has no plain background of its own, so it is unaffected.
+            // The lobby ships its own plain background and cut-out, so it does not depend on character.png.
             $this->get('/demo')
                 ->assertOk()
-                ->assertSee('images/concierge-lobby.webp', false)
-                ->assertDontSee('class="stage-character"', false);
+                ->assertSee('images/lobby-bg.webp', false)
+                ->assertSee('class="stage-character"', false)
+                ->assertSee('character right hand.webp', false)
+                ->assertDontSee('images/concierge-lobby.webp', false);
         } finally {
             @unlink($character);
             @unlink($background);
