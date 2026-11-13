@@ -13,7 +13,7 @@ Semua gambar ada di `public/images/`. Tiap adegan membaca file dengan nama tetap
 |--------|----------------------------------|--------------------------------|-----------------|
 | Lobi | `concierge-lobby.webp` | `lobby-bg.webp` (sudah terpasang: lobi kantor FTS) | `character/character right hand.webp` (sudah terpasang) |
 | Paket website | `suite.webp` | `rooms-bg.png` | `character.png` |
-| Layanan | `facility.webp` (cadangan) | `facilities-bg.webp` (tunggu file dari Anda) | `character/character right hand.webp` (dicerminkan) |
+| Layanan | `facility.webp` (cadangan) | `facilities-bg.webp` (sudah terpasang: lounge layanan FTS) | `character/character right hand.webp` (dicerminkan) |
 | AI Solutions | `facility.webp` (cadangan) | `solutions-bg.webp` (sudah terpasang: ruang AI Solutions FTS) | `character/character right hand.webp` (dicerminkan) |
 | Portofolio | `facility.webp` (cadangan) | `portfolio-bg.webp` (sudah terpasang: dinding portofolio FTS) | `character/character right hand.webp` (dicerminkan) |
 | Tentang FTS | `information.webp` (cadangan) | `about-bg.webp` (sudah terpasang: ruang rapat FTS) | `character/character greeting.webp` |

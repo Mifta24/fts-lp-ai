@@ -911,3 +911,8 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
     .stage[data-scene="solutions"] .stage-character[data-anchor="left"],
     .stage[data-scene="portfolio"] .stage-character[data-anchor="left"] { height: min(84%, 860px); left: 0; }
 }
+
+/* Phones: the right-hand scene panels use the full width instead of a narrow strip. */
+@media (max-width: 899px) {
+    .lobby-content.stage-panel-right { left: 12px; }
+}
