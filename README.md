@@ -186,6 +186,12 @@ vendor/bin/pint --dirty
 
 Project ini dibangun di atas [Laravel](https://laravel.com), yang berlisensi [MIT](https://opensource.org/licenses/MIT).
 
+## Ruang, suara, dan SEO
+
+- **Tujuh ruang** di menu atas: Paket Website, Layanan, AI Solutions, Portofolio, Tentang FTS, Mulai proyek, dan Bicara dengan tim, ditambah lobi. AI Solutions dan Portofolio memakai daftar dan halaman detail yang sama dengan Layanan, dipisah lewat kategori knowledge item `ai` dan `portfolio` (diatur di admin atau di `FtsSeeder`). Portofolio berisi 12 proyek dari fts-tech.co.id/projects/all.
+- **Balasan dibacakan:** tombol speaker di header chat menyalakan suara dari browser (speech synthesis). Pilihannya tersimpan, dan suara berhenti saat pengunjung mengirim pesan, memulai chat baru, atau menutup chat. Tombol tersembunyi di browser yang tidak bisa bersuara.
+- **SEO:** setiap halaman punya deskripsi, tautan kanonik, dan alternatif bahasa (`hreflang`). Lobi memuat data terstruktur schema.org Organization. `/sitemap.xml` mendaftar semua ruang dari perusahaan yang dipublikasikan, dan `/robots.txt` menunjuk ke sitemap serta menyembunyikan `/admin` dan `/platform`.
+
 ## Gambar latar dan avatar
 
 Daftar file, ukuran, dan cara menggantinya ada di [docs/stage-images.md](docs/stage-images.md).

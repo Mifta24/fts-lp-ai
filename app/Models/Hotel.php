@@ -174,6 +174,32 @@ class Hotel extends Model implements MemberTenant
         return filled($this->email) ? $this->email : null;
     }
 
+    /**
+     * schema.org Organization data for the lobby page, so search engines can show
+     * the company's name, address and contact details.
+     *
+     * @return array<string, mixed>
+     */
+    public function structuredData(string $locale, string $url): array
+    {
+        return array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => $this->name,
+            'url' => $url,
+            'logo' => $this->logoUrl() ?: asset('images/logo.webp'),
+            'description' => $this->translatedDescription($locale),
+            'email' => $this->email,
+            'telephone' => $this->phone,
+            'address' => array_filter([
+                '@type' => 'PostalAddress',
+                'streetAddress' => $this->address,
+                'addressLocality' => $this->city,
+                'addressCountry' => $this->country === 'Indonesia' ? 'ID' : $this->country,
+            ]),
+        ]);
+    }
+
     public function translatedDescription(string $locale): ?string
     {
         $value = $this->translations[$locale]['description'] ?? null;

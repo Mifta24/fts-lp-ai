@@ -25,9 +25,12 @@ use App\Http\Controllers\Member\LoginController as MemberLoginController;
 use App\Http\Controllers\NarrationSpeechController;
 use App\Http\Controllers\Platform\HotelController as PlatformHotelController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\SeoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HotelPageController::class, 'index'])->name('home');
+Route::get('sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('robots.txt', [SeoController::class, 'robots'])->name('robots');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {

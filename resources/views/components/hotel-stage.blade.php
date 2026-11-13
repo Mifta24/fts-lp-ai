@@ -10,6 +10,19 @@
     <meta property="og:title" content="{{ $hotel->name }}">
     @if ($hotel->coverUrl())<meta property="og:image" content="{{ $hotel->coverUrl() }}">@endif
     @if (filled($hotel->description))<meta property="og:description" content="{{ \Illuminate\Support\Str::limit($hotel->description, 200) }}">@endif
+    @php
+        $about = $hotel->translatedDescription($locale);
+        $canonical = url()->current();
+    @endphp
+    @if (filled($about))<meta name="description" content="{{ \Illuminate\Support\Str::limit($about, 200) }}">@endif
+    <link rel="canonical" href="{{ $canonical }}">
+    @foreach ($supportedLocales as $code)
+        <link rel="alternate" hreflang="{{ $code }}" href="{{ $canonical }}?lang={{ $code }}">
+    @endforeach
+    <link rel="alternate" hreflang="x-default" href="{{ $canonical }}">
+    @if ($scene === 'lobby')
+        <script type="application/ld+json">{!! json_encode($hotel->structuredData($locale, $canonical), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+    @endif
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
