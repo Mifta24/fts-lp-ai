@@ -72,4 +72,25 @@ class StageNavigationTest extends TestCase
 
         $this->assertSame(8, substr_count($chips, 'class="chip-label"'));
     }
+
+    public function test_the_header_has_a_theme_switch_labelled_in_every_language(): void
+    {
+        Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published']);
+
+        foreach (['en' => ['Dark theme', 'Light theme'], 'id' => ['Tema gelap', 'Tema terang'], 'ja' => ['ダークテーマ', 'ライトテーマ']] as $lang => [$dark, $light]) {
+            $html = $this->get('/demo/info?lang='.$lang)->assertOk()->getContent();
+
+            $this->assertMatchesRegularExpression('/<button type="button" class="sound-toggle theme-toggle" data-theme-toggle data-label-dark="'.$dark.'" data-label-light="'.$light.'" aria-pressed="false" aria-label="'.$dark.'">/', $html, "theme switch in {$lang}");
+        }
+    }
+
+    public function test_the_saved_theme_is_applied_before_the_page_paints(): void
+    {
+        Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published']);
+
+        $head = strstr($this->get('/demo?lang=en')->getContent(), '</head>', true);
+
+        $this->assertStringContainsString("localStorage.getItem('fts_theme')", $head);
+        $this->assertStringContainsString('document.documentElement.dataset.theme', $head);
+    }
 }

@@ -6,6 +6,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- The visitor's saved theme is applied before anything paints, so a dark choice never flashes light. --}}
+    <script>try { if (localStorage.getItem('fts_theme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (e) {}</script>
     <title>{{ $title ?? $hotel->name.' · AI Concierge' }}</title>
     <meta property="og:title" content="{{ $hotel->name }}">
     @if ($hotel->coverUrl())<meta property="og:image" content="{{ $hotel->coverUrl() }}">@endif
@@ -51,6 +53,7 @@
             </nav>
             <div class="stage-tools">
                 <x-sound-toggle :on="$lobby['sound_on']" :off="$lobby['sound_off']" />
+                <x-theme-toggle :dark="$lobby['theme_dark']" :light="$lobby['theme_light']" />
                 <nav aria-label="Language" class="stage-lang">
                     @foreach ($supportedLocales as $code)
                         <a href="?lang={{ $code }}" lang="{{ $code }}" aria-label="{{ ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => '日本語'][$code] }}" @if($code === $locale) aria-current="true" @endif>{{ $code }}</a>
