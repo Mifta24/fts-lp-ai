@@ -48,4 +48,28 @@ class StageNavigationTest extends TestCase
 
         $this->assertStringNotContainsString('aria-current', $this->navOf($this->get('/demo?lang=en')->getContent()));
     }
+
+    public function test_the_header_navigation_has_a_glider_for_the_sliding_highlight(): void
+    {
+        Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published']);
+
+        $nav = $this->navOf($this->get('/demo/info?lang=en')->getContent());
+
+        $this->assertStringContainsString('data-nav-glider', $nav);
+        $this->assertStringContainsString('<span class="stage-nav-glider" aria-hidden="true" data-nav-glider></span>', $nav);
+    }
+
+    public function test_every_quick_chip_carries_an_icon_for_its_destination(): void
+    {
+        Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published']);
+
+        preg_match('/<ul class="chat-chips".*?<\/ul>/s', $this->get('/demo?lang=en')->assertOk()->getContent(), $match);
+        $chips = $match[0] ?? '';
+
+        foreach (['rooms', 'facilities', 'solutions', 'portfolio', 'info', 'reservation', 'staff', 'tour'] as $key) {
+            $this->assertMatchesRegularExpression('/<span class="chip-icon" data-icon="'.$key.'"><svg/', $chips, "chip {$key} has no icon");
+        }
+
+        $this->assertSame(8, substr_count($chips, 'class="chip-label"'));
+    }
 }

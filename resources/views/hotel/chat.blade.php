@@ -190,8 +190,8 @@
             @endphp
             <ul class="chat-chips" aria-label="{{ $labels['menu_heading'] }}">
                 @foreach ($menuItems as $item)
-                    <li><a href="{{ $item['href'] }}" data-stage-exit data-topic="{{ $item['topic'] }}" @if($item['tour']) data-tour-line="{{ $item['tour'] }}" @endif>{{ $chipLabels[$item['key']] ?? $item['label'] }} <span aria-hidden="true">›</span></a></li>
+                    <li style="--i: {{ $loop->index }}"><a href="{{ $item['href'] }}" data-stage-exit data-topic="{{ $item['topic'] }}" @if($item['tour']) data-tour-line="{{ $item['tour'] }}" @endif><span class="chip-icon" data-icon="{{ $item['key'] }}"><x-menu-icon :name="$item['key']" /></span><span class="chip-label">{{ $chipLabels[$item['key']] ?? $item['label'] }}</span><span class="chip-go" aria-hidden="true">›</span></a></li>
                 @endforeach
-                <li><button type="button" data-tour-start><span aria-hidden="true">✦</span> {{ $labels['quick_tour'] }}</button></li>
+                <li style="--i: {{ count($menuItems) }}"><button type="button" data-tour-start><span class="chip-icon" data-icon="tour"><x-menu-icon name="tour" /></span><span class="chip-label">{{ $labels['quick_tour'] }}</span></button></li>
             </ul>
         </div>

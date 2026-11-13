@@ -42,6 +42,7 @@
                 <span class="min-w-0"><span class="block truncate font-semibold tracking-tight">{{ $hotel->name }}</span><span class="block truncate text-xs opacity-75">{{ $hotel->city }} · {{ $hotel->country }}</span></span>
             </a>
             <nav class="stage-nav" aria-label="{{ $lobby['explore'] }}">
+                <span class="stage-nav-glider" aria-hidden="true" data-nav-glider></span>
                 @foreach ($menuItems as $item)
                     <a href="{{ $item['href'] }}" data-stage-exit @if($item['tour']) data-tour-line="{{ $item['tour'] }}" @endif data-topic="{{ $item['topic'] }}" @if($item['current'] ?? false) aria-current="page" @endif>{{ $item['label'] }}</a>
                 @endforeach
