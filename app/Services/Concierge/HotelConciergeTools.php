@@ -289,6 +289,7 @@ class HotelConciergeTools
             'category' => $item->category,
             'title' => $item->translatedTitle($this->locale),
             'body' => $item->translatedBody($this->locale),
+            ...($item->demoUrl($this->locale) ? ['demo_url' => $item->demoUrl($this->locale)] : []),
         ])->values()->all();
 
         return ['text' => json_encode($results, JSON_UNESCAPED_UNICODE), 'ui' => null];
@@ -455,7 +456,7 @@ class HotelConciergeTools
                 'title' => $item->translatedTitle($this->locale),
                 'body' => $item->translatedBody($this->locale),
                 'hours' => $item->openingHours(),
-                'menu' => $item->menuEntries(),
+                'menu' => $item->menuEntries($this->locale),
                 'images' => array_slice($item->photoUrls(), 0, self::MAX_CARD_PHOTOS + 1),
             ])
             ->values()

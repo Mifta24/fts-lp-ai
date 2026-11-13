@@ -37,6 +37,35 @@ class FtsSeederTest extends TestCase
         $this->assertSame(['website-5-pages', 'website-10-pages', 'website-15-pages'], $plans->pluck('slug')->all());
     }
 
+    public function test_the_ai_solutions_room_lists_the_sixteen_live_demos_from_the_fts_ai_site(): void
+    {
+        $this->seed(FtsSeeder::class);
+
+        $demos = Hotel::where('slug', 'fts')->firstOrFail()->knowledgeItems
+            ->where('category', 'ai')
+            ->filter(fn ($item) => filled($item->details['demo_url'] ?? null));
+
+        $this->assertCount(16, $demos);
+        $this->assertCount(16, $demos->pluck('details.demo_url')->unique());
+
+        $hotel = $demos->firstWhere('title', 'FTS Hotel AI');
+        $this->assertSame('https://hotel-ai.fts-tech.co.id/fts-hotel-ai', $hotel->details['demo_url']);
+        $this->assertSame('https://hotel-ai.fts-tech.co.id/fts-hotel-ai?lang=ja', $hotel->demoUrl('ja'));
+        $this->assertStringContainsString('Concierge AI', $hotel->body);
+        $this->assertStringContainsString('AI Concierge', $hotel->translations['en']['body']);
+        $this->assertStringContainsString('AIコンシェルジュ', $hotel->translations['ja']['body']);
+        $this->assertSame(['Kamar & suite', 'Fasilitas', 'Reservasi'], collect($hotel->menuEntries())->pluck('name')->all());
+        $this->assertSame(['Rooms & suites', 'Facilities', 'Reservations'], collect($hotel->menuEntries('en'))->pluck('name')->all());
+        $this->assertSame(['客室', '施設', '予約'], collect($hotel->menuEntries('ja'))->pluck('name')->all());
+        $this->assertSame(['Kamar & suite', 'Fasilitas', 'Reservasi'], collect($hotel->menuEntries('id'))->pluck('name')->all());
+
+        foreach (['Cafe AI', 'FTS Restaurant AI', 'Aurelia Event Hall', 'Maju Jaya Studio', 'Software SaaS AI'] as $title) {
+            $this->assertContains($title, $demos->pluck('title')->all());
+        }
+
+        $this->get('/fts/solutions?lang=en')->assertOk()->assertSee('Cafe AI')->assertSee('AI Automation');
+    }
+
     public function test_services_team_policies_and_faq_are_in_the_knowledge_base(): void
     {
         $this->seed(FtsSeeder::class);
@@ -81,7 +110,7 @@ class FtsSeederTest extends TestCase
             $this->assertNotEmpty($hotel->translatedDescription($lang), "hotel description in {$lang}");
 
             foreach ($hotel->knowledgeItems as $item) {
-                $this->assertNotSame($item->title, '', "title");
+                $this->assertNotSame($item->title, '', 'title');
                 $this->assertNotEmpty($item->translations[$lang]['title'] ?? null, "{$item->title} title in {$lang}");
                 $this->assertNotEmpty($item->translations[$lang]['body'] ?? null, "{$item->title} body in {$lang}");
             }

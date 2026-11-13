@@ -1,0 +1,111 @@
+- main [ref=f12e2]:
+  - img "Resepsionis virtual Anda"
+  - generic [ref=f12e4]:
+    - link "Fujiyama Technology Solutions West Jakarta, DKI Jakarta 11470 · Indonesia" [ref=f12e5] [cursor=pointer]:
+      - /url: http://127.0.0.1:8000/fts?lang=id
+      - generic [aria-hidden] [ref=f12e6]: F
+      - generic [ref=f12e7]:
+        - generic [ref=f12e8]: Fujiyama Technology Solutions
+        - generic [ref=f12e9]: West Jakarta, DKI Jakarta 11470 · Indonesia
+    - navigation "Jelajahi FTS" [ref=f12e10]:
+      - link "Paket Website" [ref=f12e11] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/rooms?lang=id
+      - link "Layanan kami" [ref=f12e12] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities?lang=id
+      - link "Tentang FTS" [ref=f12e13] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/info?lang=id
+      - link "Mulai proyek" [ref=f12e14] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/reservation?lang=id
+      - link "Bicara dengan tim" [ref=f12e15] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/staff?lang=id
+    - generic [ref=f12e16]:
+      - button "Suara aktif" [pressed] [ref=f12e17] [cursor=pointer]
+      - navigation "Language" [ref=f12e21]:
+        - link "Bahasa Indonesia" [ref=f12e22] [cursor=pointer]:
+          - /url: "?lang=id"
+          - text: id
+        - link "English" [ref=f12e23] [cursor=pointer]:
+          - /url: "?lang=en"
+          - text: en
+        - link "日本語" [ref=f12e24] [cursor=pointer]:
+          - /url: "?lang=ja"
+          - text: ja
+  - region "Permintaan proyek" [ref=f12e26]:
+    - link "Kembali ke lobi" [ref=f12e27] [cursor=pointer]:
+      - /url: http://127.0.0.1:8000/fts?lang=id
+      - generic [aria-hidden] [ref=f12e28]: ×
+    - paragraph [ref=f12e29]: Fujiyama Technology Solutions
+    - heading "Permintaan proyek" [level=2] [ref=f12e30]
+    - generic [ref=f12e32]:
+      - paragraph [ref=f12e33]: Hanya beberapa langkah singkat. Lingkup dan biaya final dikonfirmasi oleh tim kami.
+      - generic "Permintaan proyek" [ref=f12e34]:
+        - paragraph [ref=f12e35]: Langkah 1 dari 3 · Paket & mulai
+        - list [ref=f12e36]:
+          - listitem [ref=f12e37]:
+            - generic [ref=f12e38]: Paket & mulai
+          - listitem [ref=f12e39]:
+            - generic [ref=f12e40]: Data Anda
+          - listitem [ref=f12e41]:
+            - generic [ref=f12e42]: Ringkasan
+      - generic [ref=f12e43]:
+        - generic [ref=f12e44]:
+          - group "Pilih paket" [ref=f12e45]:
+            - generic [ref=f12e47]:
+              - generic [ref=f12e48] [cursor=pointer]:
+                - radio "Website Hingga 5 Halaman Maks. 5 pengguna per paket mulai dari IDR 700.000 / bulan"
+                - generic [ref=f12e49]:
+                  - strong [ref=f12e50]: Website Hingga 5 Halaman
+                  - generic [ref=f12e51]: Maks. 5 pengguna per paket
+                  - generic [ref=f12e52]: mulai dari IDR 700.000 / bulan
+              - generic [ref=f12e53] [cursor=pointer]:
+                - radio "Website Hingga 10 Halaman Maks. 5 pengguna per paket mulai dari IDR 1.200.000 / bulan" [checked]
+                - generic [ref=f12e54]:
+                  - strong [ref=f12e55]: Website Hingga 10 Halaman
+                  - generic [ref=f12e56]: Maks. 5 pengguna per paket
+                  - generic [ref=f12e57]: mulai dari IDR 1.200.000 / bulan
+              - generic [ref=f12e58] [cursor=pointer]:
+                - radio "Website Hingga 15 Halaman Maks. 5 pengguna per paket mulai dari IDR 1.600.000 / bulan"
+                - generic [ref=f12e59]:
+                  - strong [ref=f12e60]: Website Hingga 15 Halaman
+                  - generic [ref=f12e61]: Maks. 5 pengguna per paket
+                  - generic [ref=f12e62]: mulai dari IDR 1.600.000 / bulan
+          - generic [ref=f12e63]:
+            - generic [ref=f12e64]: Mulai
+            - textbox "Mulai" [ref=f12e65]: 2026-11-12
+          - paragraph [ref=f12e66]: Setiap permintaan mencakup 30 hari, sama dengan satu biaya bulanan. (12 November 2026 → 12 Desember 2026)
+        - button "Lanjut" [ref=f12e68] [cursor=pointer]:
+          - text: Lanjut
+          - generic [aria-hidden] [ref=f12e69]: →
+  - generic [ref=f12e71]:
+    - button "Chat dengan AI Concierge" [ref=f12e72] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f12e75]: ↗
+    - list "Mulai dari sini" [ref=f12e76]:
+      - listitem [ref=f12e77]:
+        - link "Cari paket" [ref=f12e78] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/rooms?lang=id
+          - text: Cari paket
+          - generic [aria-hidden] [ref=f12e79]: ›
+      - listitem [ref=f12e80]:
+        - link "Layanan kami" [ref=f12e81] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/facilities?lang=id
+          - text: Layanan kami
+          - generic [aria-hidden] [ref=f12e82]: ›
+      - listitem [ref=f12e83]:
+        - link "Ketentuan & FAQ" [ref=f12e84] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/info?lang=id
+          - text: Ketentuan & FAQ
+          - generic [aria-hidden] [ref=f12e85]: ›
+      - listitem [ref=f12e86]:
+        - link "Rencanakan proyek" [ref=f12e87] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/reservation?lang=id
+          - text: Rencanakan proyek
+          - generic [aria-hidden] [ref=f12e88]: ›
+      - listitem [ref=f12e89]:
+        - link "Bicara dengan tim" [ref=f12e90] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/staff?lang=id
+          - text: Bicara dengan tim
+          - generic [aria-hidden] [ref=f12e91]: ›
+      - listitem [ref=f12e92]:
+        - button "Tur bersama AI" [ref=f12e93] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f12e94]: ✦
+          - text: Tur bersama AI

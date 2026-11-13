@@ -1,0 +1,97 @@
+- main [ref=f1e2]:
+  - img "Resepsionis virtual Anda" [ref=f1e3]
+  - generic [ref=f1e5]:
+    - link "Fujiyama Technology Solutions West Jakarta, DKI Jakarta 11470 · Indonesia" [ref=f1e6] [cursor=pointer]:
+      - /url: http://127.0.0.1:8000/fts?lang=id
+      - generic [aria-hidden] [ref=f1e7]: F
+      - generic [ref=f1e8]:
+        - generic [ref=f1e9]: Fujiyama Technology Solutions
+        - generic [ref=f1e10]: West Jakarta, DKI Jakarta 11470 · Indonesia
+    - navigation "Jelajahi FTS" [ref=f1e11]:
+      - link "Paket Website" [ref=f1e12] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/rooms?lang=id
+      - link "Layanan kami" [ref=f1e13] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities?lang=id
+      - link "Tentang FTS" [ref=f1e14] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/info?lang=id
+      - link "Mulai proyek" [ref=f1e15] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/reservation?lang=id
+      - link "Bicara dengan tim" [ref=f1e16] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/staff?lang=id
+    - generic [ref=f1e17]:
+      - button "Suara aktif" [pressed] [ref=f1e18] [cursor=pointer]
+      - navigation "Language" [ref=f1e22]:
+        - link "Bahasa Indonesia" [ref=f1e23] [cursor=pointer]:
+          - /url: "?lang=id"
+          - text: id
+        - link "English" [ref=f1e24] [cursor=pointer]:
+          - /url: "?lang=en"
+          - text: en
+        - link "日本語" [ref=f1e25] [cursor=pointer]:
+          - /url: "?lang=ja"
+          - text: ja
+  - generic [ref=f1e26]:
+    - text: Jelajahi FTS
+    - heading "Paket Website" [level=1] [ref=f1e27]
+    - generic [ref=f1e30]:
+      - paragraph [ref=f1e31]: AI Concierge
+      - paragraph [ref=f1e38]: Inilah paket website kami. Ada 3 paket, mulai dari IDR 700.000 per bulan. Buka salah satu, nanti saya jelaskan — atau tanyakan apa saja kepada saya.
+      - paragraph [aria-hidden] [ref=f1e39]: Inilah paket website kami. Ada 3 paket, mulai dari IDR 700.000 per bulan. Buka salah satu, nanti saya jelaskan — atau tanyakan apa saja kepada saya.
+      - generic [ref=f1e41]:
+        - button "Dengarkan" [ref=f1e42] [cursor=pointer]
+        - button "Lewati" [ref=f1e43] [cursor=pointer]
+  - complementary "Paket Website" [ref=f1e44]:
+    - link "Jelajahi FTS" [ref=f1e45] [cursor=pointer]:
+      - /url: http://127.0.0.1:8000/fts?lang=id
+      - text: ‹ Jelajahi FTS
+    - paragraph [ref=f1e46]: Paket Website
+    - navigation [ref=f1e47]:
+      - link "Website Hingga 5 Halaman mulai dari IDR 700.000 / bulan" [ref=f1e48] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/rooms/website-5-pages?lang=id
+        - generic [ref=f1e49]:
+          - generic [ref=f1e50]: Website Hingga 5 Halaman
+          - generic [ref=f1e51]: mulai dari IDR 700.000 / bulan
+      - link "Website Hingga 10 Halaman mulai dari IDR 1.200.000 / bulan" [ref=f1e52] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/rooms/website-10-pages?lang=id
+        - generic [ref=f1e53]:
+          - generic [ref=f1e54]: Website Hingga 10 Halaman
+          - generic [ref=f1e55]: mulai dari IDR 1.200.000 / bulan
+      - link "Website Hingga 15 Halaman mulai dari IDR 1.600.000 / bulan" [ref=f1e56] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/rooms/website-15-pages?lang=id
+        - generic [ref=f1e57]:
+          - generic [ref=f1e58]: Website Hingga 15 Halaman
+          - generic [ref=f1e59]: mulai dari IDR 1.600.000 / bulan
+    - generic [ref=f1e60]: Siap membantu, 24 jam · POWERED BY FTS
+  - generic [ref=f1e62]:
+    - button "Chat dengan AI Concierge" [ref=f1e63] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e66]: ↗
+    - list "Mulai dari sini" [ref=f1e67]:
+      - listitem [ref=f1e68]:
+        - link "Cari paket" [ref=f1e69] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/rooms?lang=id
+          - text: Cari paket
+          - generic [aria-hidden] [ref=f1e70]: ›
+      - listitem [ref=f1e71]:
+        - link "Layanan kami" [ref=f1e72] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/facilities?lang=id
+          - text: Layanan kami
+          - generic [aria-hidden] [ref=f1e73]: ›
+      - listitem [ref=f1e74]:
+        - link "Ketentuan & FAQ" [ref=f1e75] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/info?lang=id
+          - text: Ketentuan & FAQ
+          - generic [aria-hidden] [ref=f1e76]: ›
+      - listitem [ref=f1e77]:
+        - link "Rencanakan proyek" [ref=f1e78] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/reservation?lang=id
+          - text: Rencanakan proyek
+          - generic [aria-hidden] [ref=f1e79]: ›
+      - listitem [ref=f1e80]:
+        - link "Bicara dengan tim" [ref=f1e81] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/staff?lang=id
+          - text: Bicara dengan tim
+          - generic [aria-hidden] [ref=f1e82]: ›
+      - listitem [ref=f1e83]:
+        - button "Tur bersama AI" [ref=f1e84] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e85]: ✦
+          - text: Tur bersama AI

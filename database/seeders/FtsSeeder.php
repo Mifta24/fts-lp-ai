@@ -191,6 +191,7 @@ class FtsSeeder extends Seeder
         return [
             ...$this->aboutItems(),
             ...$this->serviceItems(),
+            ...$this->aiDemoItems(),
             ...$this->portfolioItems(),
             ...$this->officeItems(),
             ...$this->policyItems(),
@@ -274,6 +275,56 @@ class FtsSeeder extends Seeder
             fn (array $item) => in_array($item['title'], $aiTitles, true) ? [...$item, 'category' => HotelKnowledgeItem::CATEGORY_AI] : $item,
             $this->allServiceItems()
         );
+    }
+
+    /**
+     * The sixteen live demos listed on ai-solutions.fts-tech.co.id, each a
+     * sample business run by an AI assistant.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function aiDemoItems(): array
+    {
+        $rows = [
+            'Cafe AI|https://cafe-ai.fts-tech.co.id/cafe-ai|Kafe|Cafe|カフェ|Barista AI|AI Barista|AIバリスタ|Menu;Tempat duduk;Reservasi meja|Menu;Seating;Reserve a table|メニュー;座席;テーブル予約',
+            'FTS Restaurant AI|https://restaurant-ai.fts-tech.co.id/|Restoran|Restaurant|レストラン|Host AI|AI Host|AIホスト|Menu;Pesan meja;Pesanan|Menu;Book a table;Order|メニュー;テーブル予約;注文',
+            'FTS Hotel AI|https://hotel-ai.fts-tech.co.id/fts-hotel-ai|Hotel|Hotel|ホテル|Concierge AI|AI Concierge|AIコンシェルジュ|Kamar & suite;Fasilitas;Reservasi|Rooms & suites;Facilities;Reservations|客室;施設;予約',
+            'FTS Apartment AI|https://apartment-ai.fts-tech.co.id/fts-apartment-ai|Apartemen|Apartment|アパートメント|Concierge AI|AI Concierge|AIコンシェルジュ|Unit;Fasilitas;Pengajuan|Units;Facilities;Apply|物件;施設;入居申込',
+            'FTS Car Rental AI|https://car-rental-ai.fts-tech.co.id/fts-car-rental-ai|Rental mobil|Car rental|レンタカー|Agen rental AI|AI Rental Agent|AIレンタルエージェント|Armada;Layanan rental;Reservasi|Fleet;Rental services;Reservation|車両;レンタルサービス;予約',
+            'Spa AI|https://spa-ai.fts-tech.co.id/spa-ai|Spa|Spa|スパ|Concierge spa AI|AI Spa Concierge|AIスパコンシェルジュ|Perawatan;Ruangan;Reservasi|Treatments;Rooms;Reservation|トリートメント;個室;予約',
+            'Beauty Salon AI|https://beauty-salon-ai.fts-tech.co.id/beauty-salon-ai|Salon kecantikan|Beauty salon|美容サロン|Beautician AI|AI Beautician|AIビューティシャン|Layanan;Stylist;Janji temu|Services;Stylists;Appointment|メニュー;スタイリスト;予約',
+            'Fitness Gym AI|https://fitness-gym-ai.fts-tech.co.id/fitness-gym-ai|Pusat kebugaran|Fitness gym|フィットネスジム|Concierge kebugaran AI|AI Fitness Concierge|AIフィットネスコンシェルジュ|Program;Latihan;Reservasi|Programs;Training;Reservation|プログラム;トレーニング;予約',
+            'Aurelia Event Hall|https://event-venue-ai.fts-tech.co.id/aurelia-event-hall|Gedung acara|Event hall|イベントホール|Perencana acara AI|AI Event Planner|AIイベントプランナー|Ruang;Fasilitas;Reservasi|Spaces;Facilities;Reservation|スペース;施設;予約',
+            'FTS Wedding Venue AI|https://wedding-venue-ai.fts-tech.co.id/fts-wedding-venue-ai|Gedung pernikahan|Wedding venue|結婚式場|Concierge pernikahan AI|AI Wedding Concierge|AIウェディングコンシェルジュ|Hall;Layanan;Reservasi|Halls;Services;Reservation|会場;サービス;予約',
+            'FTS Training Venue AI|https://training-venue-ai.fts-tech.co.id/fts-training-venue-ai|Tempat pelatihan|Training venue|研修会場|Koordinator AI|AI Coordinator|AIコーディネーター|Ruangan;Fasilitas;Reservasi|Rooms;Facilities;Reservation|研修室;施設;予約',
+            'FTS Recruitment Venue|https://recruitment-venue-ai.fts-tech.co.id/fts-recruitment-venue|Venue rekrutmen|Recruitment venue|採用イベント会場|Koordinator venue AI|AI Venue Coordinator|AI会場コーディネーター|Ruang;Fasilitas;Pesan acara|Spaces;Facilities;Book your event|スペース;施設;イベント予約',
+            'Digital Agency AI|https://digital-agency-ai.fts-tech.co.id/digital-agency-ai|Agensi digital|Digital agency|デジタルエージェンシー|Strategis digital AI|AI Digital Strategist|AIデジタルストラテジスト|Katalog;Tim;Konsultasi|Catalog;Team;Consultation|カタログ;チーム;相談',
+            'IT Company AI|https://it-company-ai.fts-tech.co.id/it-company-ai|Perusahaan IT|IT company|IT企業|Konsultan solusi AI|AI Solution Consultant|AIソリューションコンサルタント|Layanan;Konsultan;Konsultasi|Services;Consultants;Consultation|サービス;コンサルタント;相談',
+            'Software SaaS AI|https://software-saas-ai.fts-tech.co.id/software-saas-ai|Software (SaaS)|Software (SaaS)|SaaSソフトウェア|Konsultan SaaS AI|AI SaaS Consultant|AI SaaSコンサルタント|Produk & paket;Konsultan;Demo produk|Products & plans;Consultants;Product demo|製品・プラン;コンサルタント;デモ申込',
+            'Maju Jaya Studio|https://sme-business-ai.fts-tech.co.id/maju-jaya-studio|UMKM|Small business|中小企業|Asisten bisnis AI|AI Business Assistant|AIビジネスアシスタント|Katalog;Area layanan;Pesan jadwal|Catalog;Service areas;Book a slot|カタログ;対応エリア;予約',
+        ];
+
+        return array_map(function (string $row): array {
+            [$name, $url, $industryId, $industryEn, $industryJa, $roleId, $roleEn, $roleJa, $featuresId, $featuresEn, $featuresJa] = explode('|', $row);
+            [$f1, $f2, $f3] = explode(';', $featuresId);
+            [$e1, $e2, $e3] = explode(';', $featuresEn);
+            [$j1, $j2, $j3] = explode(';', $featuresJa);
+
+            return [
+                'category' => HotelKnowledgeItem::CATEGORY_AI,
+                'title' => $name,
+                'body' => "Demo live untuk industri {$industryId}, dilayani {$roleId}. Coba langsung di browser: {$f1}, {$f2}, dan {$f3}. Tersedia dalam bahasa Indonesia, Inggris, dan Jepang. Data dalam demo hanya contoh.",
+                'translations' => [
+                    'en' => ['title' => $name, 'menu' => [$e1, $e2, $e3], 'body' => "A live demo for the {$industryEn} industry, run by the {$roleEn}. Try it in your browser: {$e1}, {$e2} and {$e3}. Available in Indonesian, English and Japanese. Demos use sample data."],
+                    'ja' => ['title' => $name, 'menu' => [$j1, $j2, $j3], 'body' => "{$industryJa}向けのライブデモです。{$roleJa}が接客します。ブラウザですぐに試せます：{$j1}、{$j2}、{$j3}。インドネシア語・英語・日本語に対応。デモはサンプルデータです。"],
+                ],
+                'details' => [
+                    'demo_url' => $url,
+                    'menu' => array_map(fn (string $feature) => ['name' => $feature, 'description' => '', 'price' => null], [$f1, $f2, $f3]),
+                ],
+                'tags' => ['ai demo', 'live demo', strtolower($industryEn), strtolower($roleEn), strtolower($name)],
+            ];
+        }, $rows);
     }
 
     /** @return array<int, array<string, mixed>> */

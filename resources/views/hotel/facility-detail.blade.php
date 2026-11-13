@@ -35,9 +35,9 @@
                     <p class="facility-hours">{{ $labels['chat_hours'] }}: {{ $facility->openingHours() }}</p>
                 @endif
                 @include('hotel.narrator', ['text' => $facility->translatedBody($locale), 'key' => 'facility-'.$facility->id, 'inline' => true])
-                @if ($facility->menuEntries() !== [])
+                @if ($facility->menuEntries($locale) !== [])
                     <ul class="rc-menu facility-menu mt-5">
-                        @foreach ($facility->menuEntries() as $dish)
+                        @foreach ($facility->menuEntries($locale) as $dish)
                             <li>
                                 <span class="rc-menu-name">{{ $dish['name'] }}</span>
                                 @if ($dish['price'])<span class="rc-menu-price">{{ $dish['price'] }}</span>@endif
@@ -47,6 +47,9 @@
                     </ul>
                 @endif
                 <div class="mt-8 flex flex-wrap gap-3">
+                    @if ($facility->demoUrl($locale))
+                        <a href="{{ $facility->demoUrl($locale) }}" target="_blank" rel="noopener" class="lobby-action">{{ $lobby['try_demo'] }} <span aria-hidden="true">↗</span></a>
+                    @endif
                     <button type="button" class="lobby-action" data-hero-quick-message="{{ str_replace(':name', $title, $section['ask_q']) }}">{{ $section['ask'] }} <span aria-hidden="true">↗</span></button>
                     <a href="{{ route($section['route'], ['hotelSlug' => $hotel->slug, 'lang' => $locale]) }}" data-stage-exit class="room-scene-step">{{ $section['back'] }}</a>
                 </div>

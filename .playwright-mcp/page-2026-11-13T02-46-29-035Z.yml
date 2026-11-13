@@ -1,0 +1,164 @@
+- main [ref=f24e2]:
+  - img "Resepsionis virtual Anda" [ref=f24e3]
+  - generic [ref=f24e5]:
+    - link "Fujiyama Technology Solutions West Jakarta, DKI Jakarta 11470 · Indonesia" [ref=f24e6] [cursor=pointer]:
+      - /url: http://127.0.0.1:8000/fts?lang=id
+      - generic [aria-hidden] [ref=f24e7]: F
+      - generic [ref=f24e8]:
+        - generic [ref=f24e9]: Fujiyama Technology Solutions
+        - generic [ref=f24e10]: West Jakarta, DKI Jakarta 11470 · Indonesia
+    - navigation "Jelajahi FTS" [ref=f24e11]:
+      - link "Paket Website" [ref=f24e12] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/rooms?lang=id
+      - link "Layanan kami" [ref=f24e13] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities?lang=id
+      - link "AI Solutions" [ref=f24e14] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/solutions?lang=id
+      - link "Portofolio" [ref=f24e15] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/portfolio?lang=id
+      - link "Tentang FTS" [ref=f24e16] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/info?lang=id
+      - link "Mulai proyek" [ref=f24e17] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/reservation?lang=id
+      - link "Bicara dengan tim" [ref=f24e18] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/staff?lang=id
+    - generic [ref=f24e19]:
+      - button "Suara aktif" [pressed] [ref=f24e20] [cursor=pointer]
+      - navigation "Language" [ref=f24e24]:
+        - link "Bahasa Indonesia" [ref=f24e25] [cursor=pointer]:
+          - /url: "?lang=id"
+          - text: id
+        - link "English" [ref=f24e26] [cursor=pointer]:
+          - /url: "?lang=en"
+          - text: en
+        - link "日本語" [ref=f24e27] [cursor=pointer]:
+          - /url: "?lang=ja"
+          - text: ja
+  - region "Portofolio" [ref=f24e29]:
+    - link "Kembali ke lobi" [ref=f24e30] [cursor=pointer]:
+      - /url: http://127.0.0.1:8000/fts?lang=id
+      - generic [aria-hidden] [ref=f24e31]: ×
+    - paragraph [ref=f24e32]: AI Concierge
+    - heading "Portofolio" [level=2] [ref=f24e33]
+    - generic [ref=f24e35]:
+      - paragraph [ref=f24e36]: Inilah portofolio kami. Ada 12 proyek, di antaranya EDEPA World; FBE - Fujiyama Biomass Energy; Building Maintenance. Pilih salah satu untuk membacanya, atau tanyakan apa saja kepada saya.
+      - paragraph [aria-hidden] [ref=f24e37]: Inilah portofolio kami. Ada 12 proyek, di antaranya EDEPA World; FBE - Fujiyama Biomass Energy; Building Maintenance. Pilih salah satu untuk membacanya, atau tanyakan apa saja kepada saya.
+      - generic [ref=f24e39]:
+        - button "Dengarkan" [ref=f24e40] [cursor=pointer]
+        - button "Lewati" [ref=f24e41] [cursor=pointer]
+    - generic [ref=f24e42]:
+      - link "EDEPA World Website company profile untuk EDEPA World, agensi kreatif Jepang, yang menampilkan ringkasan bisnis, portofolio proyek, dan topik terbaru." [ref=f24e43] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/13?lang=id
+        - generic [ref=f24e48]:
+          - generic [ref=f24e49]: EDEPA World
+          - generic [ref=f24e50]: Website company profile untuk EDEPA World, agensi kreatif Jepang, yang menampilkan ringkasan bisnis, portofolio proyek, dan topik terbaru.
+        - generic [aria-hidden] [ref=f24e51]: ›
+      - link "FBE - Fujiyama Biomass Energy Website korporat Fujiyama Biomass Energy yang mempromosikan produk arang PKS premium, inisiatif keberlanjutan, dan kemitraan ekspor." [ref=f24e52] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/14?lang=id
+        - generic [ref=f24e57]:
+          - generic [ref=f24e58]: FBE - Fujiyama Biomass Energy
+          - generic [ref=f24e59]: Website korporat Fujiyama Biomass Energy yang mempromosikan produk arang PKS premium, inisiatif keberlanjutan, dan kemitraan ekspor.
+        - generic [aria-hidden] [ref=f24e60]: ›
+      - link "Building Maintenance Website company profile untuk perusahaan perawatan gedung di Jepang yang menonjolkan keahlian pengelolaan fasilitas dan layanannya." [ref=f24e61] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/15?lang=id
+        - generic [ref=f24e66]:
+          - generic [ref=f24e67]: Building Maintenance
+          - generic [ref=f24e68]: Website company profile untuk perusahaan perawatan gedung di Jepang yang menonjolkan keahlian pengelolaan fasilitas dan layanannya.
+        - generic [aria-hidden] [ref=f24e69]: ›
+      - link "LookLook Platform informasi wisata untuk pengunjung Jepang, dengan pencarian restoran, tempat wisata, info WiFi gratis, dan pencarian multibahasa per wilayah." [ref=f24e70] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/16?lang=id
+        - generic [ref=f24e75]:
+          - generic [ref=f24e76]: LookLook
+          - generic [ref=f24e77]: Platform informasi wisata untuk pengunjung Jepang, dengan pencarian restoran, tempat wisata, info WiFi gratis, dan pencarian multibahasa per wilayah.
+        - generic [aria-hidden] [ref=f24e78]: ›
+      - link "Minnano Kuruma Landing page lokal untuk layanan pembelian mobil bekas di kawasan Nishitama, Jepang, dengan panggilan penilaian gratis, dukungan LINE, dan bukti kepercayaan pelanggan." [ref=f24e79] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/17?lang=id
+        - generic [ref=f24e86]:
+          - generic [ref=f24e87]: Minnano Kuruma
+          - generic [ref=f24e88]: Landing page lokal untuk layanan pembelian mobil bekas di kawasan Nishitama, Jepang, dengan panggilan penilaian gratis, dukungan LINE, dan bukti kepercayaan pelanggan.
+        - generic [aria-hidden] [ref=f24e89]: ›
+      - link "XchangePro Website bisnis untuk toko ban dan velg yang menampilkan penjualan ban, jasa pemasangan dan penggantian, serta perawatan mobil di kawasan Tokyo/Saitama." [ref=f24e90] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/18?lang=id
+        - generic [ref=f24e95]:
+          - generic [ref=f24e96]: XchangePro
+          - generic [ref=f24e97]: Website bisnis untuk toko ban dan velg yang menampilkan penjualan ban, jasa pemasangan dan penggantian, serta perawatan mobil di kawasan Tokyo/Saitama.
+        - generic [aria-hidden] [ref=f24e98]: ›
+      - link "Ebila Hall Website pemesanan untuk aula musik dan acara serbaguna di Shinagawa, dengan reservasi online untuk pernikahan, konser, dan acara pribadi." [ref=f24e99] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/19?lang=id
+        - generic [ref=f24e104]:
+          - generic [ref=f24e105]: Ebila Hall
+          - generic [ref=f24e106]: Website pemesanan untuk aula musik dan acara serbaguna di Shinagawa, dengan reservasi online untuk pernikahan, konser, dan acara pribadi.
+        - generic [aria-hidden] [ref=f24e107]: ›
+      - link "Hiking (San Kou Kai) Website komunitas untuk perkumpulan hiking di Jepang, berisi laporan perjalanan, rencana pendakian, dan informasi keanggotaan untuk pendakian yang aman." [ref=f24e108] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/20?lang=id
+        - generic [ref=f24e113]:
+          - generic [ref=f24e114]: Hiking (San Kou Kai)
+          - generic [ref=f24e115]: Website komunitas untuk perkumpulan hiking di Jepang, berisi laporan perjalanan, rencana pendakian, dan informasi keanggotaan untuk pendakian yang aman.
+        - generic [aria-hidden] [ref=f24e116]: ›
+      - link "Car Repair Website bisnis untuk bengkel perbaikan bodi mobil yang menampilkan layanan perbaikan, sistem pemesanan online, dan testimoni pelanggan." [ref=f24e117] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/21?lang=id
+        - generic [ref=f24e124]:
+          - generic [ref=f24e125]: Car Repair
+          - generic [ref=f24e126]: Website bisnis untuk bengkel perbaikan bodi mobil yang menampilkan layanan perbaikan, sistem pemesanan online, dan testimoni pelanggan.
+        - generic [aria-hidden] [ref=f24e127]: ›
+      - link "Thai Travel Platform pemesanan perjalanan untuk Thailand, dengan antar-jemput bandara, sewa mobil pribadi, dan paket tur lewat sistem pencarian dan pemesanan online." [ref=f24e128] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/22?lang=id
+        - generic [ref=f24e133]:
+          - generic [ref=f24e134]: Thai Travel
+          - generic [ref=f24e135]: Platform pemesanan perjalanan untuk Thailand, dengan antar-jemput bandara, sewa mobil pribadi, dan paket tur lewat sistem pencarian dan pemesanan online.
+        - generic [aria-hidden] [ref=f24e136]: ›
+      - link "FTS Menu Landing page SaaS untuk platform menu digital berbasis QR code yang memungkinkan restoran dan kafe memperbarui harga, foto, dan ketersediaan secara real time." [ref=f24e137] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/23?lang=id
+        - generic [ref=f24e142]:
+          - generic [ref=f24e143]: FTS Menu
+          - generic [ref=f24e144]: Landing page SaaS untuk platform menu digital berbasis QR code yang memungkinkan restoran dan kafe memperbarui harga, foto, dan ketersediaan secara real time.
+        - generic [aria-hidden] [ref=f24e145]: ›
+      - link "ens. Hair Salon Website bisnis untuk ens., salon rambut di Hachioji, Jepang, yang menampilkan konsep, menu dan harga, staf, galeri, dan kontak online." [ref=f24e146] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities/24?lang=id
+        - generic [ref=f24e151]:
+          - generic [ref=f24e152]: ens. Hair Salon
+          - generic [ref=f24e153]: Website bisnis untuk ens., salon rambut di Hachioji, Jepang, yang menampilkan konsep, menu dan harga, staf, galeri, dan kontak online.
+        - generic [aria-hidden] [ref=f24e154]: ›
+  - generic [ref=f24e156]:
+    - button "Chat dengan AI Concierge" [ref=f24e157] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f24e160]: ↗
+    - list "Mulai dari sini" [ref=f24e161]:
+      - listitem [ref=f24e162]:
+        - link "Cari paket" [ref=f24e163] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/rooms?lang=id
+          - text: Cari paket
+          - generic [aria-hidden] [ref=f24e164]: ›
+      - listitem [ref=f24e165]:
+        - link "Layanan kami" [ref=f24e166] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/facilities?lang=id
+          - text: Layanan kami
+          - generic [aria-hidden] [ref=f24e167]: ›
+      - listitem [ref=f24e168]:
+        - link "AI Solutions" [ref=f24e169] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/solutions?lang=id
+          - text: AI Solutions
+          - generic [aria-hidden] [ref=f24e170]: ›
+      - listitem [ref=f24e171]:
+        - link "Portofolio" [ref=f24e172] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/portfolio?lang=id
+          - text: Portofolio
+          - generic [aria-hidden] [ref=f24e173]: ›
+      - listitem [ref=f24e174]:
+        - link "Ketentuan & FAQ" [ref=f24e175] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/info?lang=id
+          - text: Ketentuan & FAQ
+          - generic [aria-hidden] [ref=f24e176]: ›
+      - listitem [ref=f24e177]:
+        - link "Rencanakan proyek" [ref=f24e178] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/reservation?lang=id
+          - text: Rencanakan proyek
+          - generic [aria-hidden] [ref=f24e179]: ›
+      - listitem [ref=f24e180]:
+        - link "Bicara dengan tim" [ref=f24e181] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/staff?lang=id
+          - text: Bicara dengan tim
+          - generic [aria-hidden] [ref=f24e182]: ›
+      - listitem [ref=f24e183]:
+        - button "Tur bersama AI" [ref=f24e184] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f24e185]: ✦
+          - text: Tur bersama AI

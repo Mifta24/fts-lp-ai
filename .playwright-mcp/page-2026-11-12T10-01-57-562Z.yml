@@ -1,0 +1,121 @@
+- main [ref=f6e2]:
+  - img "Resepsionis virtual Anda"
+  - generic [ref=f6e4]:
+    - link "Fujiyama Technology Solutions West Jakarta, DKI Jakarta 11470 · Indonesia" [ref=f6e5] [cursor=pointer]:
+      - /url: http://127.0.0.1:8000/fts?lang=id
+      - generic [aria-hidden] [ref=f6e6]: F
+      - generic [ref=f6e7]:
+        - generic [ref=f6e8]: Fujiyama Technology Solutions
+        - generic [ref=f6e9]: West Jakarta, DKI Jakarta 11470 · Indonesia
+    - navigation "Jelajahi FTS" [ref=f6e10]:
+      - link "Paket Website" [ref=f6e11] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/rooms?lang=id
+      - link "Layanan kami" [ref=f6e12] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities?lang=id
+      - link "Tentang FTS" [ref=f6e13] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/info?lang=id
+      - link "Mulai proyek" [ref=f6e14] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/reservation?lang=id
+      - link "Bicara dengan tim" [ref=f6e15] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/staff?lang=id
+    - generic [ref=f6e16]:
+      - button "Suara aktif" [pressed] [ref=f6e17] [cursor=pointer]
+      - navigation "Language" [ref=f6e21]:
+        - link "Bahasa Indonesia" [ref=f6e22] [cursor=pointer]:
+          - /url: "?lang=id"
+          - text: id
+        - link "English" [ref=f6e23] [cursor=pointer]:
+          - /url: "?lang=en"
+          - text: en
+        - link "日本語" [ref=f6e24] [cursor=pointer]:
+          - /url: "?lang=ja"
+          - text: ja
+  - region "Tentang FTS" [ref=f6e26]:
+    - link "Kembali ke lobi" [ref=f6e27] [cursor=pointer]:
+      - /url: http://127.0.0.1:8000/fts?lang=id
+      - generic [aria-hidden] [ref=f6e28]: ×
+    - paragraph [ref=f6e29]: Fujiyama Technology Solutions
+    - heading "Tentang FTS" [level=2] [ref=f6e30]
+    - generic [ref=f6e32]:
+      - paragraph [ref=f6e33]: Selamat datang di Fujiyama Technology Solutions. Kami berada di West Jakarta, DKI Jakarta 11470, Indonesia. Kantor kami buka pukul 09:00 sampai 18:00, Senin sampai Jumat. Di bawah ini ada alamat, ketentuan, dan pertanyaan yang sering diajukan — atau tanyakan langsung kepada saya.
+      - paragraph [aria-hidden] [ref=f6e34]: Selamat datang di Fujiyama Technology Solutions. Kami berada di West Jakarta, DKI Jakarta 11470, Indonesia. Kantor kami buka pukul 09:00 sampai 18:00, Senin sampai Jumat. Di bawah ini ada alamat, ketentuan, dan pertanyaan yang sering diajukan — atau tanyakan langsung kepada saya.
+      - generic [ref=f6e36]:
+        - button "Dengarkan" [ref=f6e37] [cursor=pointer]
+        - button "Lewati" [ref=f6e38] [cursor=pointer]
+    - paragraph [ref=f6e39]: Perusahaan IT berakar Jepang di Jakarta yang menghadirkan web development, AI automation, AI agent, offshore development, dan dukungan digital marketing untuk bisnis di Indonesia.
+    - generic [ref=f6e40]:
+      - generic [ref=f6e41]:
+        - generic [ref=f6e42]: Buka
+        - generic [ref=f6e43]: 09:00
+      - generic [ref=f6e45]:
+        - generic [ref=f6e46]: Tutup
+        - generic [ref=f6e47]: 18:00
+    - generic [ref=f6e48]:
+      - link "West Jakarta, DKI Jakarta 11470" [ref=f6e49] [cursor=pointer]:
+        - /url: https://www.google.com/maps?q=Neo%20Soho%20Mall%2C%20Jalan%20Let.%20Jend.%20S.%20Parman%20Kav.%2028%20Unit%202011%2C%20Tanjung%20Duren%20Selatan%2C%20Grogol%20Petamburan%20West%20Jakarta%2C%20DKI%20Jakarta%2011470
+      - link "WhatsApp" [ref=f6e54] [cursor=pointer]:
+        - /url: https://wa.me/6289529336179?text=Halo%2C%20saya%20ingin%20bicara%20dengan%20tim%20FTS.
+    - paragraph [ref=f6e58]: Neo Soho Mall, Jalan Let. Jend. S. Parman Kav. 28 Unit 2011, Tanjung Duren Selatan, Grogol Petamburan, West Jakarta, DKI Jakarta 11470, Indonesia
+    - generic [ref=f6e59]:
+      - radio "Tentang" [checked]
+      - radio "Ketentuan"
+      - radio "FAQ"
+      - generic [ref=f6e60]:
+        - generic [ref=f6e61] [cursor=pointer]: Tentang
+        - generic [ref=f6e62] [cursor=pointer]: Ketentuan
+        - generic [ref=f6e63] [cursor=pointer]: FAQ
+      - generic [ref=f6e66]:
+        - group [ref=f6e67]:
+          - generic "Tentang Fujiyama Technology Solutions" [ref=f6e68] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f6e70]: ›
+        - group [ref=f6e71]:
+          - generic "Yoshihiro Nakagawa, Founder / President Director" [ref=f6e72] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f6e74]: ›
+        - group [ref=f6e75]:
+          - generic "Takakazu Kaburaki, Chief Operating Officer" [ref=f6e76] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f6e78]: ›
+        - group [ref=f6e79]:
+          - generic "Naoki Yoshida, Director" [ref=f6e80] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f6e82]: ›
+        - group [ref=f6e83]:
+          - generic "Takaki Morita, Director" [ref=f6e84] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f6e86]: ›
+        - group [ref=f6e87]:
+          - generic "Nilai-nilai FTS" [ref=f6e88] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f6e90]: ›
+    - button "Tanya tentang FTS" [ref=f6e91] [cursor=pointer]:
+      - text: Tanya tentang FTS
+      - generic [aria-hidden] [ref=f6e92]: ↗
+  - generic [ref=f6e94]:
+    - button "Chat dengan AI Concierge" [ref=f6e95] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f6e98]: ↗
+    - list "Mulai dari sini" [ref=f6e99]:
+      - listitem [ref=f6e100]:
+        - link "Cari paket" [ref=f6e101] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/rooms?lang=id
+          - text: Cari paket
+          - generic [aria-hidden] [ref=f6e102]: ›
+      - listitem [ref=f6e103]:
+        - link "Layanan kami" [ref=f6e104] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/facilities?lang=id
+          - text: Layanan kami
+          - generic [aria-hidden] [ref=f6e105]: ›
+      - listitem [ref=f6e106]:
+        - link "Ketentuan & FAQ" [ref=f6e107] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/info?lang=id
+          - text: Ketentuan & FAQ
+          - generic [aria-hidden] [ref=f6e108]: ›
+      - listitem [ref=f6e109]:
+        - link "Rencanakan proyek" [ref=f6e110] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/reservation?lang=id
+          - text: Rencanakan proyek
+          - generic [aria-hidden] [ref=f6e111]: ›
+      - listitem [ref=f6e112]:
+        - link "Bicara dengan tim" [ref=f6e113] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/staff?lang=id
+          - text: Bicara dengan tim
+          - generic [aria-hidden] [ref=f6e114]: ›
+      - listitem [ref=f6e115]:
+        - button "Tur bersama AI" [ref=f6e116] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f6e117]: ✦
+          - text: Tur bersama AI

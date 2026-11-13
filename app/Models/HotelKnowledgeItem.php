@@ -111,16 +111,34 @@ class HotelKnowledgeItem extends Model
     }
 
     /**
-     * The dishes or services the hotel listed for this entry.
+     * The live demo this entry points to, opened in the visitor's language.
+     */
+    public function demoUrl(string $locale): ?string
+    {
+        $url = $this->details['demo_url'] ?? null;
+
+        if (! filled($url)) {
+            return null;
+        }
+
+        return $url.(str_contains($url, '?') ? '&' : '?').'lang='.$locale;
+    }
+
+    /**
+     * The dishes or services the hotel listed for this entry. Names can be
+     * translated with `translations.<locale>.menu`, a list in the same order.
      *
      * @return list<array{name: string, description: ?string, price: ?string}>
      */
-    public function menuEntries(): array
+    public function menuEntries(?string $locale = null): array
     {
+        $names = $locale !== null ? ($this->translations[$locale]['menu'] ?? []) : [];
+
         return collect($this->details['menu'] ?? [])
+            ->values()
             ->filter(fn ($entry) => filled($entry['name'] ?? null))
-            ->map(fn ($entry) => [
-                'name' => (string) $entry['name'],
+            ->map(fn ($entry, $index) => [
+                'name' => filled($names[$index] ?? null) ? (string) $names[$index] : (string) $entry['name'],
                 'description' => filled($entry['description'] ?? null) ? (string) $entry['description'] : null,
                 'price' => filled($entry['price'] ?? null) ? (string) $entry['price'] : null,
             ])

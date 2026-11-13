@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Conversation;
 use App\Models\Hotel;
 use App\Models\HotelKnowledgeItem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -84,6 +85,35 @@ class ExtraRoomsTest extends TestCase
             ->assertSee('href="'.route('hotel.facilities', ['hotelSlug' => 'demo', 'lang' => 'en']).'"', false);
     }
 
+    public function test_a_demo_entry_links_to_its_live_demo_in_the_visitors_language(): void
+    {
+        $demo = $this->company->knowledgeItems()->create([
+            'category' => 'ai', 'title' => 'Cafe AI', 'body' => 'A live cafe demo.', 'is_active' => true, 'sort_order' => 9,
+            'details' => ['demo_url' => 'https://cafe-ai.example.test/cafe-ai'],
+        ]);
+
+        $this->assertSame('https://cafe-ai.example.test/cafe-ai?lang=ja', $demo->demoUrl('ja'));
+
+        $this->get('/demo/facilities/'.$demo->id.'?lang=en')
+            ->assertOk()
+            ->assertSee('href="https://cafe-ai.example.test/cafe-ai?lang=en"', false)
+            ->assertSee('target="_blank"', false)
+            ->assertSee('rel="noopener"', false)
+            ->assertSee('Try the demo');
+
+        $this->get('/demo/facilities/'.$demo->id.'?lang=id')->assertOk()->assertSee('Coba demo');
+        $this->get('/demo/facilities/'.$demo->id.'?lang=ja')->assertOk()->assertSee('デモを試す');
+    }
+
+    public function test_entries_without_a_demo_have_no_demo_link(): void
+    {
+        $this->assertNull($this->items['agent']->demoUrl('en'));
+
+        $this->get('/demo/facilities/'.$this->items['agent']->id.'?lang=en')
+            ->assertOk()
+            ->assertDontSee('Try the demo');
+    }
+
     public function test_items_outside_the_rooms_still_return_not_found(): void
     {
         $this->get('/demo/facilities/'.$this->items['about']->id)->assertNotFound();
@@ -122,10 +152,10 @@ class ExtraRoomsTest extends TestCase
     {
         $this->postJson('/demo/concierge/start', ['locale' => 'en'])->assertOk();
 
-        $token = \App\Models\Conversation::firstOrFail()->guest_token;
+        $token = Conversation::firstOrFail()->guest_token;
 
         foreach (['solutions', 'portfolio'] as $scene) {
-            $this->assertContains($scene, \App\Models\Conversation::SCENES, "{$scene} is not an accepted chat scene");
+            $this->assertContains($scene, Conversation::SCENES, "{$scene} is not an accepted chat scene");
         }
 
         $this->assertNotEmpty($token);

@@ -1,0 +1,70 @@
+- main [ref=f10e2]:
+  - img "Resepsionis virtual Anda" [ref=f10e3]
+  - generic [ref=f10e5]:
+    - link "Fujiyama Technology Solutions West Jakarta, DKI Jakarta 11470 · Indonesia" [ref=f10e6] [cursor=pointer]:
+      - /url: http://127.0.0.1:8000/fts?lang=id
+      - generic [aria-hidden] [ref=f10e7]: F
+      - generic [ref=f10e8]:
+        - generic [ref=f10e9]: Fujiyama Technology Solutions
+        - generic [ref=f10e10]: West Jakarta, DKI Jakarta 11470 · Indonesia
+    - navigation "Jelajahi FTS" [ref=f10e11]:
+      - link "Paket Website" [ref=f10e12] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/rooms?lang=id
+      - link "Layanan kami" [ref=f10e13] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/facilities?lang=id
+      - link "Tentang FTS" [ref=f10e14] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/info?lang=id
+      - link "Mulai proyek" [ref=f10e15] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/reservation?lang=id
+      - link "Bicara dengan tim" [ref=f10e16] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/fts/staff?lang=id
+    - generic [ref=f10e17]:
+      - button "Suara aktif" [pressed] [ref=f10e18] [cursor=pointer]
+      - navigation "Language" [ref=f10e22]:
+        - link "Bahasa Indonesia" [ref=f10e23] [cursor=pointer]:
+          - /url: "?lang=id"
+          - text: id
+        - link "English" [ref=f10e24] [cursor=pointer]:
+          - /url: "?lang=en"
+          - text: en
+        - link "日本語" [ref=f10e25] [cursor=pointer]:
+          - /url: "?lang=ja"
+          - text: ja
+  - generic [ref=f10e26]:
+    - heading [level=1] [ref=f10e27]:
+      - text: Selamat datang di
+      - emphasis [ref=f10e28]: lobi virtual Anda.
+    - paragraph [ref=f10e29]: Sambutan hangat. Solusi yang praktis. Biarkan saya membantu rencana proyek Anda.
+  - generic [ref=f10e31]:
+    - button "Chat dengan AI Concierge" [ref=f10e32] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f10e35]: ↗
+    - list "Mulai dari sini" [ref=f10e36]:
+      - listitem [ref=f10e37]:
+        - link "Cari paket" [ref=f10e38] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/rooms?lang=id
+          - text: Cari paket
+          - generic [aria-hidden] [ref=f10e39]: ›
+      - listitem [ref=f10e40]:
+        - link "Layanan kami" [ref=f10e41] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/facilities?lang=id
+          - text: Layanan kami
+          - generic [aria-hidden] [ref=f10e42]: ›
+      - listitem [ref=f10e43]:
+        - link "Ketentuan & FAQ" [ref=f10e44] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/info?lang=id
+          - text: Ketentuan & FAQ
+          - generic [aria-hidden] [ref=f10e45]: ›
+      - listitem [ref=f10e46]:
+        - link "Rencanakan proyek" [ref=f10e47] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/reservation?lang=id
+          - text: Rencanakan proyek
+          - generic [aria-hidden] [ref=f10e48]: ›
+      - listitem [ref=f10e49]:
+        - link "Bicara dengan tim" [ref=f10e50] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/fts/staff?lang=id
+          - text: Bicara dengan tim
+          - generic [aria-hidden] [ref=f10e51]: ›
+      - listitem [ref=f10e52]:
+        - button "Tur bersama AI" [ref=f10e53] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f10e54]: ✦
+          - text: Tur bersama AI
