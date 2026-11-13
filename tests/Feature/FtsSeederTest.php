@@ -50,6 +50,12 @@ class FtsSeederTest extends TestCase
 
         $hotel = $demos->firstWhere('title', 'FTS Hotel AI');
         $this->assertSame('https://hotel-ai.fts-tech.co.id/fts-hotel-ai', $hotel->details['demo_url']);
+        $this->assertSame('/images/demos/hotel-ai.webp', $hotel->image_url);
+
+        foreach ($demos as $demo) {
+            $this->assertNotNull($demo->image_url, "{$demo->title} has no photo");
+            $this->assertFileExists(public_path(ltrim($demo->image_url, '/')), "{$demo->title} photo is missing");
+        }
         $this->assertSame('https://hotel-ai.fts-tech.co.id/fts-hotel-ai?lang=ja', $hotel->demoUrl('ja'));
         $this->assertStringContainsString('Concierge AI', $hotel->body);
         $this->assertStringContainsString('AI Concierge', $hotel->translations['en']['body']);

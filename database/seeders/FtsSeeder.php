@@ -313,6 +313,8 @@ class FtsSeeder extends Seeder
             return [
                 'category' => HotelKnowledgeItem::CATEGORY_AI,
                 'title' => $name,
+                // The screenshot ai-solutions.fts-tech.co.id shows for this demo, named after its subdomain.
+                'image_url' => '/images/demos/'.strtok((string) parse_url($url, PHP_URL_HOST), '.').'.webp',
                 'body' => "Demo live untuk industri {$industryId}, dilayani {$roleId}. Coba langsung di browser: {$f1}, {$f2}, dan {$f3}. Tersedia dalam bahasa Indonesia, Inggris, dan Jepang. Data dalam demo hanya contoh.",
                 'translations' => [
                     'en' => ['title' => $name, 'role' => $roleEn, 'menu' => [$e1, $e2, $e3], 'body' => "A live demo for the {$industryEn} industry, run by the {$roleEn}. Try it in your browser: {$e1}, {$e2} and {$e3}. Available in Indonesian, English and Japanese. Demos use sample data."],

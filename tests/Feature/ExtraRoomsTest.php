@@ -147,6 +147,22 @@ class ExtraRoomsTest extends TestCase
         $this->get('/demo/solutions?lang=id')->assertOk()->assertSee('Barista AI')->assertSee('Demo live');
     }
 
+    public function test_a_demo_card_with_a_photo_shows_it_with_the_ai_role_over_it(): void
+    {
+        $this->company->knowledgeItems()->create([
+            'category' => 'ai', 'title' => 'Spa AI', 'body' => 'Demo spa.', 'is_active' => true, 'sort_order' => 9,
+            'image_url' => '/images/demos/spa-ai.webp',
+            'details' => ['demo_url' => 'https://spa-ai.example.test/spa-ai', 'role' => 'Concierge spa AI'],
+        ]);
+
+        preg_match('/<a [^>]*class="facility-card[^"]*"[^>]*>(?:(?!<\/a>).)*Spa AI.*?<\/a>/s', $this->get('/demo/solutions?lang=id')->assertOk()->getContent(), $match);
+        $card = $match[0] ?? '';
+
+        $this->assertStringContainsString('<img src="/images/demos/spa-ai.webp"', $card);
+        $this->assertStringContainsString('cover-chat', $card);
+        $this->assertStringContainsString('Concierge spa AI', $card);
+    }
+
     public function test_items_outside_the_rooms_still_return_not_found(): void
     {
         $this->get('/demo/facilities/'.$this->items['about']->id)->assertNotFound();

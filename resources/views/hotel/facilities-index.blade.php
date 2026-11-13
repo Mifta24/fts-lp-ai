@@ -26,8 +26,11 @@
                     @php($role = $item->demoRole($locale))
                     <a href="{{ route('hotel.facility', ['hotelSlug' => $hotel->slug, 'facilityId' => $item->id, 'lang' => $locale]) }}" data-stage-exit class="facility-card" style="{{ $motion }}">
                         @if ($role)
-                            {{-- A live demo has no photo: its cover is a little chat with the AI staff member it showcases. --}}
-                            <span class="facility-card-photo facility-card-cover" style="--hue: {{ [205, 222, 246, 192, 262][$index % 5] }}" aria-hidden="true">
+                            {{-- A live demo's cover: its screenshot (or a tinted ground) with a little chat from the AI staff member it showcases. --}}
+                            <span class="facility-card-photo facility-card-cover @if($item->image_url) has-photo @endif" style="--hue: {{ [205, 222, 246, 192, 262][$index % 5] }}" aria-hidden="true">
+                                @if ($item->image_url)
+                                    <img src="{{ $item->image_url }}" alt="" loading="lazy">
+                                @endif
                                 <span class="cover-chat">
                                     <span class="cover-avatar"><x-menu-icon name="solutions" /></span>
                                     <span class="cover-bubble"><span class="cover-role">{{ $role }}</span><span class="cover-typing"><i></i><i></i><i></i></span></span>

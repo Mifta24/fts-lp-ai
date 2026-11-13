@@ -1261,3 +1261,15 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
     .stage-chat .chat-bar { padding-left: 20px; }
     .stage-chat .chat-bar button:not(.chat-mic) { padding: 0 18px; }
 }
+
+/* A live demo with a screenshot: the picture fills the frame and the AI's chat bubble sits in its lower left corner. */
+.float-field .facility-card-cover.has-photo { place-items: end start; padding: 12px; }
+.float-field .facility-card-cover.has-photo::before { z-index: 1; background-image: linear-gradient(to top, #071427d9, transparent 55%); background-size: auto; mask-image: none; }
+.float-field .facility-card-cover.has-photo .cover-chat { z-index: 2; gap: 8px; }
+.float-field .facility-card-cover.has-photo .cover-avatar { width: 30px; height: 30px; }
+.float-field .facility-card-cover.has-photo .cover-avatar svg { width: 15px; height: 15px; }
+.float-field .facility-card-cover.has-photo .cover-bubble { gap: 4px; padding: 7px 11px; border-radius: 13px 13px 13px 4px; }
+.float-field .facility-card-cover.has-photo .cover-role { font-size: 12px; }
+.float-field .facility-card-cover.has-photo .cover-typing i { width: 5px; height: 5px; }
+/* Detail pictures keep their upper part (faces, headlines) in view when cropped. */
+.facility-hero img { object-position: center 22%; }
