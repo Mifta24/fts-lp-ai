@@ -468,10 +468,13 @@ class HotelPageController extends Controller
                 'avatarFocus' => '17% 11%',
             ],
             'portfolio' => [
-                // Placeholder until a portfolio-room background is supplied: she stands on the left, the list on the right.
+                // The FTS portfolio wall. The list panel sits on the right, so
+                // the right-hand cut-out is mirrored to point at it.
                 'combined' => 'images/facility.webp',
                 'background' => 'images/portfolio-bg.webp',
-                'focus' => 'center 30%',
+                'character' => 'images/character/character right hand.webp',
+                'flip' => true,
+                'focus' => 'center 40%',
                 'focusMobile' => '24% 18%',
                 'anchor' => 'left',
                 'text' => 'bottom',
