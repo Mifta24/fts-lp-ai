@@ -23,18 +23,33 @@
                             $index % 2 === 0 ? 0.4 : -0.4,
                         );
                     @endphp
+                    @php($role = $item->demoRole($locale))
                     <a href="{{ route('hotel.facility', ['hotelSlug' => $hotel->slug, 'facilityId' => $item->id, 'lang' => $locale]) }}" data-stage-exit class="facility-card" style="{{ $motion }}">
-                        <span class="facility-card-photo">
-                            @if ($item->image_url)
-                                <img src="{{ $item->image_url }}" alt="" loading="lazy">
-                            @endif
-                            <span class="facility-card-icon"><x-facility-icon :name="$item->iconName()" /></span>
-                        </span>
+                        @if ($role)
+                            {{-- A live demo has no photo: its cover is a little chat with the AI staff member it showcases. --}}
+                            <span class="facility-card-photo facility-card-cover" style="--hue: {{ [205, 222, 246, 192, 262][$index % 5] }}" aria-hidden="true">
+                                <span class="cover-chat">
+                                    <span class="cover-avatar"><x-menu-icon name="solutions" /></span>
+                                    <span class="cover-bubble"><span class="cover-role">{{ $role }}</span><span class="cover-typing"><i></i><i></i><i></i></span></span>
+                                </span>
+                            </span>
+                        @else
+                            <span class="facility-card-photo">
+                                @if ($item->image_url)
+                                    <img src="{{ $item->image_url }}" alt="" loading="lazy">
+                                @else
+                                    <span class="facility-card-icon"><x-facility-icon :name="$item->iconName()" /></span>
+                                @endif
+                            </span>
+                        @endif
                         <span class="facility-card-body">
+                            @if ($role)
+                                <span class="card-badge">{{ $lobby['live_demo'] }}</span>
+                            @endif
                             <span class="facility-card-title">{{ $title }}</span>
                             <span class="facility-card-text">{{ $item->translatedBody($locale) }}</span>
+                            <span class="facility-card-more">{{ $labels['view_details'] }} <span class="facility-card-go" aria-hidden="true">→</span></span>
                         </span>
-                        <span class="facility-card-go" aria-hidden="true">›</span>
                     </a>
                 @empty
                     <p class="text-stone-500">{{ $lobby['empty'] }}</p>

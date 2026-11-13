@@ -315,11 +315,12 @@ class FtsSeeder extends Seeder
                 'title' => $name,
                 'body' => "Demo live untuk industri {$industryId}, dilayani {$roleId}. Coba langsung di browser: {$f1}, {$f2}, dan {$f3}. Tersedia dalam bahasa Indonesia, Inggris, dan Jepang. Data dalam demo hanya contoh.",
                 'translations' => [
-                    'en' => ['title' => $name, 'menu' => [$e1, $e2, $e3], 'body' => "A live demo for the {$industryEn} industry, run by the {$roleEn}. Try it in your browser: {$e1}, {$e2} and {$e3}. Available in Indonesian, English and Japanese. Demos use sample data."],
-                    'ja' => ['title' => $name, 'menu' => [$j1, $j2, $j3], 'body' => "{$industryJa}向けのライブデモです。{$roleJa}が接客します。ブラウザですぐに試せます：{$j1}、{$j2}、{$j3}。インドネシア語・英語・日本語に対応。デモはサンプルデータです。"],
+                    'en' => ['title' => $name, 'role' => $roleEn, 'menu' => [$e1, $e2, $e3], 'body' => "A live demo for the {$industryEn} industry, run by the {$roleEn}. Try it in your browser: {$e1}, {$e2} and {$e3}. Available in Indonesian, English and Japanese. Demos use sample data."],
+                    'ja' => ['title' => $name, 'role' => $roleJa, 'menu' => [$j1, $j2, $j3], 'body' => "{$industryJa}向けのライブデモです。{$roleJa}が接客します。ブラウザですぐに試せます：{$j1}、{$j2}、{$j3}。インドネシア語・英語・日本語に対応。デモはサンプルデータです。"],
                 ],
                 'details' => [
                     'demo_url' => $url,
+                    'role' => $roleId,
                     'menu' => array_map(fn (string $feature) => ['name' => $feature, 'description' => '', 'price' => null], [$f1, $f2, $f3]),
                 ],
                 'tags' => ['ai demo', 'live demo', strtolower($industryEn), strtolower($roleEn), strtolower($name)],

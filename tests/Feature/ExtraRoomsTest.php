@@ -124,6 +124,29 @@ class ExtraRoomsTest extends TestCase
         }
     }
 
+    public function test_a_demo_card_shows_a_live_badge_and_a_chat_cover_with_its_ai_role(): void
+    {
+        $this->company->knowledgeItems()->create([
+            'category' => 'ai', 'title' => 'Cafe AI', 'body' => 'Demo live kafe.', 'is_active' => true, 'sort_order' => 9,
+            'details' => ['demo_url' => 'https://cafe-ai.example.test/cafe-ai', 'role' => 'Barista AI'],
+            'translations' => ['en' => ['title' => 'Cafe AI', 'body' => 'A live cafe demo.', 'role' => 'AI Barista']],
+        ]);
+
+        preg_match('/<a [^>]*class="facility-card[^"]*"[^>]*>(?:(?!<\/a>).)*Cafe AI.*?<\/a>/s', $this->get('/demo/solutions?lang=en')->assertOk()->getContent(), $match);
+        $card = $match[0] ?? '';
+
+        $this->assertStringContainsString('facility-card-cover', $card);
+        $this->assertStringContainsString('AI Barista', $card);
+        $this->assertStringContainsString('class="card-badge"', $card);
+        $this->assertStringContainsString('Live demo', $card);
+        $this->assertStringContainsString('View details', $card);
+
+        preg_match('/<a [^>]*class="facility-card[^"]*"[^>]*>(?:(?!<\/a>).)*AI Agent Development.*?<\/a>/s', $this->get('/demo/solutions?lang=en')->getContent(), $plain);
+        $this->assertStringNotContainsString('card-badge', $plain[0] ?? 'card-badge');
+
+        $this->get('/demo/solutions?lang=id')->assertOk()->assertSee('Barista AI')->assertSee('Demo live');
+    }
+
     public function test_items_outside_the_rooms_still_return_not_found(): void
     {
         $this->get('/demo/facilities/'.$this->items['about']->id)->assertNotFound();

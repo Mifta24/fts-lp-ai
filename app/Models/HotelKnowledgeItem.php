@@ -125,6 +125,21 @@ class HotelKnowledgeItem extends Model
     }
 
     /**
+     * The AI staff role a live demo is run by (e.g. "AI Barista"), in the
+     * visitor's language; null for entries that are not demos.
+     */
+    public function demoRole(string $locale): ?string
+    {
+        if ($this->demoUrl($locale) === null) {
+            return null;
+        }
+
+        $role = $this->translations[$locale]['role'] ?? $this->details['role'] ?? null;
+
+        return filled($role) ? (string) $role : null;
+    }
+
+    /**
      * The dishes or services the hotel listed for this entry. Names can be
      * translated with `translations.<locale>.menu`, a list in the same order.
      *
