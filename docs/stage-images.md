@@ -18,7 +18,7 @@ Semua gambar ada di `public/images/`. Tiap adegan membaca file dengan nama tetap
 | Portofolio | `facility.webp` (sementara) | `portfolio-bg.webp` | `character.png` |
 | Tentang FTS | `information.webp` (cadangan) | `about-bg.webp` (sudah terpasang: ruang rapat FTS) | `character/character greeting.webp` |
 | Bicara dengan tim | `talk to staff.webp` (latar polos) | `talk to staff.webp` | `character/character grateful.webp` |
-| Mulai proyek | `reservation.webp` (latar polos) | `reservation.webp` | `character/character reservation.webp` |
+| Mulai proyek | `reservation.webp` (latar polos) | `consultation-bg.webp` (menunggu file dari Anda; dipakai otomatis begitu ada) | `character/character reservation.webp`, diganti `character right hand.webp` (dicerminkan) saat `consultation-bg.webp` ada |
 
 Mode 2 untuk paket dan portofolio hanya aktif kalau **dua** file ada: `character.png` dan file `*-bg.png` adegan itu. Kalau salah satu tidak ada, dipakai gambar bawaan. Lobi sudah memakai mode 2.
 

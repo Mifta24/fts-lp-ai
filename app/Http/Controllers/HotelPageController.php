@@ -516,6 +516,16 @@ class HotelPageController extends Controller
                 'text' => 'bottom',
                 'avatarZoom' => '300%',
                 'avatarFocus' => '42% 14%',
+                // Used instead of the above once the FTS consultation room
+                // photo is installed: the right-hand cut-out, mirrored to
+                // point at the form on the right.
+                'upgrade' => [
+                    'background' => 'images/consultation-bg.webp',
+                    'character' => 'images/character/character right hand.webp',
+                    'flip' => true,
+                    'avatarZoom' => '300%',
+                    'avatarFocus' => '69% 20%',
+                ],
             ],
             'lobby' => [
                 // The FTS office lobby, with her presenting from the right.
@@ -532,6 +542,10 @@ class HotelPageController extends Controller
         ];
 
         $artwork = $scenes[['room' => 'rooms', 'facility' => 'facilities'][$scene] ?? $scene] ?? $scenes['lobby'];
+
+        if (isset($artwork['upgrade']) && file_exists(public_path($artwork['upgrade']['background']))) {
+            $artwork = [...$artwork, ...$artwork['upgrade']];
+        }
 
         $characterImage = $artwork['character'] ?? self::CHARACTER_IMAGE;
         $character = file_exists(public_path($characterImage)) ? $characterImage : null;

@@ -582,6 +582,38 @@ class HotelLobbyTest extends TestCase
         }
     }
 
+    public function test_the_project_request_room_switches_to_the_consultation_background_when_it_exists(): void
+    {
+        $background = public_path('images/consultation-bg.webp');
+
+        if (file_exists($background)) {
+            $this->markTestSkipped('A real consultation background is installed; this test would overwrite it.');
+        }
+
+        $hotel = Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR']);
+        $hotel->roomTypes()->create(['name' => 'Plan', 'slug' => 'plan', 'base_price' => 1000, 'max_adults' => 1, 'max_children' => 0, 'is_active' => true]);
+
+        // Without the file the room keeps its current artwork.
+        $this->get('/demo/reservation')
+            ->assertOk()
+            ->assertSee('images/reservation.webp', false)
+            ->assertSee('character reservation.webp', false)
+            ->assertDontSee('data-flip', false);
+
+        try {
+            file_put_contents($background, 'x');
+
+            $this->get('/demo/reservation')
+                ->assertOk()
+                ->assertSee('images/consultation-bg.webp', false)
+                ->assertSee('character right hand.webp', false)
+                ->assertSee('data-flip', false)
+                ->assertDontSee('character reservation.webp', false);
+        } finally {
+            @unlink($background);
+        }
+    }
+
     public function test_facility_icons_follow_what_the_entry_is_about(): void
     {
         $hotel = Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published']);
