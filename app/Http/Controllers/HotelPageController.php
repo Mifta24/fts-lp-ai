@@ -813,8 +813,8 @@ class HotelPageController extends Controller
     {
         return match ($locale) {
             'en' => [
-                'welcome' => 'Welcome to your', 'lobby' => 'virtual lobby',
-                'intro' => 'A warm welcome. Practical solutions. Let me take care of the details.',
+                'welcome' => 'Welcome to', 'lobby' => ':name.',
+                'intro' => 'Japanese quality, Indonesian excellence. Web development and AI automation for businesses in Indonesia. Let me show you around.',
                 'home' => 'Lobby', 'explore' => 'Explore FTS', 'reservation' => 'Start a project',
                 'reservation_intro' => 'Tell your AI Concierge about your project and preferred dates. We will help you choose a plan and submit a project request.',
                 'reservation_q' => 'I would like to start a project. Please help me choose a plan.',
@@ -841,8 +841,8 @@ class HotelPageController extends Controller
                 'ask_room_q' => 'Tell me more about the :name.',
             ],
             'ja' => [
-                'welcome' => 'ようこそ', 'lobby' => 'バーチャルロビー',
-                'intro' => '心を込めたおもてなしで、実用的なソリューションをご提案します。細部はお任せください。',
+                'welcome' => 'ようこそ', 'lobby' => ':nameへ。',
+                'intro' => '日本の品質と、インドネシアの力。インドネシアの企業に向けたWeb開発とAI自動化を、私がご案内します。',
                 'home' => 'ロビー', 'explore' => 'FTSをご案内', 'reservation' => 'プロジェクトのご相談',
                 'reservation_intro' => 'プロジェクトの内容とご希望の日程をAIコンシェルジュにお伝えください。プランの選択とご相談リクエストをお手伝いします。',
                 'reservation_q' => 'プロジェクトを始めたいです。プランの選び方を教えてください。',
@@ -869,8 +869,8 @@ class HotelPageController extends Controller
                 'ask_room_q' => ':name について詳しく教えてください。',
             ],
             default => [
-                'welcome' => 'Selamat datang di', 'lobby' => 'lobi virtual Anda',
-                'intro' => 'Sambutan hangat. Solusi yang praktis. Biarkan saya membantu rencana proyek Anda.',
+                'welcome' => 'Selamat datang di', 'lobby' => ':name.',
+                'intro' => 'Kualitas Jepang, keunggulan Indonesia. Web development dan AI automation untuk bisnis di Indonesia. Mari saya antar berkeliling.',
                 'home' => 'Beranda', 'explore' => 'Jelajahi FTS', 'reservation' => 'Mulai proyek',
                 'reservation_intro' => 'Ceritakan proyek dan tanggal mulai yang Anda inginkan kepada AI Concierge. Kami bantu memilih paket hingga pengajuan permintaan proyek.',
                 'reservation_q' => 'Saya ingin memulai proyek. Bantu saya memilih paket.',

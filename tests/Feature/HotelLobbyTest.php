@@ -147,8 +147,12 @@ class HotelLobbyTest extends TestCase
             ->assertSee('https://example.test/pool.jpg', false)
             ->assertSee('class="lobby-content stage-panel-right', false)
             ->assertDontSee('class="lobby-navigation"', false);
-        $this->get('/demo?lang=en')->assertOk()->assertSee('Welcome to your')->assertSee('virtual lobby');
-        $this->get('/demo?lang=ja')->assertOk()->assertSee('バーチャルロビー');
+        $welcome = fn (string $lang) => preg_match('/<h1>(.*?)<\/h1>/s', $this->get('/demo?lang='.$lang)->assertOk()->getContent(), $m) ? trim(preg_replace('/\s+/', ' ', strip_tags(str_replace('<br>', ' ', $m[1])))) : '';
+        $name = Hotel::where('slug', 'demo')->value('name');
+        $this->assertSame("Welcome to {$name}.", $welcome('en'));
+        $this->assertSame("Selamat datang di {$name}.", $welcome('id'));
+        $this->assertSame("ようこそ {$name}へ。", $welcome('ja'));
+        $this->get('/demo?lang=en')->assertSee('Japanese quality, Indonesian excellence.')->assertDontSee('virtual lobby');
     }
 
     public function test_unpublished_lobby_is_not_accessible(): void

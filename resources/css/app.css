@@ -1049,14 +1049,14 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
 
 /* Lobby on wide screens: the chips become a 4 × 2 grid of floating tiles under the headline. */
 @media (min-width: 900px) {
-    .stage[data-scene="lobby"] .stage-welcome { bottom: 326px; }
+    .stage[data-scene="lobby"] .stage-welcome { bottom: 330px; }
     .stage[data-scene="lobby"] .chat-chips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; bottom: 110px; width: min(600px, 46vw); }
     .stage[data-scene="lobby"] .chat-chips li { display: flex; animation: chip-in .65s cubic-bezier(.34, 1.45, .5, 1) backwards, tile-float 7s ease-in-out infinite; animation-delay: calc(.3s + var(--i, 0) * 55ms), calc(var(--i, 0) * -.9s); }
     .stage[data-scene="lobby"] .chat-chips a, .stage[data-scene="lobby"] .chat-chips button { position: relative; flex-direction: column; align-items: flex-start; justify-content: space-between; width: 100%; min-height: 84px; padding: 12px; border-radius: 16px; font-size: 13px; line-height: 1.25; text-align: left; white-space: normal; }
     .stage[data-scene="lobby"] .chat-chips .chip-go { position: absolute; top: 12px; right: 12px; }
 }
 @media (min-width: 900px) and (max-height: 720px) {
-    .stage[data-scene="lobby"] .stage-welcome { bottom: 308px; }
+    .stage[data-scene="lobby"] .stage-welcome { bottom: 330px; }
 }
 
 /* The launcher's border is a light that keeps circling; its dot breathes. */
@@ -1285,3 +1285,8 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
     .stage-loader .hotel-monogram:has(img) { animation: logo-breathe 1.8s ease-in-out infinite; }
 }
 @keyframes logo-breathe { 50% { scale: 1.05; box-shadow: 0 0 0 1px #ffffff59, 0 0 70px #1490e280; } }
+
+/* The company name is long, so it runs a size below the greeting above it. */
+@media (min-width: 900px) {
+    .stage[data-scene="lobby"] .stage-welcome h1 em { margin-top: 4px; font-size: .82em; line-height: 1.08; }
+}

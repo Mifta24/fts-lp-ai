@@ -2,7 +2,7 @@
     <x-slot:welcome>
         <div class="stage-welcome">
             <span class="lobby-eyebrow">{{ $hotel->name }}</span>
-            <h1>{{ $lobby['welcome'] }}<br><em>{{ $lobby['lobby'] }}.</em></h1>
+            <h1>{{ $lobby['welcome'] }}<br><em>{{ str_replace(':name', $hotel->name, $lobby['lobby']) }}</em></h1>
             <p>{{ $lobby['intro'] }}</p>
         </div>
     </x-slot:welcome>
