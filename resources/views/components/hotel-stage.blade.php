@@ -12,7 +12,8 @@
     @if (filled($hotel->description))<meta property="og:description" content="{{ \Illuminate\Support\Str::limit($hotel->description, 200) }}">@endif
     @php
         $about = $hotel->translatedDescription($locale);
-        $canonical = url()->current();
+        // The lobby is also served at the site root; both point search engines at the company URL.
+        $canonical = $scene === 'lobby' ? route('hotel.show', ['hotelSlug' => $hotel->slug]) : url()->current();
     @endphp
     @if (filled($about))<meta name="description" content="{{ \Illuminate\Support\Str::limit($about, 200) }}">@endif
     @if ($hotel->logoUrl())<link rel="icon" type="image/png" href="{{ $hotel->logoUrl() }}">@endif

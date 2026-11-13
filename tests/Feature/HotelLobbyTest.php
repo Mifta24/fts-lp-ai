@@ -11,19 +11,19 @@ class HotelLobbyTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_opening_screen_links_to_the_only_published_hotel(): void
+    public function test_the_site_root_is_the_lobby_of_the_only_published_company(): void
     {
         Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published']);
         Hotel::create(['name' => 'Draft', 'slug' => 'draft']);
 
         $this->get('/?lang=en')
             ->assertOk()
-            ->assertSee('FTS AI Concierge')
-            ->assertSee('Enter Demo')
+            ->assertSee('data-scene="lobby"', false)
+            ->assertSee('Welcome to')
+            ->assertSee('<link rel="canonical" href="'.route('hotel.show', ['hotelSlug' => 'demo']).'">', false)
             ->assertSee('href="'.route('hotel.rooms', ['hotelSlug' => 'demo', 'lang' => 'en']).'"', false)
-            ->assertSee('href="'.route('hotel.facilities', ['hotelSlug' => 'demo', 'lang' => 'en']).'"', false)
             ->assertSee('href="'.route('hotel.reservation', ['hotelSlug' => 'demo', 'lang' => 'en']).'"', false)
-            ->assertSee('href="'.route('hotel.staff', ['hotelSlug' => 'demo', 'lang' => 'en']).'"', false)
+            ->assertDontSee('Enter Demo')
             ->assertDontSee('Draft');
     }
 

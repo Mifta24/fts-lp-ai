@@ -11,7 +11,7 @@
 <body class="stage-page antialiased">
     <main class="stage">
         <div class="stage-loader" data-stage-loader role="status"><span class="hotel-monogram" aria-hidden="true"><img src="{{ asset('images/fts-mark.png') }}" alt=""></span><p>{{ $opening['loading'] }}</p></div>
-        <img src="{{ asset('images/concierge-lobby.webp') }}" alt="" class="stage-image" fetchpriority="high">
+        <img src="{{ asset('images/lobby-bg.webp') }}" alt="" class="stage-image" fetchpriority="high">
         <div class="stage-shade"></div>
 
         <header class="stage-header">

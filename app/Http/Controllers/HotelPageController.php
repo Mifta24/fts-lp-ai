@@ -153,9 +153,18 @@ class HotelPageController extends Controller
         ],
     ];
 
+    /**
+     * The site root: with a single published company it is that company's
+     * lobby; otherwise an opening screen that lists them (or says none is
+     * ready yet).
+     */
     public function index(Request $request): View
     {
         $hotels = Hotel::where('public_status', 'published')->orderBy('name')->get();
+
+        if ($hotels->count() === 1) {
+            return $this->show($request, $hotels->first()->slug);
+        }
 
         $locale = in_array($request->query('lang'), self::SUPPORTED_LOCALES, true)
             ? $request->query('lang')
