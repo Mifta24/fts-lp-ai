@@ -541,6 +541,8 @@ class ConciergeService
             'rooms' => 'The visitor is browsing the plan list. Help them compare plans and pick one; use search_rooms when they give dates and number of users.',
             'room_detail' => 'The visitor is looking at the selected plan on screen. Treat "this plan" as that plan, answer questions about it, and suggest a project request when it fits. Use get_room_detail / check_availability with its slug; never quote a price from memory.',
             'facilities' => 'The visitor is looking at the list of FTS services. Answer with search_knowledge and keep the focus on services.',
+            'solutions' => 'The visitor is looking at the list of FTS AI solutions (AI automation, AI agents, business automation). Answer with search_knowledge and keep the focus on those solutions, and suggest a project request when it fits.',
+            'portfolio' => 'The visitor is looking at the FTS portfolio of finished projects. Answer with search_knowledge, describe the projects as FTS work, and never invent client names, results or links.',
             'facility_detail' => 'The visitor is reading about the selected service on screen. Treat "this service" as that one and answer from search_knowledge; never invent hours, fees or availability.',
             'reservation' => 'The visitor is filling in the project request form on screen. Collect only what is still missing, validate dates and number of users, and summarise before any submission. Never ask for card details.',
             'handover' => 'The visitor is on the team contact screen. Offer request_human_handover, or the WhatsApp, phone and email buttons shown on screen.',

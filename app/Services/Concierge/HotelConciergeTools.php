@@ -29,7 +29,7 @@ class HotelConciergeTools
 
     private const MAX_FACILITY_CARDS = 6;
 
-    private const FACILITY_CATEGORIES = ['facilities', 'dining', 'transport'];
+    private const FACILITY_CATEGORIES = ['facilities', 'dining', 'transport', 'ai', 'portfolio'];
 
     public function __construct(
         private readonly Hotel $hotel,
@@ -57,7 +57,7 @@ class HotelConciergeTools
                             'query' => ['type' => 'string', 'description' => 'Keywords from the guest question, e.g. "late check-in" or "bathtub"'],
                             'category' => [
                                 'type' => 'string',
-                                'enum' => ['general', 'facilities', 'policies', 'dining', 'transport', 'faq'],
+                                'enum' => ['general', 'facilities', 'policies', 'dining', 'transport', 'faq', 'ai', 'portfolio'],
                                 'description' => 'Optional category filter',
                             ],
                         ],

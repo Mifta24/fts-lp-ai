@@ -1,9 +1,9 @@
-<x-hotel-stage :prefill="$prefill" :hotel="$hotel" :locale="$locale" :supported-locales="$supportedLocales" :labels="$labels" :lobby="$lobby" :narration="$narration" :scene="$scene" :backdrop="$backdrop" :menu-items="$menuItems" :wizard="$wizard" :room-terms="$roomTerms" :today="$today" :tour-stops="$tourStops" :menu="false" :title="$labels['menu_facilities'].' · '.$hotel->name">
+<x-hotel-stage :prefill="$prefill" :hotel="$hotel" :locale="$locale" :supported-locales="$supportedLocales" :labels="$labels" :lobby="$lobby" :narration="$narration" :scene="$scene" :backdrop="$backdrop" :menu-items="$menuItems" :wizard="$wizard" :room-terms="$roomTerms" :today="$today" :tour-stops="$tourStops" :menu="false" :title="$section['heading'].' · '.$hotel->name">
     <div class="stage-panels">
-        <section class="lobby-content stage-panel-right @container" aria-label="{{ $labels['menu_facilities'] }}">
+        <section class="lobby-content stage-panel-right @container" aria-label="{{ $section['heading'] }}">
             <a href="{{ route('hotel.show', ['hotelSlug' => $hotel->slug, 'lang' => $locale]) }}" data-stage-exit data-tour-line="{{ $narration['tour_lobby'] }}" class="panel-close" aria-label="{{ $lobby['back'] }}"><span aria-hidden="true">×</span></a>
             <p class="lobby-eyebrow">{{ $labels['chat_heading'] }}</p>
-            <h2>{{ $labels['menu_facilities'] }}</h2>
+            <h2>{{ $section['heading'] }}</h2>
             @if ($sceneNarrations['facilities'])
                 @include('hotel.narrator', ['text' => $sceneNarrations['facilities'], 'key' => 'facilities', 'inline' => true])
             @endif

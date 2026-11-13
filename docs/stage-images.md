@@ -14,11 +14,13 @@ Semua gambar ada di `public/images/`. Tiap adegan membaca file dengan nama tetap
 | Lobi | `concierge-lobby.webp` | `lobby-bg.webp` (sudah terpasang: lobi kantor FTS) | `character/character right hand.webp` (sudah terpasang) |
 | Paket website | `suite.webp` | `rooms-bg.png` | `character.png` |
 | Layanan | `facility.webp` | `facilities-bg.png` | `character.png` |
+| AI Solutions | `facility.webp` (sementara, sama dengan Layanan) | `solutions-bg.webp` | `character.png` |
+| Portofolio | `facility.webp` (sementara) | `portfolio-bg.webp` | `character.png` |
 | Tentang FTS | `information.webp` (latar polos) | `information.webp` | `character/character greeting.webp` |
 | Bicara dengan tim | `talk to staff.webp` (latar polos) | `talk to staff.webp` | `character/character grateful.webp` |
 | Mulai proyek | `reservation.webp` (latar polos) | `reservation.webp` | `character/character reservation.webp` |
 
-Mode 2 untuk paket dan layanan hanya aktif kalau **dua** file ada: `character.png` dan file `*-bg.png` adegan itu. Kalau salah satu tidak ada, dipakai gambar bawaan. Lobi sudah memakai mode 2.
+Mode 2 untuk paket, layanan, AI Solutions, dan portofolio hanya aktif kalau **dua** file ada: `character.png` dan file `*-bg.png` adegan itu. Kalau salah satu tidak ada, dipakai gambar bawaan. Lobi sudah memakai mode 2.
 
 ## Ukuran dan format
 

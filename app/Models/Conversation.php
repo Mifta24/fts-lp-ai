@@ -33,7 +33,7 @@ class Conversation extends Model
     /**
      * The UI scenes the guest can be in while talking to the concierge.
      */
-    public const SCENES = ['lobby', 'reception', 'rooms', 'room_detail', 'facilities', 'facility_detail', 'reservation', 'handover'];
+    public const SCENES = ['lobby', 'reception', 'rooms', 'room_detail', 'facilities', 'facility_detail', 'solutions', 'portfolio', 'reservation', 'handover'];
 
     protected function casts(): array
     {

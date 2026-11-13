@@ -177,6 +177,8 @@ class KnowledgeItemController extends Controller
             HotelKnowledgeItem::CATEGORY_DINING,
             HotelKnowledgeItem::CATEGORY_TRANSPORT,
             HotelKnowledgeItem::CATEGORY_FAQ,
+            HotelKnowledgeItem::CATEGORY_AI,
+            HotelKnowledgeItem::CATEGORY_PORTFOLIO,
         ];
     }
 }

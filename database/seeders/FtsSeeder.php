@@ -191,6 +191,7 @@ class FtsSeeder extends Seeder
         return [
             ...$this->aboutItems(),
             ...$this->serviceItems(),
+            ...$this->portfolioItems(),
             ...$this->officeItems(),
             ...$this->policyItems(),
             ...$this->faqItems(),
@@ -267,6 +268,17 @@ class FtsSeeder extends Seeder
     /** @return array<int, array<string, mixed>> */
     private function serviceItems(): array
     {
+        $aiTitles = ['AI Automation', 'AI Agent Development', 'Otomasi Bisnis & Digital Marketing'];
+
+        return array_map(
+            fn (array $item) => in_array($item['title'], $aiTitles, true) ? [...$item, 'category' => HotelKnowledgeItem::CATEGORY_AI] : $item,
+            $this->allServiceItems()
+        );
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    private function allServiceItems(): array
+    {
         $service = function (string $title, string $enTitle, string $jaTitle, string $id, string $en, string $ja, string $imageId, array $features, array $tags): array {
             return [
                 'category' => HotelKnowledgeItem::CATEGORY_FACILITIES,
@@ -339,6 +351,90 @@ class FtsSeeder extends Seeder
                 ['Lead Capture & Nurturing', 'Analytics & Conversion Tracking', 'WhatsApp Campaign Automation', 'Digital Marketing Support'],
                 ['business automation', 'digital marketing', 'lead capture', 'analytics'],
             ),
+        ];
+    }
+
+    /**
+     * The twelve projects listed on fts-tech.co.id/projects/all, with the images
+     * that site serves.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function portfolioItems(): array
+    {
+        $project = fn (string $title, string $image, string $id, string $en, string $ja, array $tags): array => [
+            'category' => HotelKnowledgeItem::CATEGORY_PORTFOLIO,
+            'title' => $title,
+            'image_url' => 'https://fts-tech.co.id/images/portfolio/'.$image.'.jpg',
+            'body' => $id,
+            'translations' => [
+                'en' => ['title' => $title, 'body' => $en],
+                'ja' => ['title' => $title, 'body' => $ja],
+            ],
+            'tags' => ['portfolio', 'project', ...$tags],
+        ];
+
+        return [
+            $project('EDEPA World', 'edepa',
+                'Website company profile untuk EDEPA World, agensi kreatif Jepang, yang menampilkan ringkasan bisnis, portofolio proyek, dan topik terbaru.',
+                'Company profile website for EDEPA World, a Japanese creative agency, presenting their business overview, project portfolio, and latest topics.',
+                '日本のクリエイティブエージェンシーEDEPA WORLDのコーポレートサイト。事業概要、制作実績、最新トピックを紹介しています。',
+                ['creative agency', 'company profile', 'portfolio', 'japan']),
+            $project('FBE - Fujiyama Biomass Energy', 'fbe',
+                'Website korporat Fujiyama Biomass Energy yang mempromosikan produk arang PKS premium, inisiatif keberlanjutan, dan kemitraan ekspor.',
+                'Corporate website for Fujiyama Biomass Energy, promoting premium PKS charcoal products, sustainability initiatives, and export partnerships.',
+                'Fujiyama Biomass Energyのコーポレートサイト。高品質なPKS炭製品、サステナビリティへの取り組み、輸出パートナーシップを紹介しています。',
+                ['biomass energy', 'sustainability', 'export', 'indonesia']),
+            $project('Building Maintenance', 'building-maintenance',
+                'Website company profile untuk perusahaan perawatan gedung di Jepang yang menonjolkan keahlian pengelolaan fasilitas dan layanannya.',
+                'Company profile website for a Japanese building maintenance firm, highlighting specialized facility management expertise and service offerings.',
+                '日本のビルメンテナンス会社のコーポレートサイト。専門的な施設管理のノウハウとサービス内容を紹介しています。',
+                ['building maintenance', 'facility management', 'company profile', 'japan']),
+            $project('LookLook', 'looklook',
+                'Platform informasi wisata untuk pengunjung Jepang, dengan pencarian restoran, tempat wisata, info WiFi gratis, dan pencarian multibahasa per wilayah.',
+                'Travel information platform for visitors to Japan, offering restaurant search, sightseeing spots, free WiFi info, and multilingual search by region.',
+                '訪日観光客向けの旅行情報プラットフォーム。レストラン検索、観光スポット、無料WiFi情報、地域別の多言語検索を提供しています。',
+                ['travel platform', 'tourism', 'directory', 'japan']),
+            $project('Minnano Kuruma', 'minnano-kuruma',
+                'Landing page lokal untuk layanan pembelian mobil bekas di kawasan Nishitama, Jepang, dengan panggilan penilaian gratis, dukungan LINE, dan bukti kepercayaan pelanggan.',
+                'Local landing page for a used car buying service in the Nishitama area of Japan, featuring free appraisal calls, LINE support, and customer trust signals.',
+                '西多摩エリアの中古車買取サービスのローカルLP。無料査定の電話、LINE対応、お客様の信頼を伝える要素を備えています。',
+                ['used car buying', 'automotive', 'local business', 'japan']),
+            $project('XchangePro', 'xchangepro',
+                'Website bisnis untuk toko ban dan velg yang menampilkan penjualan ban, jasa pemasangan dan penggantian, serta perawatan mobil di kawasan Tokyo/Saitama.',
+                'Business website for a tire and wheel shop, showcasing tire sales, installation and exchange services, and car maintenance in the Tokyo/Saitama area.',
+                'タイヤ・ホイール専門店のサイト。東京・埼玉エリアでのタイヤ販売、取付・交換サービス、車のメンテナンスを紹介しています。',
+                ['tire shop', 'automotive', 'service business', 'japan']),
+            $project('Ebila Hall', 'ebilahall',
+                'Website pemesanan untuk aula musik dan acara serbaguna di Shinagawa, dengan reservasi online untuk pernikahan, konser, dan acara pribadi.',
+                'Booking website for a versatile music and event hall in Shinagawa Ward, featuring online reservations for weddings, concerts, and private gatherings.',
+                '品川区の多目的ミュージック・イベントホールの予約サイト。結婚式、コンサート、プライベートな集まりのオンライン予約に対応しています。',
+                ['event venue', 'booking system', 'hospitality', 'japan']),
+            $project('Hiking (San Kou Kai)', 'hiking',
+                'Website komunitas untuk perkumpulan hiking di Jepang, berisi laporan perjalanan, rencana pendakian, dan informasi keanggotaan untuk pendakian yang aman.',
+                'Community website for a Japanese hiking association, sharing trip reports, hiking plans, and membership information for safe mountain climbing.',
+                '日本の登山会のコミュニティサイト。山行報告、登山計画、会員情報を共有し、安全な山登りを支えています。',
+                ['community website', 'hiking club', 'blog', 'japan']),
+            $project('Car Repair', 'car-repair',
+                'Website bisnis untuk bengkel perbaikan bodi mobil yang menampilkan layanan perbaikan, sistem pemesanan online, dan testimoni pelanggan.',
+                'Business website for an auto body repair shop, showcasing repair services, an online booking system, and customer testimonials.',
+                '自動車板金工場のサイト。修理サービス、オンライン予約システム、お客様の声を紹介しています。',
+                ['auto repair', 'booking system', 'automotive', 'service business']),
+            $project('Thai Travel', 'thai-travel',
+                'Platform pemesanan perjalanan untuk Thailand, dengan antar-jemput bandara, sewa mobil pribadi, dan paket tur lewat sistem pencarian dan pemesanan online.',
+                'Travel booking platform for Thailand, offering airport transfers, private car rentals, and tour packages through an online search and booking system.',
+                'タイ旅行の予約プラットフォーム。空港送迎、貸切車、ツアーパッケージをオンラインで検索・予約できます。',
+                ['travel booking', 'tourism', 'transportation', 'thailand']),
+            $project('FTS Menu', 'fts-menu',
+                'Landing page SaaS untuk platform menu digital berbasis QR code yang memungkinkan restoran dan kafe memperbarui harga, foto, dan ketersediaan secara real time.',
+                'SaaS landing page for a digital QR-code menu platform that lets restaurants and cafes update prices, photos, and availability in real time.',
+                'QRコード式デジタルメニューのSaaSランディングページ。レストランやカフェが価格、写真、在庫状況をリアルタイムで更新できます。',
+                ['saas', 'digital menu', 'restaurant tech', 'qr code']),
+            $project('ens. Hair Salon', 'ens',
+                'Website bisnis untuk ens., salon rambut di Hachioji, Jepang, yang menampilkan konsep, menu dan harga, staf, galeri, dan kontak online.',
+                'Business website for ens., a hair salon in Hachioji, Japan, featuring their concept, menu and pricing, staff, gallery, and online contact.',
+                '八王子のヘアサロンens.のサイト。コンセプト、メニューと料金、スタッフ、ギャラリー、オンライン問い合わせを紹介しています。',
+                ['hair salon', 'beauty', 'company profile', 'japan']),
         ];
     }
 

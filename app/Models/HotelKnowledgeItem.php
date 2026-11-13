@@ -39,6 +39,10 @@ class HotelKnowledgeItem extends Model
 
     public const CATEGORY_FAQ = 'faq';
 
+    public const CATEGORY_AI = 'ai';
+
+    public const CATEGORY_PORTFOLIO = 'portfolio';
+
     protected function casts(): array
     {
         return [

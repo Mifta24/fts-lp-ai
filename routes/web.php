@@ -111,6 +111,8 @@ Route::prefix('{hotelSlug}')->where(['hotelSlug' => '(?!(?:up|admin|platform|nar
     Route::get('rooms', [HotelPageController::class, 'rooms'])->name('hotel.rooms');
     Route::get('rooms/{roomSlug}', [HotelPageController::class, 'room'])->name('hotel.room');
     Route::get('facilities', [HotelPageController::class, 'facilities'])->name('hotel.facilities');
+    Route::get('solutions', [HotelPageController::class, 'solutions'])->name('hotel.solutions');
+    Route::get('portfolio', [HotelPageController::class, 'portfolio'])->name('hotel.portfolio');
     Route::get('facilities/{facilityId}', [HotelPageController::class, 'facility'])->whereNumber('facilityId')->name('hotel.facility');
     Route::get('info', [HotelPageController::class, 'info'])->name('hotel.info');
     Route::get('staff', [HotelPageController::class, 'staff'])->name('hotel.staff');

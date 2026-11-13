@@ -17,6 +17,18 @@ class HotelPageController extends Controller
 {
     private const SUPPORTED_LOCALES = ['id', 'en', 'ja'];
 
+    /**
+     * Rooms that list knowledge items. They share one list view and one detail
+     * view; each takes the items of its own categories.
+     *
+     * @var array<string, array{route: string, categories: list<string>}>
+     */
+    private const SECTIONS = [
+        'facilities' => ['route' => 'hotel.facilities', 'categories' => ['facilities', 'dining', 'transport']],
+        'solutions' => ['route' => 'hotel.solutions', 'categories' => ['ai']],
+        'portfolio' => ['route' => 'hotel.portfolio', 'categories' => ['portfolio']],
+    ];
+
     /** The default cut-out of the concierge, layered in front of a scene's background when a scene does not name its own. */
     private const CHARACTER_IMAGE = 'images/character.png';
 
@@ -49,6 +61,12 @@ class HotelPageController extends Controller
             'tour_facilities' => 'Come, let me show you our services.',
             'tour_info' => 'Let me tell you more about FTS.',
             'tour_staff' => 'Let me bring you to our team.',
+            'solutions' => 'Here are our AI solutions. We offer :count, including :examples. Choose one to read the details, or ask me anything.',
+            'solutions_one' => 'We offer :examples. Open it to read the details, or ask me anything.',
+            'portfolio' => 'Here is our portfolio. We have :count projects, including :examples. Choose one to read about it, or ask me anything.',
+            'portfolio_one' => 'Here is one of our projects: :examples. Open it to read about it, or ask me anything.',
+            'tour_solutions' => 'This way — let me show you our AI solutions.',
+            'tour_portfolio' => 'Come, let me show you our recent projects.',
             'tour_reservation' => 'Let me help you plan your project.',
             'tour_lobby' => 'Let me walk you back to the lobby.',
             'tour_room' => 'Let me show you :name.',
@@ -71,6 +89,12 @@ class HotelPageController extends Controller
             'tour_facilities' => 'Mari, saya antar melihat layanan kami.',
             'tour_info' => 'Mari, saya ceritakan lebih lanjut tentang FTS.',
             'tour_staff' => 'Mari, saya antar Anda bertemu tim kami.',
+            'solutions' => 'Inilah solusi AI kami. Ada :count solusi, di antaranya :examples. Pilih salah satu untuk membaca detailnya, atau tanyakan apa saja kepada saya.',
+            'solutions_one' => 'Kami memiliki :examples. Buka untuk membaca detailnya, atau tanyakan apa saja kepada saya.',
+            'portfolio' => 'Inilah portofolio kami. Ada :count proyek, di antaranya :examples. Pilih salah satu untuk membacanya, atau tanyakan apa saja kepada saya.',
+            'portfolio_one' => 'Inilah salah satu proyek kami: :examples. Buka untuk membacanya, atau tanyakan apa saja kepada saya.',
+            'tour_solutions' => 'Mari, saya antar melihat solusi AI kami.',
+            'tour_portfolio' => 'Mari, saya tunjukkan proyek-proyek terbaru kami.',
             'tour_reservation' => 'Mari, saya bantu merencanakan proyek Anda.',
             'tour_lobby' => 'Mari saya antar kembali ke lobi.',
             'tour_room' => 'Mari saya tunjukkan :name.',
@@ -93,6 +117,12 @@ class HotelPageController extends Controller
             'tour_facilities' => 'こちらへどうぞ。サービスへご案内します。',
             'tour_info' => 'FTSについてご案内します。',
             'tour_staff' => 'スタッフのもとへご案内します。',
+            'solutions' => 'こちらがAIソリューションです。:count件、:examples などをご用意しています。選ぶと詳細をご覧いただけます。ご質問もどうぞ。',
+            'solutions_one' => ':examples をご用意しています。詳細をご覧ください。ご質問もどうぞ。',
+            'portfolio' => 'こちらが制作実績です。:count件、:examples などがあります。選ぶと詳細をご覧いただけます。ご質問もどうぞ。',
+            'portfolio_one' => ':examples の制作実績です。詳細をご覧ください。ご質問もどうぞ。',
+            'tour_solutions' => 'こちらへどうぞ。AIソリューションへご案内します。',
+            'tour_portfolio' => 'こちらへどうぞ。最近のプロジェクトをご紹介します。',
             'tour_reservation' => 'プロジェクトのご計画をお手伝いします。',
             'tour_lobby' => 'ロビーへご案内します。',
             'tour_room' => ':name をご案内します。',
@@ -179,11 +209,30 @@ class HotelPageController extends Controller
         return view('hotel.facilities-index', $this->stageData($hotel, $locale, 'facilities'));
     }
 
+    public function solutions(Request $request, string $hotelSlug): View
+    {
+        [$hotel, $locale] = $this->resolveStage($request, $hotelSlug);
+
+        return view('hotel.facilities-index', $this->stageData($hotel, $locale, 'solutions'));
+    }
+
+    public function portfolio(Request $request, string $hotelSlug): View
+    {
+        [$hotel, $locale] = $this->resolveStage($request, $hotelSlug);
+
+        return view('hotel.facilities-index', $this->stageData($hotel, $locale, 'portfolio'));
+    }
+
     public function facility(Request $request, string $hotelSlug, int $facilityId): View
     {
         [$hotel, $locale] = $this->resolveStage($request, $hotelSlug);
 
-        $data = $this->stageData($hotel, $locale, 'facility');
+        $item = $hotel->knowledgeItems()->where('is_active', true)->whereKey($facilityId)->first();
+        $sectionKey = $item ? $this->sectionOf($item->category) : null;
+
+        abort_if($sectionKey === null, 404);
+
+        $data = $this->stageData($hotel, $locale, 'facility', $sectionKey);
         $facilities = $data['facilities'];
         $index = $facilities->search(fn (HotelKnowledgeItem $item) => $item->id === $facilityId);
 
@@ -265,8 +314,38 @@ class HotelPageController extends Controller
      *
      * @return array<string, mixed>
      */
-    private function stageData(Hotel $hotel, string $locale, string $scene): array
+    private function sectionOf(string $category): ?string
     {
+        foreach (self::SECTIONS as $key => $section) {
+            if (in_array($category, $section['categories'], true)) {
+                return $key;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Names the list a detail page belongs to, so its counter, back link and
+     * "ask" button follow the room the visitor came from.
+     *
+     * @param  array<string, string>  $labels
+     * @param  array<string, string>  $lobby
+     * @return array{key: string, route: string, heading: string, counter: string, back: string, ask: string, ask_q: string}
+     */
+    private function sectionMeta(string $key, array $labels, array $lobby): array
+    {
+        return match ($key) {
+            'solutions' => ['key' => 'solutions', 'route' => self::SECTIONS['solutions']['route'], 'heading' => $labels['menu_solutions'], 'counter' => $lobby['counter_solutions'], 'back' => $lobby['back_solutions'], 'ask' => $lobby['ask_solutions'], 'ask_q' => $lobby['ask_solutions_q']],
+            'portfolio' => ['key' => 'portfolio', 'route' => self::SECTIONS['portfolio']['route'], 'heading' => $labels['menu_portfolio'], 'counter' => $lobby['counter_portfolio'], 'back' => $lobby['back_portfolio'], 'ask' => $lobby['ask_portfolio'], 'ask_q' => $lobby['ask_portfolio_q']],
+            default => ['key' => 'facilities', 'route' => self::SECTIONS['facilities']['route'], 'heading' => $labels['menu_facilities'], 'counter' => $lobby['facility_counter'], 'back' => $lobby['back_facilities'], 'ask' => $lobby['ask_facility'], 'ask_q' => $lobby['ask_facility_q']],
+        };
+    }
+
+    private function stageData(Hotel $hotel, string $locale, string $scene, ?string $section = null): array
+    {
+        $sectionKey = $section ?? (isset(self::SECTIONS[$scene]) ? $scene : 'facilities');
+
         $roomTypes = $hotel->roomTypes()
             ->where('is_active', true)
             ->with(['images' => fn ($q) => $q->orderBy('sort_order')])
@@ -275,7 +354,7 @@ class HotelPageController extends Controller
             ->values();
 
         $facilities = $hotel->knowledgeItems()->where('is_active', true)
-            ->whereIn('category', ['facilities', 'dining', 'transport'])
+            ->whereIn('category', self::SECTIONS[$sectionKey]['categories'])
             ->orderBy('sort_order')->get()->values();
 
         $labels = $this->labels($locale);
@@ -286,8 +365,9 @@ class HotelPageController extends Controller
             'roomTypes' => $roomTypes,
             'locale' => $locale,
             'scene' => $scene,
-            'backdrop' => $this->sceneBackdrop($scene),
-            'menuItems' => $this->stageMenu($hotel, $locale, $labels, $lobby),
+            'backdrop' => $this->sceneBackdrop($scene === 'facility' ? $sectionKey : $scene),
+            'menuItems' => $this->stageMenu($hotel, $locale, $labels, $lobby, $this->currentMenuKey($scene, $sectionKey)),
+            'section' => $this->sectionMeta($sectionKey, $labels, $lobby),
             'supportedLocales' => self::SUPPORTED_LOCALES,
             'labels' => $labels,
             'lobby' => $lobby,
@@ -303,7 +383,7 @@ class HotelPageController extends Controller
                 ->whereIn('category', ['general', 'policies', 'faq'])
                 ->orderBy('sort_order')->get()->groupBy('category'),
             'facilities' => $facilities,
-            'sceneNarrations' => $this->sceneNarrations($hotel, $facilities, $locale),
+            'sceneNarrations' => $this->sceneNarrations($hotel, $facilities, $locale, $sectionKey),
         ];
     }
 
@@ -364,6 +444,27 @@ class HotelPageController extends Controller
                 'focusMobile' => '24% 18%',
                 // She stands on the left of this artwork, so the scene text
                 // sits low and leaves her face clear.
+                'anchor' => 'left',
+                'text' => 'bottom',
+                'avatarZoom' => '500%',
+                'avatarFocus' => '17% 11%',
+            ],
+            'solutions' => [
+                'combined' => 'images/facility.webp',
+                'background' => 'images/solutions-bg.webp',
+                'focus' => 'center 30%',
+                'focusMobile' => '24% 18%',
+                'anchor' => 'left',
+                'text' => 'bottom',
+                'avatarZoom' => '500%',
+                'avatarFocus' => '17% 11%',
+            ],
+            'portfolio' => [
+                // Placeholder until a portfolio-room background is supplied: she stands on the left, the list on the right.
+                'combined' => 'images/facility.webp',
+                'background' => 'images/portfolio-bg.webp',
+                'focus' => 'center 30%',
+                'focusMobile' => '24% 18%',
                 'anchor' => 'left',
                 'text' => 'bottom',
                 'avatarZoom' => '500%',
@@ -458,8 +559,19 @@ class HotelPageController extends Controller
      * @param  array<string, string>  $lobby
      * @return list<array{key: string, label: string, href: string, exit: bool, tour: ?string, topic: string}>
      */
-    private function stageMenu(Hotel $hotel, string $locale, array $labels, array $lobby): array
+    private function currentMenuKey(string $scene, string $sectionKey): string
     {
+        return match ($scene) {
+            'room' => 'rooms',
+            'facility' => $sectionKey,
+            default => $scene,
+        };
+    }
+
+    private function stageMenu(Hotel $hotel, string $locale, array $labels, array $lobby, string $current = ''): array
+    {
+        $solutionsUrl = route('hotel.solutions', ['hotelSlug' => $hotel->slug, 'lang' => $locale]);
+        $portfolioUrl = route('hotel.portfolio', ['hotelSlug' => $hotel->slug, 'lang' => $locale]);
         $roomsUrl = route('hotel.rooms', ['hotelSlug' => $hotel->slug, 'lang' => $locale]);
         $tour = self::NARRATION[$locale];
 
@@ -468,13 +580,15 @@ class HotelPageController extends Controller
         $reservationUrl = route('hotel.reservation', ['hotelSlug' => $hotel->slug, 'lang' => $locale]);
         $staffUrl = route('hotel.staff', ['hotelSlug' => $hotel->slug, 'lang' => $locale]);
 
-        return [
+        return array_map(fn (array $item) => [...$item, 'current' => $item['key'] === $current], [
             ['key' => 'rooms', 'label' => $labels['rooms_heading'], 'href' => $roomsUrl, 'exit' => true, 'tour' => $tour['tour_rooms'], 'topic' => $labels['menu_rooms_q']],
             ['key' => 'facilities', 'label' => $labels['menu_facilities'], 'href' => $facilitiesUrl, 'exit' => true, 'tour' => $tour['tour_facilities'], 'topic' => $labels['menu_facilities_q']],
+            ['key' => 'solutions', 'label' => $labels['menu_solutions'], 'href' => $solutionsUrl, 'exit' => true, 'tour' => $tour['tour_solutions'], 'topic' => $labels['menu_solutions_q']],
+            ['key' => 'portfolio', 'label' => $labels['menu_portfolio'], 'href' => $portfolioUrl, 'exit' => true, 'tour' => $tour['tour_portfolio'], 'topic' => $labels['menu_portfolio_q']],
             ['key' => 'info', 'label' => $lobby['menu_info'], 'href' => $infoUrl, 'exit' => true, 'tour' => $tour['tour_info'], 'topic' => $labels['menu_policies_q']],
             ['key' => 'reservation', 'label' => $lobby['reservation'], 'href' => $reservationUrl, 'exit' => true, 'tour' => $tour['tour_reservation'], 'topic' => $lobby['reservation_q']],
             ['key' => 'staff', 'label' => $labels['menu_staff'], 'href' => $staffUrl, 'exit' => true, 'tour' => $tour['tour_staff'], 'topic' => $labels['menu_staff_q']],
-        ];
+        ]);
     }
 
     /**
@@ -484,7 +598,7 @@ class HotelPageController extends Controller
      * @param  Collection<int, HotelKnowledgeItem>  $facilities
      * @return array{facilities: ?string, info: string}
      */
-    private function sceneNarrations(Hotel $hotel, Collection $facilities, string $locale): array
+    private function sceneNarrations(Hotel $hotel, Collection $facilities, string $locale, string $sectionKey = 'facilities'): array
     {
         $templates = self::NARRATION[$locale];
         $separator = $locale === 'ja' ? '、' : '; ';
@@ -497,7 +611,7 @@ class HotelPageController extends Controller
             $intro = str_replace(
                 [':count', ':examples'],
                 [(string) $facilities->count(), $examples],
-                $templates[$facilities->count() === 1 ? 'facilities_one' : 'facilities']
+                $templates[$sectionKey.($facilities->count() === 1 ? '_one' : '')]
             );
         }
 
@@ -667,6 +781,8 @@ class HotelPageController extends Controller
                 'menu_info' => 'About FTS', 'info_about' => 'About FTS', 'info_policies' => 'Terms', 'info_faq' => 'Frequently asked questions', 'info_tab_about' => 'About', 'info_tab_faq' => 'FAQ',
                 'info_address' => 'Address', 'info_hours' => 'Opening hours', 'info_contact' => 'Contact', 'info_map' => 'Open in Maps', 'info_ask' => 'Ask about FTS',
                 'facility_counter' => 'Service', 'prev_facility' => 'Previous', 'next_facility' => 'Next', 'ask_facility' => 'Ask about this service', 'back_facilities' => 'All services', 'open_facility' => 'Read more', 'ask_facility_q' => 'Tell me more about :name.',
+                'counter_solutions' => 'Solution', 'back_solutions' => 'All AI solutions', 'ask_solutions' => 'Ask about this solution', 'ask_solutions_q' => 'Tell me more about :name.',
+                'counter_portfolio' => 'Project', 'back_portfolio' => 'All projects', 'ask_portfolio' => 'Ask about this project', 'ask_portfolio_q' => 'Tell me more about the :name project.',
                 'loading' => 'Preparing the FTS experience…',
                 'sound_on' => 'Sound on', 'sound_off' => 'Sound off',
                 'room_scene' => 'Plan details', 'room_counter' => 'Plan', 'gallery' => 'Photo gallery', 'photo' => 'Photo',
@@ -693,6 +809,8 @@ class HotelPageController extends Controller
                 'menu_info' => 'FTSについて', 'info_about' => 'FTSについて', 'info_policies' => 'ご利用条件', 'info_faq' => 'よくあるご質問', 'info_tab_about' => 'FTSについて', 'info_tab_faq' => 'FAQ',
                 'info_address' => '所在地', 'info_hours' => '営業時間', 'info_contact' => 'お問い合わせ', 'info_map' => '地図で開く', 'info_ask' => 'FTSについて聞く',
                 'facility_counter' => 'サービス', 'prev_facility' => '前へ', 'next_facility' => '次へ', 'ask_facility' => 'このサービスについて聞く', 'back_facilities' => 'サービス一覧', 'open_facility' => '詳しく見る', 'ask_facility_q' => ':name について詳しく教えてください。',
+                'counter_solutions' => 'ソリューション', 'back_solutions' => 'AIソリューション一覧', 'ask_solutions' => 'このソリューションについて聞く', 'ask_solutions_q' => ':name について詳しく教えてください。',
+                'counter_portfolio' => '制作実績', 'back_portfolio' => '実績一覧', 'ask_portfolio' => 'この実績について聞く', 'ask_portfolio_q' => ':name の制作について詳しく教えてください。',
                 'loading' => 'FTSの体験を準備しています…',
                 'sound_on' => 'サウンドオン', 'sound_off' => 'サウンドオフ',
                 'room_scene' => 'プランのご案内', 'room_counter' => 'プラン', 'gallery' => 'フォトギャラリー', 'photo' => '写真',
@@ -719,6 +837,8 @@ class HotelPageController extends Controller
                 'menu_info' => 'Tentang FTS', 'info_about' => 'Tentang FTS', 'info_policies' => 'Ketentuan', 'info_faq' => 'Pertanyaan yang sering diajukan', 'info_tab_about' => 'Tentang', 'info_tab_faq' => 'FAQ',
                 'info_address' => 'Alamat', 'info_hours' => 'Jam buka', 'info_contact' => 'Kontak', 'info_map' => 'Buka di Maps', 'info_ask' => 'Tanya tentang FTS',
                 'facility_counter' => 'Layanan', 'prev_facility' => 'Sebelumnya', 'next_facility' => 'Berikutnya', 'ask_facility' => 'Tanya tentang layanan ini', 'back_facilities' => 'Semua layanan', 'open_facility' => 'Selengkapnya', 'ask_facility_q' => 'Ceritakan lebih banyak tentang :name.',
+                'counter_solutions' => 'Solusi', 'back_solutions' => 'Semua solusi AI', 'ask_solutions' => 'Tanya tentang solusi ini', 'ask_solutions_q' => 'Ceritakan lebih banyak tentang :name.',
+                'counter_portfolio' => 'Proyek', 'back_portfolio' => 'Semua proyek', 'ask_portfolio' => 'Tanya tentang proyek ini', 'ask_portfolio_q' => 'Ceritakan lebih banyak tentang proyek :name.',
                 'loading' => 'Menyiapkan pengalaman FTS…',
                 'sound_on' => 'Suara aktif', 'sound_off' => 'Suara mati',
                 'room_scene' => 'Detail paket', 'room_counter' => 'Paket', 'gallery' => 'Galeri foto', 'photo' => 'Foto',
@@ -810,6 +930,10 @@ class HotelPageController extends Controller
                 'menu_rooms_q' => 'I would like to see the website plans.',
                 'menu_facilities' => 'Our services',
                 'menu_facilities_q' => 'What services does FTS offer?',
+                'menu_solutions' => 'AI Solutions',
+                'menu_solutions_q' => 'What AI solutions does FTS offer?',
+                'menu_portfolio' => 'Portfolio',
+                'menu_portfolio_q' => 'Can I see the projects FTS has built?',
                 'menu_policies' => 'Terms & FAQ',
                 'menu_policies_q' => 'What are the contract terms and response times?',
                 'menu_staff' => 'Talk to our team',
@@ -890,6 +1014,10 @@ class HotelPageController extends Controller
                 'menu_rooms_q' => 'Webサイトのプランを見せてください。',
                 'menu_facilities' => 'サービス',
                 'menu_facilities_q' => 'FTSにはどんなサービスがありますか？',
+                'menu_solutions' => 'AIソリューション',
+                'menu_solutions_q' => 'FTSにはどんなAIソリューションがありますか？',
+                'menu_portfolio' => '制作実績',
+                'menu_portfolio_q' => 'FTSがこれまでに手がけたプロジェクトを見せてください。',
                 'menu_policies' => '条件・よくある質問',
                 'menu_policies_q' => '契約条件と対応時間を教えてください。',
                 'menu_staff' => 'チームに相談',
@@ -970,6 +1098,10 @@ class HotelPageController extends Controller
                 'menu_rooms_q' => 'Saya ingin melihat paket website yang tersedia.',
                 'menu_facilities' => 'Layanan kami',
                 'menu_facilities_q' => 'Apa saja layanan yang ditawarkan FTS?',
+                'menu_solutions' => 'AI Solutions',
+                'menu_solutions_q' => 'Solusi AI apa saja yang ditawarkan FTS?',
+                'menu_portfolio' => 'Portofolio',
+                'menu_portfolio_q' => 'Boleh saya lihat proyek yang pernah dibuat FTS?',
                 'menu_policies' => 'Ketentuan & FAQ',
                 'menu_policies_q' => 'Apa ketentuan kontrak dan waktu responsnya?',
                 'menu_staff' => 'Bicara dengan tim',

@@ -668,7 +668,7 @@ function initConcierge() {
         return el;
     }
 
-    const sceneNames = { home: 'reception', lobby: 'reception', info: 'reception', rooms: 'rooms', room: 'room_detail', facilities: 'facilities', facility: 'facility_detail', reservation: 'reservation', staff: 'handover' };
+    const sceneNames = { home: 'reception', lobby: 'reception', info: 'reception', rooms: 'rooms', room: 'room_detail', facilities: 'facilities', solutions: 'solutions', portfolio: 'portfolio', facility: 'facility_detail', reservation: 'reservation', staff: 'handover' };
 
     /**
      * Where the guest is in the lobby, so the concierge can answer for "this

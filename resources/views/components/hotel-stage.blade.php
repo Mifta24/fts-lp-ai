@@ -30,7 +30,7 @@
             </a>
             <nav class="stage-nav" aria-label="{{ $lobby['explore'] }}">
                 @foreach ($menuItems as $item)
-                    <a href="{{ $item['href'] }}" data-stage-exit @if($item['tour']) data-tour-line="{{ $item['tour'] }}" @endif data-topic="{{ $item['topic'] }}" @if($item['key'] === $scene || ($scene === 'room' && $item['key'] === 'rooms')) aria-current="page" @endif>{{ $item['label'] }}</a>
+                    <a href="{{ $item['href'] }}" data-stage-exit @if($item['tour']) data-tour-line="{{ $item['tour'] }}" @endif data-topic="{{ $item['topic'] }}" @if($item['current'] ?? false) aria-current="page" @endif>{{ $item['label'] }}</a>
                 @endforeach
             </nav>
             <div class="stage-tools">
@@ -55,7 +55,7 @@
                 @foreach ($menuItems as $item)
                     <a href="{{ $item['href'] }}"
                         @if($item['exit']) data-stage-exit @if($item['tour']) data-tour-line="{{ $item['tour'] }}" @endif data-topic="{{ $item['topic'] }}" @else data-lobby-link="{{ $item['key'] }}" aria-controls="lobby-{{ $item['key'] }}" @endif
-                        @if($item['key'] === $scene || ($scene === 'room' && $item['key'] === 'rooms')) aria-current="page" @endif>
+                        @if($item['current'] ?? false) aria-current="page" @endif>
                         <span>{{ $item['label'] }}</span><span class="nav-arrow" aria-hidden="true">›</span>
                     </a>
                 @endforeach
