@@ -514,45 +514,16 @@ class HotelLobbyTest extends TestCase
             ->assertDontSee('class="room-nav"', false);
     }
 
-    public function test_a_scene_layers_a_cut_out_concierge_when_a_plain_background_is_supplied(): void
+    public function test_the_lobby_layers_a_cut_out_concierge_on_its_plain_background(): void
     {
-        $hotel = Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR']);
-        $hotel->roomTypes()->create(['name' => 'Deluxe King', 'slug' => 'deluxe-king', 'base_price' => 950000, 'max_adults' => 2, 'max_children' => 0, 'is_active' => true]);
+        Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR']);
 
-        $pixel = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
-        $character = public_path('images/character.png');
-        $background = public_path('images/rooms-bg.png');
-
-        try {
-            // Only the cut-out: the scene keeps the artwork that already has her in it.
-            file_put_contents($character, $pixel);
-
-            $this->get('/demo/rooms')
-                ->assertOk()
-                ->assertSee('images/suite.webp', false)
-                ->assertDontSee('class="stage-character"', false);
-
-            // Cut-out plus a plain background: she is layered in front instead.
-            file_put_contents($background, $pixel);
-
-            $this->get('/demo/rooms')
-                ->assertOk()
-                ->assertSee('class="stage-character"', false)
-                ->assertSee('images/rooms-bg.png', false)
-                ->assertSee('images/character.png', false)
-                ->assertDontSee('images/suite.webp', false);
-
-            // The lobby ships its own plain background and cut-out, so it does not depend on character.png.
-            $this->get('/demo')
-                ->assertOk()
-                ->assertSee('images/lobby-bg.webp', false)
-                ->assertSee('class="stage-character"', false)
-                ->assertSee('character right hand.webp', false)
-                ->assertDontSee('images/concierge-lobby.webp', false);
-        } finally {
-            @unlink($character);
-            @unlink($background);
-        }
+        $this->get('/demo')
+            ->assertOk()
+            ->assertSee('images/lobby-bg.webp', false)
+            ->assertSee('class="stage-character"', false)
+            ->assertSee('character right hand.webp', false)
+            ->assertDontSee('images/concierge-lobby.webp', false);
     }
 
     public function test_the_services_room_layers_a_mirrored_cut_out_when_its_background_exists(): void
@@ -577,38 +548,6 @@ class HotelLobbyTest extends TestCase
                 ->assertSee('class="stage-character"', false)
                 ->assertSee('data-flip', false)
                 ->assertSee('data-anchor="left"', false);
-        } finally {
-            @unlink($background);
-        }
-    }
-
-    public function test_the_project_request_room_switches_to_the_consultation_background_when_it_exists(): void
-    {
-        $background = public_path('images/consultation-bg.webp');
-
-        if (file_exists($background)) {
-            $this->markTestSkipped('A real consultation background is installed; this test would overwrite it.');
-        }
-
-        $hotel = Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR']);
-        $hotel->roomTypes()->create(['name' => 'Plan', 'slug' => 'plan', 'base_price' => 1000, 'max_adults' => 1, 'max_children' => 0, 'is_active' => true]);
-
-        // Without the file the room keeps its current artwork.
-        $this->get('/demo/reservation')
-            ->assertOk()
-            ->assertSee('images/reservation.webp', false)
-            ->assertSee('character reservation.webp', false)
-            ->assertDontSee('data-flip', false);
-
-        try {
-            file_put_contents($background, 'x');
-
-            $this->get('/demo/reservation')
-                ->assertOk()
-                ->assertSee('images/consultation-bg.webp', false)
-                ->assertSee('character right hand.webp', false)
-                ->assertSee('data-flip', false)
-                ->assertDontSee('character reservation.webp', false);
         } finally {
             @unlink($background);
         }

@@ -436,6 +436,20 @@ class HotelPageController extends Controller
                 'text' => 'top',
                 'avatarZoom' => '500%',
                 'avatarFocus' => '52% 10%',
+                // Used instead of the above once the FTS website-plans photo is
+                // installed: the right-hand cut-out, mirrored to point at the
+                // plan cards on the right.
+                'upgrade' => [
+                    'background' => 'images/rooms-bg.webp',
+                    'character' => 'images/character/character right hand.webp',
+                    'flip' => true,
+                    'focus' => 'center 45%',
+                    'focusMobile' => '30% 50%',
+                    'anchor' => 'left',
+                    'text' => 'bottom',
+                    'avatarZoom' => '500%',
+                    'avatarFocus' => '17% 11%',
+                ],
             ],
             'facilities' => [
                 'combined' => 'images/facility.webp',
@@ -506,6 +520,13 @@ class HotelPageController extends Controller
                 'text' => 'top',
                 'avatarZoom' => '260%',
                 'avatarFocus' => '50% 12%',
+                // Used instead of the above once the FTS reception photo is
+                // installed: she stands behind the desk in the middle.
+                'upgrade' => [
+                    'background' => 'images/staff-bg.webp',
+                    'focus' => 'center 50%',
+                    'focusMobile' => '50% 50%',
+                ],
             ],
             'reservation' => [
                 // She stands on the left holding a tablet with a booking
