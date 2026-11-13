@@ -1,17 +1,29 @@
 <x-hotel-stage :prefill="$prefill" :hotel="$hotel" :locale="$locale" :supported-locales="$supportedLocales" :labels="$labels" :lobby="$lobby" :narration="$narration" :scene="$scene" :backdrop="$backdrop" :menu-items="$menuItems" :wizard="$wizard" :room-terms="$roomTerms" :today="$today" :tour-stops="$tourStops" :menu="false" :title="$section['heading'].' · '.$hotel->name">
     <div class="stage-panels">
-        <section class="lobby-content stage-panel-right @container" aria-label="{{ $section['heading'] }}">
+        <section class="lobby-content stage-panel-right float-field @container" data-float-field aria-label="{{ $section['heading'] }}">
             <a href="{{ route('hotel.show', ['hotelSlug' => $hotel->slug, 'lang' => $locale]) }}" data-stage-exit data-tour-line="{{ $narration['tour_lobby'] }}" class="panel-close" aria-label="{{ $lobby['back'] }}"><span aria-hidden="true">×</span></a>
             <p class="lobby-eyebrow">{{ $labels['chat_heading'] }}</p>
             <h2>{{ $section['heading'] }}</h2>
             @if ($sceneNarrations['facilities'])
-                @include('hotel.narrator', ['text' => $sceneNarrations['facilities'], 'key' => 'facilities', 'inline' => true])
+                @include('hotel.narrator', ['text' => $sceneNarrations['facilities'], 'key' => 'facilities', 'inline' => true, 'onStage' => true])
             @endif
 
             <div class="facility-grid">
                 @forelse ($facilities as $item)
-                    @php $title = $item->translatedTitle($locale); @endphp
-                    <a href="{{ route('hotel.facility', ['hotelSlug' => $hotel->slug, 'facilityId' => $item->id, 'lang' => $locale]) }}" data-stage-exit class="facility-card">
+                    @php
+                        $title = $item->translatedTitle($locale);
+                        // Each card drifts at its own depth and pace, so the field never moves in lockstep.
+                        $index = $loop->index;
+                        $motion = sprintf(
+                            '--i: %d; --depth: %s; --float-duration: %ss; --float-delay: -%ss; --sway: %sdeg',
+                            $index,
+                            [0.6, 1, 1.4][$index % 3],
+                            round(5 + ($index * 7 % 5) * 0.6, 2),
+                            round(($index * 13 % 9) * 0.7, 2),
+                            $index % 2 === 0 ? 0.4 : -0.4,
+                        );
+                    @endphp
+                    <a href="{{ route('hotel.facility', ['hotelSlug' => $hotel->slug, 'facilityId' => $item->id, 'lang' => $locale]) }}" data-stage-exit class="facility-card" style="{{ $motion }}">
                         <span class="facility-card-photo">
                             @if ($item->image_url)
                                 <img src="{{ $item->image_url }}" alt="" loading="lazy">

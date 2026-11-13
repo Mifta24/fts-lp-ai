@@ -114,6 +114,16 @@ class ExtraRoomsTest extends TestCase
             ->assertDontSee('Try the demo');
     }
 
+    public function test_list_rooms_lay_their_cards_out_as_a_floating_field(): void
+    {
+        foreach (['/demo/facilities', '/demo/solutions', '/demo/portfolio'] as $path) {
+            $html = $this->get($path.'?lang=en')->assertOk()->getContent();
+
+            $this->assertMatchesRegularExpression('/<section class="lobby-content[^"]*\bfloat-field\b[^"]*"[^>]*data-float-field/', $html, "{$path} has no floating field");
+            $this->assertMatchesRegularExpression('/class="facility-card" style="--i: 0; --depth: [0-9.]+; --float-duration: [0-9.]+s; --float-delay: -[0-9.]+s; --sway: -?[0-9.]+deg"/', $html, "{$path} cards carry no motion values");
+        }
+    }
+
     public function test_items_outside_the_rooms_still_return_not_found(): void
     {
         $this->get('/demo/facilities/'.$this->items['about']->id)->assertNotFound();

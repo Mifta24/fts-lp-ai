@@ -916,3 +916,74 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
 @media (max-width: 899px) {
     .lobby-content.stage-panel-right { left: 12px; }
 }
+
+/*
+ * Floating field: the list rooms (services, AI solutions, portfolio) drop the
+ * panel and let their cards hang in the room as glass tiles. Each card drifts
+ * at its own pace (--float-duration/--float-delay/--sway from the view), the
+ * field shifts against the pointer by each card's --depth (float-field.js sets
+ * --px/--py), and a hovered card lifts and tilts toward the cursor.
+ */
+.lobby-content.float-field { background: transparent; backdrop-filter: none; box-shadow: none; padding: 6px 22px 56px; color: white; overflow-x: hidden; mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent); }
+.float-field > .lobby-eyebrow { color: #bce2fc; text-shadow: 0 1px 10px #0009; }
+.float-field > h2 { color: white; text-shadow: 0 2px 22px #000a; }
+.float-field .narrator-inline { padding: 14px 18px; border: 1px solid #ffffff2b; border-radius: 16px; background: #0f223ad1; backdrop-filter: blur(14px); box-shadow: 0 12px 34px #0005; }
+.float-field .narrator-inline .narrator-text { color: #ffffffeb; }
+.float-field .narrator-actions button { color: #8fd3ff; }
+.float-field .panel-close { border-color: #ffffff40; background: #0f223ad9; color: white; backdrop-filter: blur(12px); }
+.float-field .panel-close:hover { background: #1490e2; border-color: #1490e2; }
+.float-field .facility-grid { gap: 22px; margin-top: 28px; padding-bottom: 48px; perspective: 1400px; }
+@container (min-width: 28rem) { .float-field .facility-card:nth-child(2n) { margin-top: 44px; } }
+@container (min-width: 50rem) {
+    .float-field .facility-card:nth-child(2n) { margin-top: 0; }
+    .float-field .facility-card:nth-child(3n+2) { margin-top: 52px; }
+    .float-field .facility-card:nth-child(3n) { margin-top: 22px; }
+}
+.float-field .facility-card {
+    --lift: 0px; --tilt-x: 0deg; --tilt-y: 0deg;
+    border: 1px solid #ffffff2b; border-radius: 18px; overflow: hidden;
+    background: linear-gradient(160deg, #183554d1, #0c1b2ee0);
+    backdrop-filter: blur(14px) saturate(1.25);
+    box-shadow: 0 18px 44px #00000066, inset 0 1px 0 #ffffff24;
+    transform: translate3d(calc(var(--px, 0) * var(--depth, 1) * -16px), calc(var(--py, 0) * var(--depth, 1) * -10px), var(--lift)) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+    transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s ease, border-color .35s ease, opacity .35s ease;
+    will-change: transform;
+}
+/* A soft light that follows the cursor across the hovered card. */
+.float-field .facility-card::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), #8fd3ff2e, transparent 55%); opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+.float-field .facility-card:hover, .float-field .facility-card:focus-visible { --lift: 36px; transform: translate3d(calc(var(--px, 0) * var(--depth, 1) * -16px), calc(var(--py, 0) * var(--depth, 1) * -10px), var(--lift)) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)); border-color: #5cc1ff99; box-shadow: 0 28px 64px #00000080, 0 0 0 1px #5cc1ff59, 0 0 46px #1490e247; }
+.float-field .facility-card:hover::after, .float-field .facility-card:focus-visible::after { opacity: 1; }
+.float-field .facility-card:focus-visible { outline: 2px solid #8fd3ff; outline-offset: 3px; }
+.float-field .facility-card-photo { aspect-ratio: 16 / 9; background: radial-gradient(120% 90% at 30% 20%, #2a6fa8, #10233a 70%); }
+.float-field .facility-card-photo img { transition: scale .6s cubic-bezier(.2, .8, .2, 1); }
+.float-field .facility-card:hover .facility-card-photo img { scale: 1.06; }
+.float-field .facility-card-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 45%, #0c1b2ecc); }
+/* Entries without a photo show their icon large in the middle instead. */
+.float-field .facility-card-photo:not(:has(img)) .facility-card-icon { left: 50%; bottom: 50%; translate: -50% 50%; width: 64px; height: 64px; background: #ffffff1a; color: #bce2fc; box-shadow: 0 0 0 1px #ffffff2e, 0 0 40px #5cc1ff4d; }
+.float-field .facility-card-icon { z-index: 1; background: #0f223a; color: #bce2fc; box-shadow: 0 0 0 1px #ffffff33, 0 6px 16px #0006; }
+.float-field .facility-card-title { color: white; }
+.float-field .facility-card-text { color: #d6e4f2b8; }
+.float-field .facility-card-go { border-color: #ffffff4d; color: white; }
+.float-field .facility-card:hover .facility-card-go { background: #1490e2; border-color: #1490e2; }
+
+@media (prefers-reduced-motion: no-preference) {
+    .float-field .facility-card { animation: card-float var(--float-duration, 6s) ease-in-out var(--float-delay, 0s) infinite; }
+    /* float-field.js arms the field, then reveals cards as they come into view. */
+    .float-field.is-armed .facility-card { opacity: 0; }
+    .float-field.is-armed .facility-card.is-seen { opacity: 1; animation: card-arrive .9s var(--ease-cine) var(--reveal-delay, 0ms) backwards, card-float var(--float-duration, 6s) ease-in-out var(--float-delay, 0s) infinite; }
+    /* The tapped card comes forward while the rest of the field falls away. */
+    .stage.is-leaving.is-card-launch > .stage-panels { opacity: 1; transition: none; }
+    .stage.is-card-launch .float-field > :not(.facility-grid), .stage.is-card-launch .float-field .facility-card:not(.is-launching) { opacity: 0; scale: .92; transition: opacity .3s ease, scale .4s ease; }
+    .stage.is-card-launch .float-field .facility-card.is-launching { --lift: 260px; opacity: 0; transition: transform .55s cubic-bezier(.5, 0, .75, 0), opacity .45s ease .12s; animation-play-state: paused; }
+}
+@keyframes card-float { 0%, 100% { translate: 0 0; rotate: 0deg; } 50% { translate: 0 -6px; rotate: var(--sway, .4deg); } }
+@keyframes card-arrive { from { opacity: 0; scale: .84; filter: blur(10px); } to { opacity: 1; scale: 1; filter: blur(0); } }
+@media (prefers-reduced-motion: reduce) {
+    .float-field .facility-card, .float-field .facility-card:hover { transform: none; transition: box-shadow .2s ease, border-color .2s ease; }
+}
+/* Phones: one column, a gentler drift and no zig-zag. */
+@media (max-width: 899px) {
+    .lobby-content.float-field { padding: 4px 6px 56px; }
+    .float-field .facility-grid { gap: 16px; }
+    .float-field .facility-card { --depth: .4 !important; }
+}
