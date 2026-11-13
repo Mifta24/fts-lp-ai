@@ -40,6 +40,8 @@ function initConcierge() {
             placeholder: root.dataset.labelPlaceholder,
             send: root.dataset.labelSend,
             open: root.dataset.labelOpen,
+            voiceOn: root.dataset.labelVoiceOn,
+            voiceOff: root.dataset.labelVoiceOff,
             close: root.dataset.labelClose,
             intro: root.dataset.labelIntro,
             breakfastIncluded: root.dataset.labelBreakfastIncluded,
@@ -177,6 +179,7 @@ function initConcierge() {
     }
 
     function finishClosePanel({ restoreFocus = true } = {}) {
+        stopSpeaking();
         isOpen = false;
         stopListening({ discard: true });
         syncPanelState();
@@ -602,6 +605,54 @@ function initConcierge() {
         return row;
     }
 
+    // Voice output: with the speaker switched on, each new reply is read aloud by
+    // the browser's speech synthesis, so the chat can work like a conversation.
+    // The button stays hidden where the browser cannot speak.
+    const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
+    const voiceButton = widget.querySelector('[data-chat-voice]');
+    const voiceKey = 'fts_voice';
+    let voiceOn = false;
+
+    function speakLanguage(text) {
+        if (/[\u3040-\u30ff\u4e00-\u9fff]/.test(text)) return 'ja-JP';
+        const english = (text.match(/\b(the|and|you|your|with|for|are|is|can|would)\b/gi) || []).length;
+        const indonesian = (text.match(/\b(yang|dan|untuk|dengan|anda|kami|saya|bisa|ada)\b/gi) || []).length;
+        if (english > indonesian) return 'en-US';
+        return { id: 'id-ID', en: 'en-US', ja: 'en-US' }[config.locale] || 'id-ID';
+    }
+
+    function stopSpeaking() {
+        if (synth) synth.cancel();
+    }
+
+    function speak(text) {
+        if (!synth || !voiceOn || !text) return;
+        stopSpeaking();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = speakLanguage(text);
+        const voice = synth.getVoices().find((candidate) => candidate.lang.replace('_', '-').toLowerCase().startsWith(utterance.lang.slice(0, 2).toLowerCase()));
+        if (voice) utterance.voice = voice;
+        synth.speak(utterance);
+    }
+
+    function setVoice(value) {
+        voiceOn = value;
+        if (!voiceButton) return;
+        const label = value ? config.labels.voiceOff : config.labels.voiceOn;
+        voiceButton.setAttribute('aria-pressed', String(value));
+        voiceButton.setAttribute('aria-label', label);
+        voiceButton.title = label;
+        if (!value) stopSpeaking();
+        try { localStorage.setItem(voiceKey, value ? '1' : '0'); } catch { /* storage unavailable */ }
+    }
+
+    if (voiceButton && synth) {
+        voiceButton.hidden = false;
+        try { voiceOn = localStorage.getItem(voiceKey) === '1'; } catch { /* storage unavailable */ }
+        setVoice(voiceOn);
+        voiceButton.addEventListener('click', () => setVoice(!voiceOn));
+    }
+
     function renderMessage(message, { fresh = false } = {}) {
         let presented = false;
 
@@ -610,6 +661,7 @@ function initConcierge() {
         } else if (message.role === 'assistant') {
             if (message.content) {
                 messagesEl.appendChild(bubble('assistant', message.content));
+                if (fresh) speak(message.content);
                 if (message.id && config.feedbackUrl) messagesEl.appendChild(ratingRow(message));
             }
             presented = renderUiPayload(message.ui_payload, { fresh, comment: message.content || '', quick: message.quick_replies });
@@ -767,6 +819,7 @@ function initConcierge() {
     }
 
     async function sendMessage(text, { retry = false, skeleton = false } = {}) {
+        stopSpeaking();
         if (!text.trim() || handedOver || busy || !ready) return;
 
         const guestToken = localStorage.getItem(config.storageKey);
@@ -820,6 +873,7 @@ function initConcierge() {
      * one stays on the server, so staff can still see and answer a handover.
      */
     async function startNewChat() {
+        stopSpeaking();
         if (busy || !ready) return;
 
         hideResetDialog();

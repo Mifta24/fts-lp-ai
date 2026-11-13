@@ -43,6 +43,8 @@
             data-label-mic-listening="{{ $labels['chat_mic_listening'] }}"
             data-label-mic-denied="{{ $labels['chat_mic_denied'] }}"
             data-label-mic-nospeech="{{ $labels['chat_mic_nospeech'] }}"
+            data-label-voice-on="{{ $labels['chat_voice_on'] }}"
+            data-label-voice-off="{{ $labels['chat_voice_off'] }}"
             data-label-hide-details="{{ $labels['chat_hide_details'] }}"
             data-label-form-title="{{ $labels['chat_form_title'] }}"
             data-label-form-confirm="{{ $labels['chat_form_confirm'] }}"
@@ -121,6 +123,9 @@
                         <p class="truncate text-xs text-stone-500">{{ $labels['chat_subtitle'] }}</p>
                         <p data-chat-status class="chat-status" aria-live="polite" hidden></p>
                     </div>
+                    <button type="button" data-chat-voice class="chat-log-close" aria-pressed="false" aria-label="{{ $labels['chat_voice_on'] }}" title="{{ $labels['chat_voice_on'] }}" hidden>
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+                    </button>
                     <button type="button" data-chat-new class="chat-log-close" aria-label="{{ $labels['chat_new'] }}" title="{{ $labels['chat_new'] }}">
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg>
                     </button>

@@ -895,3 +895,6 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
     .stage[data-scene="lobby"] .stage-character { height: 54%; max-width: none; right: -10%; }
     .stage[data-scene="lobby"] .stage-welcome .lobby-eyebrow { display: none; }
 }
+
+/* Voice toggle in the chat header: tinted while replies are read aloud. */
+.chat-log-close[data-chat-voice][aria-pressed="true"] { background: #1ca0f21f; color: #0f6fb3; }
