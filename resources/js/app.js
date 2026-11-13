@@ -6,3 +6,4 @@ import './narrator';
 import './parallax';
 import './float-field';
 import './nav-glider';
+import './chip-row';
