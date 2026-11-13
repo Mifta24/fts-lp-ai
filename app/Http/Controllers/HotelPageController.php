@@ -448,7 +448,7 @@ class HotelPageController extends Controller
                     'anchor' => 'left',
                     'text' => 'bottom',
                     'avatarZoom' => '300%',
-                    'avatarFocus' => '69% 20%',
+                    'avatarFocus' => '77% 9%',
                 ],
             ],
             'facilities' => [
@@ -465,7 +465,7 @@ class HotelPageController extends Controller
                 'anchor' => 'left',
                 'text' => 'bottom',
                 'avatarZoom' => '300%',
-                'avatarFocus' => '69% 20%',
+                'avatarFocus' => '77% 9%',
             ],
             'solutions' => [
                 // The FTS AI Solutions room. The list panel sits on the right, so
@@ -479,7 +479,7 @@ class HotelPageController extends Controller
                 'anchor' => 'left',
                 'text' => 'bottom',
                 'avatarZoom' => '300%',
-                'avatarFocus' => '69% 20%',
+                'avatarFocus' => '77% 9%',
             ],
             'portfolio' => [
                 // The FTS portfolio wall. The list panel sits on the right, so
@@ -493,7 +493,7 @@ class HotelPageController extends Controller
                 'anchor' => 'left',
                 'text' => 'bottom',
                 'avatarZoom' => '300%',
-                'avatarFocus' => '69% 20%',
+                'avatarFocus' => '77% 9%',
             ],
             'info' => [
                 // The FTS meeting room with her greeting cut-out layered in
@@ -505,8 +505,8 @@ class HotelPageController extends Controller
                 'focusMobile' => '45% 50%',
                 'anchor' => 'right',
                 'text' => 'bottom',
-                'avatarZoom' => '300%',
-                'avatarFocus' => '50% 25%',
+                'avatarZoom' => '230%',
+                'avatarFocus' => '52% 8%',
             ],
             'staff' => [
                 // A reception lounge backdrop with her grateful cut-out
@@ -518,8 +518,8 @@ class HotelPageController extends Controller
                 'focusMobile' => '62% 20%',
                 'anchor' => 'center',
                 'text' => 'top',
-                'avatarZoom' => '260%',
-                'avatarFocus' => '50% 12%',
+                'avatarZoom' => '230%',
+                'avatarFocus' => '43% 10%',
                 // Used instead of the above once the FTS reception photo is
                 // installed: she stands behind the desk in the middle.
                 'upgrade' => [
@@ -529,27 +529,18 @@ class HotelPageController extends Controller
                 ],
             ],
             'reservation' => [
-                // She stands on the left holding a tablet with a booking
-                // form, echoing the wizard panel that sits beside her.
+                // The consultation room, with the right-hand cut-out mirrored
+                // to point at the project form on the right.
                 'combined' => 'images/reservation.webp',
-                'background' => 'images/reservation.webp',
-                'character' => 'images/character/character reservation.webp',
+                'background' => 'images/consultation-bg.webp',
+                'character' => 'images/character/character right hand.webp',
+                'flip' => true,
                 'focus' => 'center 30%',
                 'focusMobile' => '24% 18%',
                 'anchor' => 'left',
                 'text' => 'bottom',
                 'avatarZoom' => '300%',
-                'avatarFocus' => '42% 14%',
-                // Used instead of the above once the FTS consultation room
-                // photo is installed: the right-hand cut-out, mirrored to
-                // point at the form on the right.
-                'upgrade' => [
-                    'background' => 'images/consultation-bg.webp',
-                    'character' => 'images/character/character right hand.webp',
-                    'flip' => true,
-                    'avatarZoom' => '300%',
-                    'avatarFocus' => '69% 20%',
-                ],
+                'avatarFocus' => '77% 9%',
             ],
             'lobby' => [
                 // The FTS office lobby, with her presenting from the right.
@@ -561,7 +552,7 @@ class HotelPageController extends Controller
                 'anchor' => 'right',
                 'text' => 'bottom',
                 'avatarZoom' => '300%',
-                'avatarFocus' => '69% 20%',
+                'avatarFocus' => '77% 9%',
             ],
         ];
 

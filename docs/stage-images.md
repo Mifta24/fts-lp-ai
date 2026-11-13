@@ -32,6 +32,6 @@ Tiga foto latar terbaru (`rooms-bg.webp`, `consultation-bg.webp`, `staff-bg.webp
 
 ## Catatan
 
-- Potongan `character/character reservation.webp` saat ini memegang tablet yang tertulis "Hotel Reservation / Check-in / Room Type". Ganti file itu dengan versi yang tidak ada tulisan hotelnya.
+- Avatar FTS (wanita berambut bob, blazer navy) dibuat dengan Figma AI dalam satu lembar karakter supaya ketiga pose sama persis: `character right hand.webp` (menunjuk ke samping), `character greeting.webp` (melambai), `character grateful.webp` (tangan tertangkup). File sumbernya ada di file Figma "FTS Avatar". Untuk mengganti, timpa ketiga file itu; potongan avatar sebaiknya rapat (tanpa ruang kosong di atas kepala) dengan tubuh terpotong di tepi bawah.
 - Posisi dan zoom wajah untuk avatar kecil di chat diatur per adegan di `sceneBackdrop()` di `app/Http/Controllers/HotelPageController.php` (kunci `focus`, `anchor`, `avatarZoom`, `avatarFocus`). Ubah hanya jika avatar baru terpotong atau terlalu kecil.
 - Logo lengkap ada di `public/images/logo.webp`. Ikon logo (gunung dan matahari tanpa tulisan) ada di `public/images/fts-mark.png` dan dipakai di header, layar loading, dan tab browser. Untuk mengganti, timpa file itu dengan PNG persegi berlatar putih, atau unggah logo lewat pengaturan admin.

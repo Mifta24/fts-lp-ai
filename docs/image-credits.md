@@ -9,3 +9,5 @@ Tiga latar adegan memakai foto stok dari [Unsplash](https://unsplash.com), yang 
 | `public/images/staff-bg.webp` (Bicara dengan tim) | [Modern lobby with reception desk and elevators](https://unsplash.com/photos/modern-lobby-with-reception-desk-and-elevators-tUcVQwXsNck) | [@aalolens](https://unsplash.com/@aalolens) |
 
 Latar lobi, Tentang FTS, Layanan, AI Solutions, dan Portofolio adalah gambar yang disediakan pemilik proyek.
+
+Avatar AI Concierge (`public/images/character/*.webp`) dibuat dengan Figma AI (model gpt-image-2.5-flare) untuk proyek ini, lalu latarnya dihapus dan dipotong per pose.
