@@ -4,7 +4,7 @@ Semua gambar ada di `public/images/`. Tiap adegan membaca file dengan nama tetap
 
 ## Dua cara pakai
 
-1. **Satu gambar dengan avatar di dalamnya** (cara paling sederhana). Dua adegan memakai cara ini: paket dan layanan.
+1. **Satu gambar dengan avatar di dalamnya** (cara paling sederhana). Satu adegan memakai cara ini: paket website.
 2. **Latar polos + potongan avatar terpisah** (lebih fleksibel). Avatar dilapis di atas latar, jadi bisa dipindah dan dipakai ulang. Info, tim, dan mulai proyek memakai cara ini. Paket dan layanan otomatis ikut cara ini jika Anda menyediakan `character.png` dan file `*-bg.png` yang sesuai.
 
 ## Daftar file
@@ -13,14 +13,14 @@ Semua gambar ada di `public/images/`. Tiap adegan membaca file dengan nama tetap
 |--------|----------------------------------|--------------------------------|-----------------|
 | Lobi | `concierge-lobby.webp` | `lobby-bg.webp` (sudah terpasang: lobi kantor FTS) | `character/character right hand.webp` (sudah terpasang) |
 | Paket website | `suite.webp` | `rooms-bg.png` | `character.png` |
-| Layanan | `facility.webp` | `facilities-bg.png` | `character.png` |
+| Layanan | `facility.webp` (cadangan) | `facilities-bg.webp` (tunggu file dari Anda) | `character/character right hand.webp` (dicerminkan) |
 | AI Solutions | `facility.webp` (sementara, sama dengan Layanan) | `solutions-bg.webp` | `character.png` |
 | Portofolio | `facility.webp` (sementara) | `portfolio-bg.webp` | `character.png` |
-| Tentang FTS | `information.webp` (latar polos) | `information.webp` | `character/character greeting.webp` |
+| Tentang FTS | `information.webp` (cadangan) | `about-bg.webp` (sudah terpasang: ruang rapat FTS) | `character/character greeting.webp` |
 | Bicara dengan tim | `talk to staff.webp` (latar polos) | `talk to staff.webp` | `character/character grateful.webp` |
 | Mulai proyek | `reservation.webp` (latar polos) | `reservation.webp` | `character/character reservation.webp` |
 
-Mode 2 untuk paket, layanan, AI Solutions, dan portofolio hanya aktif kalau **dua** file ada: `character.png` dan file `*-bg.png` adegan itu. Kalau salah satu tidak ada, dipakai gambar bawaan. Lobi sudah memakai mode 2.
+Mode 2 untuk paket, AI Solutions, dan portofolio hanya aktif kalau **dua** file ada: `character.png` dan file `*-bg.png` adegan itu. Kalau salah satu tidak ada, dipakai gambar bawaan. Lobi sudah memakai mode 2.
 
 ## Ukuran dan format
 

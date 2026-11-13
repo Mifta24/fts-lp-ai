@@ -439,7 +439,11 @@ class HotelPageController extends Controller
             ],
             'facilities' => [
                 'combined' => 'images/facility.webp',
-                'background' => 'images/facilities-bg.png',
+                // The FTS services lounge. The list panel sits on the right, so
+                // the right-hand cut-out is mirrored to point at it.
+                'background' => 'images/facilities-bg.webp',
+                'character' => 'images/character/character right hand.webp',
+                'flip' => true,
                 'focus' => 'center 30%',
                 'focusMobile' => '24% 18%',
                 // She stands on the left of this artwork, so the scene text
@@ -471,13 +475,13 @@ class HotelPageController extends Controller
                 'avatarFocus' => '17% 11%',
             ],
             'info' => [
-                // A plain terrace backdrop with her greeting cut-out layered
-                // in front, standing clear on the right of the panel.
+                // The FTS meeting room with her greeting cut-out layered in
+                // front, standing clear on the right of the panel.
                 'combined' => 'images/information.webp',
-                'background' => 'images/information.webp',
+                'background' => 'images/about-bg.webp',
                 'character' => 'images/character/character greeting.webp',
-                'focus' => 'center 38%',
-                'focusMobile' => '70% 30%',
+                'focus' => 'center 50%',
+                'focusMobile' => '45% 50%',
                 'anchor' => 'right',
                 'text' => 'bottom',
                 'avatarZoom' => '300%',
@@ -541,6 +545,7 @@ class HotelPageController extends Controller
             'focus' => $artwork['focus'],
             'focusMobile' => $artwork['focusMobile'],
             'character' => $character ? asset($character) : null,
+            'flip' => $character !== null && ($artwork['flip'] ?? false),
             'anchor' => $artwork['anchor'],
             'text' => $artwork['text'],
             // The avatars crop her face out of whichever picture holds her —

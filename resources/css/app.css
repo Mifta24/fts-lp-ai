@@ -898,3 +898,6 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
 
 /* Voice toggle in the chat header: tinted while replies are read aloud. */
 .chat-log-close[data-chat-voice][aria-pressed="true"] { background: #1ca0f21f; color: #0f6fb3; }
+
+/* A cut-out that faces the wrong way for its scene is mirrored. */
+.stage-character[data-flip] { scale: -1 1; }

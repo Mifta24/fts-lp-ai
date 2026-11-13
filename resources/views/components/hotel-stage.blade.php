@@ -32,7 +32,7 @@
         <img src="{{ $backdrop['image'] }}" alt="{{ $backdrop['character'] ? '' : $lobby['assistant'] }}" class="stage-image" fetchpriority="high">
         <div class="stage-shade"></div>
         @if ($backdrop['character'])
-            <img src="{{ $backdrop['character'] }}" alt="{{ $lobby['assistant'] }}" class="stage-character" data-anchor="{{ $backdrop['anchor'] }}">
+            <img src="{{ $backdrop['character'] }}" alt="{{ $lobby['assistant'] }}" class="stage-character" data-anchor="{{ $backdrop['anchor'] }}" @if($backdrop['flip'] ?? false) data-flip @endif>
         @endif
         <p class="stage-tour" data-stage-tour aria-live="polite"></p>
 

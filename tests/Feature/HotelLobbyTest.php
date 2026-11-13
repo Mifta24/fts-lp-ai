@@ -555,6 +555,33 @@ class HotelLobbyTest extends TestCase
         }
     }
 
+    public function test_the_services_room_layers_a_mirrored_cut_out_when_its_background_exists(): void
+    {
+        $background = public_path('images/facilities-bg.webp');
+
+        if (file_exists($background)) {
+            $this->markTestSkipped('A real services background is installed; this test would overwrite it.');
+        }
+
+        $hotel = Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR']);
+        $hotel->knowledgeItems()->create(['category' => 'facilities', 'title' => 'Web', 'body' => 'Web', 'is_active' => true, 'sort_order' => 0]);
+
+        $this->get('/demo/facilities')->assertOk()->assertDontSee('data-flip', false);
+
+        try {
+            file_put_contents($background, 'x');
+
+            $this->get('/demo/facilities')
+                ->assertOk()
+                ->assertSee('images/facilities-bg.webp', false)
+                ->assertSee('class="stage-character"', false)
+                ->assertSee('data-flip', false)
+                ->assertSee('data-anchor="left"', false);
+        } finally {
+            @unlink($background);
+        }
+    }
+
     public function test_facility_icons_follow_what_the_entry_is_about(): void
     {
         $hotel = Hotel::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published']);
