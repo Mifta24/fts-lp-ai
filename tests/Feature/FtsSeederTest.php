@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Hotel;
+use App\Models\User;
 use Database\Seeders\FtsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class FtsSeederTest extends TestCase
@@ -37,6 +39,37 @@ class FtsSeederTest extends TestCase
         $html = $this->get('/fts?lang=id')->assertOk()->getContent();
         $this->assertStringContainsString('<link rel="icon" type="image/png" href="'.asset('images/fts-mark.png').'">', $html);
         $this->assertSame(2, substr_count($html, '<span class="hotel-monogram" aria-hidden="true"><img src="'.asset('images/fts-mark.png').'"'));
+    }
+
+    public function test_outside_production_the_owner_gets_the_demo_password(): void
+    {
+        $this->seed(FtsSeeder::class);
+
+        $owner = User::where('email', 'owner@fts-tech.test')->firstOrFail();
+        $this->assertTrue(Hash::check('password', $owner->password));
+    }
+
+    public function test_in_production_the_owner_never_gets_the_demo_password(): void
+    {
+        $this->app['env'] = 'production';
+        config(['services.fts_owner.email' => 'admin@fts-tech.co.id', 'services.fts_owner.password' => null]);
+
+        $this->artisan('db:seed', ['--class' => FtsSeeder::class, '--force' => true])->assertSuccessful();
+
+        $owner = User::where('email', 'admin@fts-tech.co.id')->firstOrFail();
+        $this->assertFalse(Hash::check('password', $owner->password));
+        $this->assertNull(User::where('email', 'owner@fts-tech.test')->first());
+    }
+
+    public function test_in_production_the_owner_password_can_be_set_from_the_environment(): void
+    {
+        $this->app['env'] = 'production';
+        config(['services.fts_owner.email' => 'admin@fts-tech.co.id', 'services.fts_owner.password' => 'a-long-chosen-secret']);
+
+        $this->artisan('db:seed', ['--class' => FtsSeeder::class, '--force' => true])->assertSuccessful();
+
+        $owner = User::where('email', 'admin@fts-tech.co.id')->firstOrFail();
+        $this->assertTrue(Hash::check('a-long-chosen-secret', $owner->password));
     }
 
     public function test_the_three_pricing_plans_use_the_prices_from_the_fts_site(): void

@@ -42,6 +42,14 @@ return [
         'tts_voice' => env('OPENROUTER_TTS_VOICE', 'Sulafat'),
     ],
 
+    // The company admin the FTS seeder creates. Outside production it gets
+    // the demo password; in production the password comes from here or is
+    // generated and printed once.
+    'fts_owner' => [
+        'email' => env('FTS_OWNER_EMAIL', 'owner@fts-tech.test'),
+        'password' => env('FTS_OWNER_PASSWORD'),
+    ],
+
     'local_llm' => [
         'base_url' => env('LOCAL_LLM_BASE_URL'),
         'api_key' => env('LOCAL_LLM_API_KEY'),

@@ -9,6 +9,7 @@ use App\Models\RoomType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * Fills the concierge app with the content of https://fts-tech.co.id/.
@@ -24,9 +25,11 @@ class FtsSeeder extends Seeder
 
     public function run(): void
     {
+        [$email, $password, $generated] = $this->ownerLogin();
+
         $owner = User::firstOrCreate(
-            ['email' => 'owner@fts-tech.test'],
-            ['name' => 'Owner', 'password' => Hash::make('password'), 'email_verified_at' => now()]
+            ['email' => $email],
+            ['name' => 'Owner', 'password' => Hash::make($password), 'email_verified_at' => now()]
         );
 
         $hotel = Hotel::updateOrCreate(
@@ -97,7 +100,28 @@ class FtsSeeder extends Seeder
 
         $this->seedKnowledgeBase($hotel);
 
-        $this->command?->info('Demo login: owner@fts-tech.test — password: password');
+        if ($owner->wasRecentlyCreated && ($generated || ! app()->isProduction())) {
+            $this->command?->info("Admin login: {$email} — password: {$password}".($generated ? ' (generated: save it now, it is not shown again)' : ''));
+        }
+    }
+
+    /**
+     * The admin's email and password. Outside production the demo password
+     * is fine; in production it comes from FTS_OWNER_PASSWORD or is a fresh
+     * random one, so a live site never has a guessable login.
+     *
+     * @return array{0: string, 1: string, 2: bool}
+     */
+    private function ownerLogin(): array
+    {
+        $email = (string) config('services.fts_owner.email');
+        $configured = config('services.fts_owner.password');
+
+        if (filled($configured)) {
+            return [$email, (string) $configured, false];
+        }
+
+        return app()->isProduction() ? [$email, Str::password(20), true] : [$email, 'password', false];
     }
 
     /** @return array<int, array<string, mixed>> */
