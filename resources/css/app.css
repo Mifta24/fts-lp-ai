@@ -1290,3 +1290,6 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
 @media (min-width: 900px) {
     .stage[data-scene="lobby"] .stage-welcome h1 em { margin-top: 4px; font-size: .82em; line-height: 1.08; }
 }
+
+/* Concierge replies keep their line breaks (lists come one item per line). */
+.showcase-bubble { white-space: pre-line; }

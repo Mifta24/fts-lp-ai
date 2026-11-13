@@ -197,6 +197,18 @@ class ConciergeChatTest extends TestCase
         $this->assertStringContainsString('Treat "this plan" as that plan', $prompt);
     }
 
+    public function test_replies_are_stored_as_plain_text_without_markdown(): void
+    {
+        $this->fakeReply('Pilihan kami: 1. **Paket A** - Rp 700.000 2. **Paket B** - Rp 1.200.000');
+        $token = $this->startConversation();
+
+        $this->postJson('/demo/concierge/message', ['guest_token' => $token, 'message' => 'Paket apa saja?'])
+            ->assertOk()
+            ->assertJsonPath('message.content', "Pilihan kami:\n1. Paket A - Rp 700.000\n2. Paket B - Rp 1.200.000");
+
+        $this->assertStringContainsString('Write plain text only', $this->systemPromptOfLastRequest());
+    }
+
     public function test_the_concierge_is_told_to_stay_within_the_hotel_and_decline_everything_else(): void
     {
         $this->fakeReply();
