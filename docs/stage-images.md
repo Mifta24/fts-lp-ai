@@ -34,4 +34,4 @@ Tiga foto latar terbaru (`rooms-bg.webp`, `consultation-bg.webp`, `staff-bg.webp
 
 - Potongan `character/character reservation.webp` saat ini memegang tablet yang tertulis "Hotel Reservation / Check-in / Room Type". Ganti file itu dengan versi yang tidak ada tulisan hotelnya.
 - Posisi dan zoom wajah untuk avatar kecil di chat diatur per adegan di `sceneBackdrop()` di `app/Http/Controllers/HotelPageController.php` (kunci `focus`, `anchor`, `avatarZoom`, `avatarFocus`). Ubah hanya jika avatar baru terpotong atau terlalu kecil.
-- Logo ada di `public/images/logo.webp`.
+- Logo lengkap ada di `public/images/logo.webp`. Ikon logo (gunung dan matahari tanpa tulisan) ada di `public/images/fts-mark.png` dan dipakai di header, layar loading, dan tab browser. Untuk mengganti, timpa file itu dengan PNG persegi berlatar putih, atau unggah logo lewat pengaturan admin.

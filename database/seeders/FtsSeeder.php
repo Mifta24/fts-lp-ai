@@ -33,6 +33,7 @@ class FtsSeeder extends Seeder
             ['slug' => 'fts'],
             [
                 'name' => 'Fujiyama Technology Solutions',
+                'logo_path' => 'images/fts-mark.png',
                 'description' => 'Perusahaan IT berakar Jepang di Jakarta yang menghadirkan web development, AI automation, AI agent, offshore development, dan dukungan digital marketing untuk bisnis di Indonesia.',
                 'translations' => [
                     'id' => ['description' => 'Perusahaan IT berakar Jepang di Jakarta yang menghadirkan web development, AI automation, AI agent, offshore development, dan dukungan digital marketing untuk bisnis di Indonesia.'],

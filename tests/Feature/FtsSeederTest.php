@@ -26,6 +26,19 @@ class FtsSeederTest extends TestCase
         $this->assertSame('Asia/Jakarta', $hotel->timezone);
     }
 
+    public function test_the_company_uses_the_fts_logo_in_the_header_loader_and_browser_tab(): void
+    {
+        $this->seed(FtsSeeder::class);
+
+        $hotel = Hotel::where('slug', 'fts')->firstOrFail();
+        $this->assertSame(asset('images/fts-mark.png'), $hotel->logoUrl());
+        $this->assertFileExists(public_path('images/fts-mark.png'));
+
+        $html = $this->get('/fts?lang=id')->assertOk()->getContent();
+        $this->assertStringContainsString('<link rel="icon" type="image/png" href="'.asset('images/fts-mark.png').'">', $html);
+        $this->assertSame(2, substr_count($html, '<span class="hotel-monogram" aria-hidden="true"><img src="'.asset('images/fts-mark.png').'"'));
+    }
+
     public function test_the_three_pricing_plans_use_the_prices_from_the_fts_site(): void
     {
         $this->seed(FtsSeeder::class);

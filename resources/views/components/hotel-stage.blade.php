@@ -15,6 +15,7 @@
         $canonical = url()->current();
     @endphp
     @if (filled($about))<meta name="description" content="{{ \Illuminate\Support\Str::limit($about, 200) }}">@endif
+    @if ($hotel->logoUrl())<link rel="icon" type="image/png" href="{{ $hotel->logoUrl() }}">@endif
     <link rel="canonical" href="{{ $canonical }}">
     @foreach ($supportedLocales as $code)
         <link rel="alternate" hreflang="{{ $code }}" href="{{ $canonical }}?lang={{ $code }}">

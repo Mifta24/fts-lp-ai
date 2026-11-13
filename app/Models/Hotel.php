@@ -217,9 +217,19 @@ class Hotel extends Model implements MemberTenant
         return filled($value) ? $value : $default;
     }
 
+    /**
+     * The logo: an upload on the public disk, or an image shipped with the
+     * site (a path under public/images, as the seeded companies use).
+     */
     public function logoUrl(): ?string
     {
-        return filled($this->logo_path) ? Storage::disk('public')->url($this->logo_path) : null;
+        if (! filled($this->logo_path)) {
+            return null;
+        }
+
+        return str_starts_with($this->logo_path, 'images/')
+            ? asset($this->logo_path)
+            : Storage::disk('public')->url($this->logo_path);
     }
 
     public function coverUrl(): ?string

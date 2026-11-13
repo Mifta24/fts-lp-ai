@@ -4,18 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/fts-mark.png') }}">
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="stage-page antialiased">
     <main class="stage">
-        <div class="stage-loader" data-stage-loader role="status"><span class="hotel-monogram" aria-hidden="true">{{ mb_substr(config('app.name'), 0, 1) }}</span><p>{{ $opening['loading'] }}</p></div>
+        <div class="stage-loader" data-stage-loader role="status"><span class="hotel-monogram" aria-hidden="true"><img src="{{ asset('images/fts-mark.png') }}" alt=""></span><p>{{ $opening['loading'] }}</p></div>
         <img src="{{ asset('images/concierge-lobby.webp') }}" alt="" class="stage-image" fetchpriority="high">
         <div class="stage-shade"></div>
 
         <header class="stage-header">
             <span class="flex min-w-0 items-center gap-3">
-                <span class="hotel-monogram" aria-hidden="true">{{ mb_substr(config('app.name'), 0, 1) }}</span>
+                <span class="hotel-monogram" aria-hidden="true"><img src="{{ asset('images/fts-mark.png') }}" alt=""></span>
                 <span class="block truncate font-semibold tracking-tight">{{ config('app.name') }}</span>
             </span>
             <div class="stage-tools">

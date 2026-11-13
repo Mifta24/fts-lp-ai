@@ -1273,3 +1273,15 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
 .float-field .facility-card-cover.has-photo .cover-typing i { width: 5px; height: 5px; }
 /* Detail pictures keep their upper part (faces, headlines) in view when cropped. */
 .facility-hero img { object-position: center 22%; }
+
+/* The FTS mark sits on a white tile in the header and grows on the loading screen. */
+.hotel-monogram:has(img) { width: 46px; height: 46px; border: 0; border-radius: 13px; background: white; box-shadow: 0 0 0 1px #ffffff40, 0 6px 18px #0006; }
+.hotel-monogram:has(img) img { padding: 3px; }
+.stage-header > a:hover .hotel-monogram:has(img) { box-shadow: 0 0 0 2px #5cc1ff, 0 6px 22px #1490e266; }
+.stage-header .hotel-monogram { transition: box-shadow .3s ease; }
+.stage-loader .hotel-monogram:has(img) { width: 96px; height: 96px; border-radius: 26px; box-shadow: 0 0 0 1px #ffffff40, 0 0 50px #1490e259; }
+.stage-loader .hotel-monogram:has(img) img { padding: 8px; }
+@media (prefers-reduced-motion: no-preference) {
+    .stage-loader .hotel-monogram:has(img) { animation: logo-breathe 1.8s ease-in-out infinite; }
+}
+@keyframes logo-breathe { 50% { scale: 1.05; box-shadow: 0 0 0 1px #ffffff59, 0 0 70px #1490e280; } }
