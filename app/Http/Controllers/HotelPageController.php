@@ -454,9 +454,13 @@ class HotelPageController extends Controller
                 'avatarFocus' => '17% 11%',
             ],
             'solutions' => [
+                // The FTS AI Solutions room. The list panel sits on the right, so
+                // the right-hand cut-out is mirrored to point at it.
                 'combined' => 'images/facility.webp',
                 'background' => 'images/solutions-bg.webp',
-                'focus' => 'center 30%',
+                'character' => 'images/character/character right hand.webp',
+                'flip' => true,
+                'focus' => 'center 40%',
                 'focusMobile' => '24% 18%',
                 'anchor' => 'left',
                 'text' => 'bottom',

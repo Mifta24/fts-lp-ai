@@ -901,3 +901,13 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
 
 /* A cut-out that faces the wrong way for its scene is mirrored. */
 .stage-character[data-flip] { scale: -1 1; }
+
+/* Scene panels are frosted glass so the office behind them still shows. */
+.lobby-content { background: #eef4fad9; backdrop-filter: blur(16px) saturate(1.15); -webkit-backdrop-filter: blur(16px) saturate(1.15); }
+
+/* In the list rooms she stands a little smaller, leaving more of the room visible. */
+@media (min-width: 900px) {
+    .stage[data-scene="facilities"] .stage-character[data-anchor="left"],
+    .stage[data-scene="solutions"] .stage-character[data-anchor="left"],
+    .stage[data-scene="portfolio"] .stage-character[data-anchor="left"] { height: min(84%, 860px); left: 0; }
+}
