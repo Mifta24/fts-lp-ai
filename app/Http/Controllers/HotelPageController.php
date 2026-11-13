@@ -447,8 +447,8 @@ class HotelPageController extends Controller
                     'focusMobile' => '30% 50%',
                     'anchor' => 'left',
                     'text' => 'bottom',
-                    'avatarZoom' => '500%',
-                    'avatarFocus' => '17% 11%',
+                    'avatarZoom' => '300%',
+                    'avatarFocus' => '69% 20%',
                 ],
             ],
             'facilities' => [
@@ -464,8 +464,8 @@ class HotelPageController extends Controller
                 // sits low and leaves her face clear.
                 'anchor' => 'left',
                 'text' => 'bottom',
-                'avatarZoom' => '500%',
-                'avatarFocus' => '17% 11%',
+                'avatarZoom' => '300%',
+                'avatarFocus' => '69% 20%',
             ],
             'solutions' => [
                 // The FTS AI Solutions room. The list panel sits on the right, so
@@ -478,8 +478,8 @@ class HotelPageController extends Controller
                 'focusMobile' => '24% 18%',
                 'anchor' => 'left',
                 'text' => 'bottom',
-                'avatarZoom' => '500%',
-                'avatarFocus' => '17% 11%',
+                'avatarZoom' => '300%',
+                'avatarFocus' => '69% 20%',
             ],
             'portfolio' => [
                 // The FTS portfolio wall. The list panel sits on the right, so
@@ -492,8 +492,8 @@ class HotelPageController extends Controller
                 'focusMobile' => '24% 18%',
                 'anchor' => 'left',
                 'text' => 'bottom',
-                'avatarZoom' => '500%',
-                'avatarFocus' => '17% 11%',
+                'avatarZoom' => '300%',
+                'avatarFocus' => '69% 20%',
             ],
             'info' => [
                 // The FTS meeting room with her greeting cut-out layered in
