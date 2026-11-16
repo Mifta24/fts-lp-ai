@@ -217,6 +217,7 @@ class FtsSeeder extends Seeder
             ...$this->aboutItems(),
             ...$this->serviceItems(),
             ...$this->aiDemoItems(),
+            ...$this->liveProductItems(),
             ...$this->portfolioItems(),
             ...$this->officeItems(),
             ...$this->policyItems(),
@@ -342,6 +343,65 @@ class FtsSeeder extends Seeder
                 'tags' => ['ai demo', 'live demo', strtolower($industryEn), strtolower($roleEn), strtolower($name)],
             ];
         }, $rows);
+    }
+
+    /**
+     * Live FTS products that sit next to the sixteen demos in AI Solutions:
+     * two travel sites and the Workspace app. They are not staffed by an AI
+     * role, so each carries its own text instead of the demo template.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function liveProductItems(): array
+    {
+        $product = fn (string $title, string $url, string $id, string $en, string $ja, array $menu, array $tags): array => [
+            'category' => HotelKnowledgeItem::CATEGORY_AI,
+            'title' => $title,
+            'image_url' => '/images/demos/'.strtok((string) parse_url($url, PHP_URL_HOST), '.').'.webp',
+            'body' => $id,
+            'translations' => [
+                'en' => ['title' => $title, 'body' => $en, 'menu' => array_column($menu, 'en')],
+                'ja' => ['title' => $title, 'body' => $ja, 'menu' => array_column($menu, 'ja')],
+            ],
+            'details' => [
+                'demo_url' => $url,
+                'menu' => array_map(fn (array $entry) => ['name' => $entry['id'], 'description' => '', 'price' => null], $menu),
+            ],
+            'tags' => ['live product', ...$tags],
+        ];
+
+        return [
+            $product('Wild Mongolia', 'https://wildmongolia-travel2.fts-tech.co.id/',
+                'Situs biro wisata Mongolia: paket tur, pengalaman, informasi perjalanan, dan klub anggota. Tersedia dalam bahasa Inggris, Jepang, Mongolia, dan Indonesia. Coba langsung di browser.',
+                'A Mongolia travel site with tours, experiences, travel information and a members club. Available in English, Japanese, Mongolian and Indonesian. Try it in your browser.',
+                'モンゴル旅行サイト。ツアー、体験、旅行情報、会員クラブを備えています。英語・日本語・モンゴル語・インドネシア語に対応。ブラウザですぐに試せます。',
+                [
+                    ['id' => 'Paket tur', 'en' => 'Tours', 'ja' => 'ツアー'],
+                    ['id' => 'Pengalaman', 'en' => 'Experiences', 'ja' => '体験'],
+                    ['id' => 'Info perjalanan', 'en' => 'Travel info', 'ja' => '旅行情報'],
+                ],
+                ['travel', 'tours', 'mongolia', 'wild mongolia']),
+            $product('Thai Travel Booking', 'https://thai-travel.fts-tech.co.id/',
+                'Situs wisata Thailand untuk memesan antar-jemput bandara dan mobil pribadi, serta tur dan aktivitas, lengkap dengan keanggotaan. Coba langsung di browser.',
+                'A Thailand travel site for booking airport transfers and private cars, plus tours and activities, with a membership programme. Try it in your browser.',
+                'タイ旅行サイト。空港送迎・専用車の予約に加え、ツアーやアクティビティ、会員制度を備えています。ブラウザですぐに試せます。',
+                [
+                    ['id' => 'Mobil & transfer', 'en' => 'Cars & transfers', 'ja' => '車・送迎'],
+                    ['id' => 'Tur & aktivitas', 'en' => 'Tours & activities', 'ja' => 'ツアー・アクティビティ'],
+                    ['id' => 'Keanggotaan', 'en' => 'Membership', 'ja' => '会員制度'],
+                ],
+                ['travel', 'tours', 'thailand', 'airport transfer', 'thai travel']),
+            $product('FTS Workspace', 'https://workspace.fts-tech.co.id/',
+                'Workspace multi-tenant berbantuan AI untuk tujuan, tugas, dan tim. AI membantu menyiapkan langkah berikutnya, tim tetap memegang kendali. Tersedia dalam bahasa Indonesia, Inggris, dan Jepang.',
+                'A multi-tenant, AI-assisted workspace for goals, tasks and teams. AI helps prepare the next step while the team stays in control. Available in Indonesian, English and Japanese.',
+                '目標、タスク、チームのためのAI支援型マルチテナントワークスペース。AIが次のステップの準備を手伝い、主導権はチームにあります。インドネシア語・英語・日本語に対応。',
+                [
+                    ['id' => 'Tujuan tim', 'en' => 'Team goals', 'ja' => 'チームの目標'],
+                    ['id' => 'Tugas', 'en' => 'Tasks', 'ja' => 'タスク'],
+                    ['id' => 'Bantuan AI', 'en' => 'AI assistance', 'ja' => 'AIサポート'],
+                ],
+                ['workspace', 'saas', 'productivity', 'goals', 'tasks']),
+        ];
     }
 
     /**

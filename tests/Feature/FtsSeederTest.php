@@ -83,7 +83,7 @@ class FtsSeederTest extends TestCase
         $this->assertSame(['website-5-pages', 'website-10-pages', 'website-15-pages'], $plans->pluck('slug')->all());
     }
 
-    public function test_the_ai_solutions_room_lists_the_sixteen_live_demos_from_the_fts_ai_site(): void
+    public function test_the_ai_solutions_room_lists_the_live_demos_and_products_from_the_fts_ai_site(): void
     {
         $this->seed(FtsSeeder::class);
 
@@ -91,8 +91,12 @@ class FtsSeederTest extends TestCase
             ->where('category', 'ai')
             ->filter(fn ($item) => filled($item->details['demo_url'] ?? null));
 
-        $this->assertCount(16, $demos);
-        $this->assertCount(16, $demos->pluck('details.demo_url')->unique());
+        $this->assertCount(19, $demos);
+        $this->assertCount(19, $demos->pluck('details.demo_url')->unique());
+
+        foreach (['Wild Mongolia' => 'https://wildmongolia-travel2.fts-tech.co.id/', 'Thai Travel Booking' => 'https://thai-travel.fts-tech.co.id/', 'FTS Workspace' => 'https://workspace.fts-tech.co.id/'] as $title => $url) {
+            $this->assertSame($url, $demos->firstWhere('title', $title)?->details['demo_url'], "{$title} is missing from AI Solutions");
+        }
 
         $hotel = $demos->firstWhere('title', 'FTS Hotel AI');
         $this->assertSame('https://hotel-ai.fts-tech.co.id/fts-hotel-ai', $hotel->details['demo_url']);
@@ -115,7 +119,8 @@ class FtsSeederTest extends TestCase
             $this->assertContains($title, $demos->pluck('title')->all());
         }
 
-        $this->assertCount(16, Hotel::where('slug', 'fts')->firstOrFail()->knowledgeItems->where('category', 'ai'), 'AI Solutions holds only the live demos');
+        $this->assertSame(1, Hotel::where('slug', 'fts')->firstOrFail()->knowledgeItems->where('category', 'portfolio')->where('title', 'Thai Travel')->count(), 'the portfolio entry survives');
+        $this->assertCount(19, Hotel::where('slug', 'fts')->firstOrFail()->knowledgeItems->where('category', 'ai'), 'AI Solutions holds only the live demos and live products');
         $this->get('/fts/solutions?lang=en')->assertOk()->assertSee('Cafe AI')->assertDontSee('AI Automation')->assertDontSee('AI Agent Development');
     }
 
