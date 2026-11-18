@@ -8,6 +8,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {{-- The visitor's saved theme is applied before anything paints, so a dark choice never flashes light. --}}
     <script>try { if (localStorage.getItem('fts_theme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (e) {}</script>
+    {{-- A slow walk from the previous scene already had the loading portal up: open on it, so it does not blink. --}}
+    <script>try { if (sessionStorage.getItem('fts_portal')) { sessionStorage.removeItem('fts_portal'); document.documentElement.dataset.portal = ''; } } catch (e) {}</script>
     <title>{{ $title ?? $hotel->name.' · AI Concierge' }}</title>
     <meta property="og:title" content="{{ $hotel->name }}">
     @if ($hotel->coverUrl())<meta property="og:image" content="{{ $hotel->coverUrl() }}">@endif
@@ -32,7 +34,7 @@
 </head>
 <body class="stage-page antialiased" style="--concierge-image: url('{{ $backdrop['avatarImage'] }}'); --stage-focus: {{ $backdrop['focus'] }}; --stage-focus-mobile: {{ $backdrop['focusMobile'] }}; --concierge-zoom: {{ $backdrop['avatarZoom'] }}; --concierge-focus: {{ $backdrop['avatarFocus'] }}">
     <main class="stage" data-lobby data-scene="{{ $scene }}" data-page="{{ $scene === 'lobby' ? 'home' : $scene }}" data-chat-dock="{{ $scene === 'lobby' ? 'lobby' : ($scene === 'info' ? 'center' : ($scene === 'staff' ? 'left' : 'right')) }}">
-        <div class="stage-loader" data-stage-loader role="status"><span class="hotel-monogram" aria-hidden="true">@if ($hotel->logoUrl())<img src="{{ $hotel->logoUrl() }}" alt="">@else{{ mb_substr($hotel->name, 0, 1) }}@endif</span><p>{{ $lobby['loading'] }}</p></div>
+        <x-stage-loader :logo="$hotel->logoUrl()" :initial="mb_substr($hotel->name, 0, 1)" :label="$lobby['loading']" />
         <img src="{{ $backdrop['image'] }}" alt="{{ $backdrop['character'] ? '' : $lobby['assistant'] }}" class="stage-image" fetchpriority="high">
         <div class="stage-shade"></div>
         @if ($backdrop['character'])

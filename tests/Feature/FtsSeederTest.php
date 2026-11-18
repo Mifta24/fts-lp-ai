@@ -7,6 +7,7 @@ use App\Models\User;
 use Database\Seeders\FtsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class FtsSeederTest extends TestCase
@@ -38,7 +39,8 @@ class FtsSeederTest extends TestCase
 
         $html = $this->get('/fts?lang=id')->assertOk()->getContent();
         $this->assertStringContainsString('<link rel="icon" type="image/png" href="'.asset('images/fts-mark.png').'">', $html);
-        $this->assertSame(2, substr_count($html, '<span class="hotel-monogram" aria-hidden="true"><img src="'.asset('images/fts-mark.png').'"'));
+        $this->assertSame(1, substr_count($html, '<span class="hotel-monogram" aria-hidden="true"><img src="'.asset('images/fts-mark.png').'"'));
+        $this->assertSame(1, substr_count($html, '<span class="portal-core"><img src="'.asset('images/fts-mark.png').'"'));
     }
 
     public function test_outside_production_the_owner_gets_the_demo_password(): void
@@ -220,6 +222,34 @@ class FtsSeederTest extends TestCase
         $this->assertSame(1, Hotel::count());
         $this->assertSame(3, $hotel->roomTypes()->count());
         $this->assertSame($hotel->knowledgeItems()->pluck('title')->unique()->count(), $hotel->knowledgeItems()->count());
+    }
+
+    public function test_the_website_plans_board_shows_each_plan_and_price_once_in_every_language(): void
+    {
+        $this->seed(FtsSeeder::class);
+
+        $plans = [
+            'id' => ['Website Hingga 5 Halaman', 'Website Hingga 10 Halaman', 'Website Hingga 15 Halaman'],
+            'en' => ['Website up to 5 pages', 'Website up to 10 pages', 'Website up to 15 pages'],
+            'ja' => ['Webサイト 5ページまで', 'Webサイト 10ページまで', 'Webサイト 15ページまで'],
+        ];
+
+        foreach ($plans as $lang => $names) {
+            $html = $this->get('/fts/rooms?lang='.$lang)->assertOk()->assertSee('data-plan-board', false)->getContent();
+            $board = Str::between($html, 'data-plan-board', '</section>');
+
+            foreach ($names as $name) {
+                $this->assertSame(1, substr_count($board, '<h2 class="plan-card-name">'.$name.'</h2>'), "{$name} on the {$lang} board");
+            }
+
+            foreach (['700.000', '1.200.000', '1.600.000'] as $price) {
+                $this->assertStringContainsString('<strong>'.$price.'</strong>', $board, "{$price} on the {$lang} board");
+            }
+
+            // the plans are not repeated in a side index
+            $this->assertStringNotContainsString('class="room-nav"', $html);
+            $this->assertStringContainsString('class="portal"', $html);
+        }
     }
 
     public function test_company_pages_render_with_the_fts_data_in_each_language(): void

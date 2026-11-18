@@ -95,11 +95,8 @@
    is chatting it shares the column with the transcript instead of vanishing —
    the concierge can name a room and they can open it straight away. */
 @media (min-height: 760px) {
-    .stage[data-scene="rooms"]:has(.stage-chat.is-open) .stage-menu,
     .stage[data-scene="room"]:has(.stage-chat.is-open) .stage-menu { opacity: 1; visibility: visible; pointer-events: auto; height: 320px; padding-bottom: 12px; }
-    .stage[data-scene="rooms"]:has(.stage-chat.is-open) .stage-menu-footer,
     .stage[data-scene="room"]:has(.stage-chat.is-open) .stage-menu-footer { display: none; }
-    .stage[data-scene="rooms"]:has(.stage-chat.is-open) .chat-log,
     .stage[data-scene="room"]:has(.stage-chat.is-open) .chat-log { top: calc(var(--header) + 332px); }
 }
 
@@ -349,10 +346,6 @@
     ::view-transition-group(room-photo) { animation-duration: .7s; animation-timing-function: cubic-bezier(.22, .8, .24, 1); }
     ::view-transition-old(room-photo), ::view-transition-new(room-photo) { height: 100%; object-fit: cover; }
 }
-.stage-loader { position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: #0f1a28; color: #bce2fc; font-size: 14px; letter-spacing: .04em; opacity: 0; pointer-events: none; animation: loader-in .25s ease .3s forwards, loader-out .45s ease 2.6s forwards; }
-.stage-loader.is-ready { opacity: 0; visibility: hidden; animation: none; transition: opacity .3s ease; }
-@keyframes loader-in { to { opacity: 1; } }
-@keyframes loader-out { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
 .stage.is-leaving .stage-image { transform: scale(1.09); filter: brightness(.62); transition: transform .8s var(--ease-cine), filter .6s ease; animation: none; }
 .stage.is-leaving > :not(.stage-image, .stage-shade, .stage-loader, .stage-tour) { opacity: 0; animation: none; transition: opacity .22s ease; }
 /* ...except what holds the photo that is travelling to the next scene. */
@@ -373,7 +366,6 @@
 @keyframes stage-rise { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
 @keyframes stage-fade { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
-    .stage-loader { animation: none; }
     .stage-menu, .stage-welcome, .opening-panel, .opening-enter, .chat-bar, .chat-chips, .chat-launcher, .lobby-navigation a, .room-nav a, .opening-links li, .chat-log-messages > * { animation: none; }
     .stage.is-leaving .stage-image { transition: none; }
 }
@@ -1194,17 +1186,11 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
 /* Detail pictures keep their upper part (faces, headlines) in view when cropped. */
 .facility-hero img { object-position: center 22%; }
 
-/* The FTS mark sits on a white tile in the header and grows on the loading screen. */
+/* The FTS mark sits on a white tile in the header. */
 .hotel-monogram:has(img) { width: 46px; height: 46px; border: 0; border-radius: 13px; background: white; box-shadow: 0 0 0 1px #ffffff40, 0 6px 18px #0006; }
 .hotel-monogram:has(img) img { padding: 3px; }
 .stage-header > a:hover .hotel-monogram:has(img) { box-shadow: 0 0 0 2px #5cc1ff, 0 6px 22px #1490e266; }
 .stage-header .hotel-monogram { transition: box-shadow .3s ease; }
-.stage-loader .hotel-monogram:has(img) { width: 96px; height: 96px; border-radius: 26px; box-shadow: 0 0 0 1px #ffffff40, 0 0 50px #1490e259; }
-.stage-loader .hotel-monogram:has(img) img { padding: 8px; }
-@media (prefers-reduced-motion: no-preference) {
-    .stage-loader .hotel-monogram:has(img) { animation: logo-breathe 1.8s ease-in-out infinite; }
-}
-@keyframes logo-breathe { 50% { scale: 1.05; box-shadow: 0 0 0 1px #ffffff59, 0 0 70px #1490e280; } }
 
 /* The company name is long, so it runs a size below the greeting above it. */
 @media (min-width: 900px) {
@@ -1434,8 +1420,7 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
 .float-field .facility-card:hover .facility-card-go { color: white; }
 .card-badge { border-color: #1490e240; background: #1490e214; color: #1278c9; }
 
-/* Loading screen and opening screen. */
-.stage-loader { background: #eef4fa; color: #1278c9; }
+/* Opening screen. */
 .opening-panel .lobby-eyebrow { color: #1278c9; }
 .opening-panel h1 em { color: #1f5e98; }
 .opening-links a { border-color: #ffffffd9; background: #ffffffc7; color: #0f2a48; }
@@ -1484,3 +1469,207 @@ a.rc-fact { display: inline-block; color: var(--forest); text-decoration: underl
     .stage-nav a { padding: 10px 11px; font-size: 12.5px; }
     .stage-lang a { padding: 6px 10px; }
 }
+
+/* ==========================================================================
+   Website plans: the plans are the scene. One large glass card floats in the
+   middle, the concierge stands on the left with her intro, the chat docks on
+   the right. The card rises in, its plans follow one by one, and it eases
+   away again when the guest walks on.
+   ========================================================================== */
+.stage[data-scene="rooms"] { --plan-left: clamp(300px, 27vw, 420px); }
+.plan-board {
+    position: absolute; z-index: 3; left: var(--plan-left); right: 24px; top: calc(var(--header) + 4px); bottom: var(--dock);
+    display: flex; flex-direction: column; gap: 20px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #ffffff4d transparent;
+    padding: 26px 28px 28px; border: 1px solid #ffffff24; border-radius: 26px; color: #e3ecf6;
+    background: linear-gradient(160deg, #16335ae0, #0a1729eb 72%);
+    backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3);
+    box-shadow: 0 40px 90px -30px #000000b3, 0 0 0 1px #5cc1ff1f, inset 0 1px 0 #ffffff1f;
+    container-type: inline-size;
+    transition: right .38s cubic-bezier(.2, .8, .2, 1), opacity .32s ease, scale .45s var(--ease-cine), translate .45s var(--ease-cine);
+}
+.stage:has(.stage-chat.is-open) .plan-board { right: calc(var(--col) + 48px); }
+.plan-board .panel-close { flex-shrink: 0; position: absolute; top: 18px; right: 18px; margin: 0; border-color: #ffffff33; background: #ffffff14; color: white; }
+.plan-board .panel-close:hover { border-color: #1490e2; background: #1490e2; color: white; }
+.plan-board-head { padding-right: 52px; }
+.plan-board-head .lobby-eyebrow { color: #8fd3ff; }
+.plan-board-head h1 { margin-top: 8px; font: 600 clamp(26px, 2.6vw, 40px)/1.1 var(--font-display); letter-spacing: -.03em; color: white; }
+.plan-board-note { margin-top: 8px; font-size: 13px; line-height: 1.5; color: #b7c7d9; }
+.plan-board-empty { padding: 24px 0; color: #b7c7d9; }
+
+.plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.plan-card {
+    position: relative; display: flex; flex-direction: column; min-width: 0; overflow: hidden;
+    border: 1px solid #ffffff1f; border-radius: 20px; background: linear-gradient(170deg, #ffffff17, #ffffff08 70%);
+    box-shadow: 0 18px 40px -20px #000000b3, inset 0 1px 0 #ffffff14;
+    transition: border-color .3s ease, box-shadow .3s ease, translate .4s cubic-bezier(.34, 1.45, .5, 1);
+}
+.plan-card:hover, .plan-card:focus-within { translate: 0 -4px; border-color: #5cc1ff80; box-shadow: 0 28px 54px -22px #000000cc, 0 0 0 1px #5cc1ff40, 0 0 40px #1490e233; }
+.plan-card.is-suggested { border-color: #5cc1ff; box-shadow: 0 0 0 2px #5cc1ff80, 0 0 44px #1490e259, 0 28px 54px -22px #000000cc; }
+.plan-card-photo { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: #ffffff12; }
+.plan-card-photo img { width: 100%; height: 100%; object-fit: cover; transition: scale .6s var(--ease-cine); }
+.plan-card:hover .plan-card-photo img { scale: 1.05; }
+.plan-card-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, #0a1729b3, transparent 55%); }
+.plan-card-index { position: absolute; z-index: 1; left: 14px; bottom: 10px; font: 600 13px var(--font-display); letter-spacing: .12em; color: white; }
+.plan-card-body { display: flex; flex: 1; flex-direction: column; gap: 10px; padding: 16px 18px 18px; }
+.plan-card-name { font: 600 17px/1.3 var(--font-display); letter-spacing: -.01em; color: white; }
+.plan-card-price { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 5px; font-size: 12px; color: #9fb3c9; }
+.plan-card-price strong { font: 600 clamp(24px, 2.2vw, 30px)/1.1 var(--font-display); letter-spacing: -.02em; color: white; }
+.plan-card-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 12.5px; line-height: 1.6; color: #b7c7d9; }
+.plan-card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: auto; padding-top: 6px; }
+.plan-card-cta { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 999px; background: linear-gradient(135deg, #2aa4f4, #1278c9); color: white; font-size: 13px; font-weight: 600; box-shadow: 0 8px 22px #1490e240; transition: filter .2s ease, translate .3s cubic-bezier(.34, 1.45, .5, 1); }
+.plan-card-cta:hover { filter: brightness(1.1); translate: 0 -1px; }
+.plan-card-more { font-size: 12.5px; font-weight: 500; color: #8fd3ff; }
+.plan-card-more:hover { text-decoration: underline; }
+
+/* A narrow board (the chat is open beside it, or a small laptop): each plan becomes one row. */
+@container (max-width: 700px) {
+    .plan-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .plan-card { flex-direction: row; }
+    .plan-card-photo { flex: 0 0 34%; aspect-ratio: auto; min-height: 100%; }
+    .plan-card-desc { -webkit-line-clamp: 2; }
+}
+@container (max-width: 420px) {
+    .plan-card { flex-direction: column; }
+    .plan-card-photo { flex: none; aspect-ratio: 21 / 9; min-height: 0; }
+}
+
+/* Her intro stays on the left, beside the board. */
+@media (min-width: 900px) {
+    .stage[data-scene="rooms"] .stage-welcome-scene { left: 24px; top: auto; bottom: 96px; width: calc(var(--plan-left) - 48px); }
+    .stage[data-scene="rooms"] .stage-welcome-scene .narrator-on-stage { margin-top: 0; }
+}
+@media (min-width: 900px) and (max-height: 760px) {
+    .plan-board { gap: 14px; padding: 20px 22px 22px; }
+    .plan-card-photo { aspect-ratio: 21 / 9; }
+    .plan-card-desc { -webkit-line-clamp: 2; }
+}
+
+/* Phones and portrait tablets: a short line from the concierge on top, the board below it. */
+@media (max-width: 899px) {
+    .plan-board { left: 12px; right: 12px; top: calc(var(--header) + 104px); bottom: calc(var(--dock) + 4px); gap: 16px; padding: 20px 16px 18px; border-radius: 22px; }
+    .stage:has(.stage-chat.is-open) .plan-board { right: 12px; }
+    .stage:not(:has(.stage-welcome-scene)) .plan-board { top: calc(var(--header) + 4px); }
+    .plan-board .panel-close { top: 12px; right: 12px; }
+    .plan-board-head h1 { font-size: 26px; }
+    .stage[data-scene="rooms"] .stage-welcome-scene { left: 12px; right: 12px; top: calc(var(--header) + 4px); bottom: auto; }
+    .stage[data-scene="rooms"] .narrator-on-stage { margin: 0; gap: 10px; padding: 10px 12px; border-radius: 16px; }
+    .stage[data-scene="rooms"] .narrator-on-stage .narrator-avatar { width: 40px; height: 40px; }
+    .stage[data-scene="rooms"] .narrator-on-stage .narrator-text { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 0; margin-top: 2px; font-size: 12.5px; line-height: 1.5; }
+    .stage[data-scene="rooms"] .narrator-on-stage .narrator-actions { display: none; }
+}
+@media (max-width: 899px) and (max-height: 640px) {
+    .plan-board { top: calc(var(--header) + 4px); }
+}
+
+/* Motion: the board fades and rises in while it grows to size, then its plans follow one after another. */
+@media (prefers-reduced-motion: no-preference) {
+    .plan-board { animation: plan-board-in .7s var(--ease-cine) .12s backwards; }
+    .plan-board-head { animation: plan-item-in .55s var(--ease-cine) .3s backwards; }
+    .plan-card { animation: plan-item-in .6s var(--ease-cine) backwards; animation-delay: calc(.42s + var(--i, 0) * .11s); }
+    .plan-card.is-suggested { animation: plan-item-in .6s var(--ease-cine) backwards, plan-suggest 1.6s ease-out 1; animation-delay: calc(.42s + var(--i, 0) * .11s), 0s; }
+    .stage.is-leaving > .plan-board { opacity: 0; scale: .96; translate: 0 -14px; animation: none; transition: opacity .32s ease, scale .45s var(--ease-cine), translate .45s var(--ease-cine); }
+    .stage.is-leaving .plan-card { opacity: 0; translate: 0 10px; transition: opacity .22s ease, translate .3s ease; transition-delay: calc(var(--i, 0) * 40ms); }
+}
+@keyframes plan-board-in { from { opacity: 0; scale: .94; translate: 0 26px; } to { opacity: 1; scale: 1; translate: 0 0; } }
+@keyframes plan-item-in { from { opacity: 0; scale: .96; translate: 0 22px; } to { opacity: 1; scale: 1; translate: 0 0; } }
+@keyframes plan-suggest { 0% { box-shadow: 0 0 0 0 #5cc1ffcc; } 100% { box-shadow: 0 0 0 16px #5cc1ff00; } }
+@media (prefers-reduced-motion: reduce) {
+    .plan-board, .plan-card, .plan-card-photo img, .plan-card-cta { transition: none; }
+    .plan-card:hover, .plan-card:focus-within { translate: none; }
+}
+
+/* Light theme: white frosted glass with navy text, like the other panels. */
+:root:not([data-theme="dark"]) .plan-board {
+    border-color: #ffffffe6; color: #0f2a48; scrollbar-color: #0b2a4a33 transparent;
+    background: linear-gradient(160deg, #ffffffd9, #eef6fdc7 70%);
+    backdrop-filter: blur(26px) saturate(1.5); -webkit-backdrop-filter: blur(26px) saturate(1.5);
+    box-shadow: 0 40px 90px -30px #0b2a4a66, 0 0 0 1px #5cc1ff1f, inset 0 1px 0 #ffffff;
+}
+:root:not([data-theme="dark"]) .plan-board .panel-close { border-color: #d5e2ef; background: white; color: #0f2a48; }
+:root:not([data-theme="dark"]) .plan-board .panel-close:hover { border-color: #1490e2; background: #1490e2; color: white; }
+:root:not([data-theme="dark"]) .plan-board-head .lobby-eyebrow { color: #1278c9; }
+:root:not([data-theme="dark"]) .plan-board-head h1, :root:not([data-theme="dark"]) .plan-card-name, :root:not([data-theme="dark"]) .plan-card-price strong { color: #0f2a48; }
+:root:not([data-theme="dark"]) :is(.plan-board-note, .plan-board-empty, .plan-card-desc) { color: #4a5d73; }
+:root:not([data-theme="dark"]) .plan-card-price { color: #4a5d73; }
+:root:not([data-theme="dark"]) .plan-card { border-color: #ffffffe6; background: linear-gradient(170deg, #fffffff2, #f3f8fde6 70%); box-shadow: 0 18px 44px -18px #0b2a4a40, inset 0 1px 0 #ffffff; }
+:root:not([data-theme="dark"]) .plan-card:hover, :root:not([data-theme="dark"]) .plan-card:focus-within { border-color: #5cc1ff; box-shadow: 0 28px 60px -20px #0b2a4a59, 0 0 0 1px #5cc1ff59, 0 0 40px #5cc1ff33; }
+:root:not([data-theme="dark"]) .plan-card.is-suggested { border-color: #1490e2; box-shadow: 0 0 0 2px #5cc1ff99, 0 0 44px #5cc1ff4d, 0 28px 60px -20px #0b2a4a59; }
+:root:not([data-theme="dark"]) .plan-card-photo { background: #e3edf7; }
+:root:not([data-theme="dark"]) .plan-card-more { color: #1278c9; }
+
+/* ==========================================================================
+   Loading portal: the FTS mark at the centre of rings of light, while the
+   next scene is prepared. Hidden by default; it fades in only when loading
+   takes a while (a delayed fade on page load, `is-active` from stage.js on a
+   slow navigation) and fades out from wherever it got to (`is-done`).
+   ========================================================================== */
+.stage-loader {
+    --portal-size: clamp(180px, 34vmin, 260px);
+    position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 34px;
+    background: var(--portal-bg, radial-gradient(circle at 50% 44%, #12305a 0, #081629 46%, #040b16 100%));
+    color: var(--portal-ink, #e6f2ff); opacity: 0; visibility: hidden; pointer-events: none;
+    animation: portal-in .45s ease .45s forwards, portal-out .5s ease 6s forwards;
+}
+.stage-loader[hidden] { display: none; }
+:root[data-portal] .stage-loader { animation: portal-in .01s linear forwards, portal-out .5s ease 6s forwards; }
+.stage-loader.is-active { visibility: visible; pointer-events: auto; animation: portal-in .45s ease forwards; }
+.stage-loader.is-done { opacity: 0; visibility: hidden; animation: portal-out .5s ease forwards; }
+.stage-loader.is-ready { display: none; }
+@keyframes portal-in { from { opacity: 0; visibility: visible; } to { opacity: 1; visibility: visible; } }
+@keyframes portal-out { from { opacity: var(--portal-from, 1); visibility: visible; } to { opacity: 0; visibility: hidden; } }
+
+.portal { position: relative; width: var(--portal-size); height: var(--portal-size); }
+.portal > span { position: absolute; border-radius: 50%; }
+.portal-glow { inset: -45%; background: radial-gradient(circle, #1ca0f24d 0, #1ca0f214 34%, transparent 62%); }
+.portal-ring--outer { inset: 0; border: 1px solid #5cc1ff4d; box-shadow: inset 0 0 40px #1490e226, 0 0 34px #1490e21f; }
+.portal-ring--dash { inset: 9%; border: 1.5px dashed #5cc1ff73; }
+.portal-ring--arc { inset: 17%; border: 2px solid transparent; border-top-color: #5cc1ff; border-right-color: #5cc1ff59; box-shadow: 0 -6px 18px -8px #5cc1ffb3; }
+.portal-ring--orbit { inset: 3%; }
+.portal-ring--orbit i { position: absolute; left: 50%; top: -4px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: #bfeaff; box-shadow: 0 0 10px #5cc1ff, 0 0 22px #1490e2; }
+.portal-wave { inset: 24%; border: 1px solid #5cc1ff99; opacity: 0; }
+.portal-particles { inset: 0; }
+.portal-particles i { position: absolute; left: 50%; top: 50%; width: 3px; height: 3px; margin: -1.5px; border-radius: 50%; background: #bfeaff; box-shadow: 0 0 8px #5cc1ff; opacity: 0; transform: rotate(var(--a)) translateY(calc(var(--portal-size) * -.3)); }
+.portal-core { inset: 30% !important; display: grid; place-items: center; overflow: hidden; border-radius: 28% !important; background: white; color: #1278c9; font: 600 34px var(--font-display); box-shadow: var(--portal-core-shadow, 0 0 0 1px #ffffff40, 0 0 0 6px #5cc1ff14, 0 0 60px #1490e280); }
+.portal-core img { width: 100%; height: 100%; padding: 14%; object-fit: contain; }
+.portal-label { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.portal-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: .32em; text-transform: uppercase; color: var(--portal-muted, #5cc1ff); }
+.portal-text { font: 500 15px/1.4 var(--font-display); letter-spacing: .01em; }
+.portal-label::after { content: ''; width: 132px; height: 2px; margin-top: 6px; border-radius: 2px; background: linear-gradient(90deg, transparent, #5cc1ff, transparent) no-repeat -132px 0 / 66px 100%, #5cc1ff26; }
+
+@media (prefers-reduced-motion: no-preference) {
+    .portal-glow { animation: portal-breathe 3.2s ease-in-out infinite; }
+    .portal-ring--dash { animation: portal-spin 18s linear infinite reverse; }
+    .portal-ring--arc { animation: portal-spin 1.6s linear infinite; }
+    .portal-ring--orbit { animation: portal-spin 5.5s linear infinite; }
+    .portal-wave { animation: portal-wave 2.4s ease-out infinite; }
+    .portal-wave--late { animation-delay: 1.2s; }
+    .portal-particles i { animation: portal-particle 2.4s ease-out infinite; animation-delay: var(--d, 0s); }
+    .portal-core { animation: portal-core 2.4s ease-in-out infinite; }
+    .portal-label::after { animation: portal-scan 1.6s ease-in-out infinite; }
+    .portal-ring--dash, .portal-ring--arc, .portal-ring--orbit, .portal-particles i { will-change: transform; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .portal-wave, .portal-particles { display: none; }
+}
+@keyframes portal-spin { to { rotate: 360deg; } }
+@keyframes portal-breathe { 50% { opacity: .65; scale: .94; } }
+@keyframes portal-wave { from { opacity: .8; scale: .9; } to { opacity: 0; scale: 2.1; } }
+@keyframes portal-particle {
+    0% { opacity: 0; transform: rotate(var(--a)) translateY(calc(var(--portal-size) * -.26)) scale(.4); }
+    25% { opacity: 1; }
+    100% { opacity: 0; transform: rotate(calc(var(--a) + 24deg)) translateY(calc(var(--portal-size) * -.62)) scale(1); }
+}
+@keyframes portal-core { 50% { scale: 1.04; } }
+@keyframes portal-scan { to { background-position: 132px 0, 0 0; } }
+
+/* Light theme portal. */
+:root:not([data-theme="dark"]) .stage-loader {
+    --portal-bg: radial-gradient(circle at 50% 44%, #ffffff 0, #e6f1fb 40%, #cfe2f4 100%);
+    --portal-ink: #0f2a48; --portal-muted: #1278c9;
+    --portal-core-shadow: 0 0 0 1px #d5e2ef, 0 0 0 6px #5cc1ff1f, 0 18px 50px -10px #1490e273, 0 0 60px #5cc1ff59;
+}
+:root:not([data-theme="dark"]) .portal-ring--outer { border-color: #1490e240; }
+:root:not([data-theme="dark"]) .portal-ring--dash { border-color: #1490e259; }
+:root:not([data-theme="dark"]) .portal-ring--arc { border-top-color: #1490e2; border-right-color: #1490e24d; }
+:root:not([data-theme="dark"]) .portal-wave { border-color: #1490e280; }
+:root:not([data-theme="dark"]) .portal-particles i { background: #5cc1ff; box-shadow: 0 0 8px #1490e2; }

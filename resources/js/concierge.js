@@ -389,8 +389,22 @@ function initConcierge() {
         return chip;
     }
 
+    /** The Website Plans scene shows every plan on a board of its own. */
+    const planBoard = document.querySelector('[data-plan-board]');
+
+    /** Lights up the plans the concierge named on the board, and brings the first into view. */
+    function pointAtPlans(rooms) {
+        const slugs = new Set((rooms || []).map((room) => room.room_type_slug));
+        const plans = [...planBoard.querySelectorAll('[data-plan]')];
+
+        plans.forEach((plan) => plan.classList.toggle('is-suggested', slugs.has(plan.dataset.plan) && slugs.size < plans.length));
+        const first = plans.find((plan) => slugs.has(plan.dataset.plan));
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        first?.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' });
+    }
+
     /** Chips whose answer is a set of room cards: the showcase opens on placeholders while the concierge looks. */
-    const SHOWS_ROOMS = new Set(['cheapest', 'family', 'view', 'rooms']);
+    const SHOWS_ROOMS = new Set(planBoard ? [] : ['cheapest', 'family', 'view', 'rooms']);
 
     const quickReplies = JSON.parse(root.querySelector('script[data-quick-replies]')?.textContent || '{}');
 
@@ -449,6 +463,20 @@ function initConcierge() {
             }
 
             if (fresh && payload.type === 'booking_confirmation') confetti();
+
+            // The plans are already on the board in the middle of this scene:
+            // point at them there instead of stacking a second copy on top.
+            // A search for given dates carries its totals, so it still gets its own cards.
+            if (payload.type === 'room_results' && planBoard && !payload.check_in) {
+                const point = () => {
+                    if (showcase.isOpen()) showcase.hide();
+                    pointAtPlans(payload.rooms);
+                };
+                messagesEl.appendChild(card([recapChip(cards.describe(payload).recap, point)]));
+                latest = point;
+
+                return;
+            }
 
             const item = cards.describe(payload);
 

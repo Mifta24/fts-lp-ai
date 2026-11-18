@@ -1,6 +1,7 @@
 /**
  * Full-screen stage chrome shared by the opening screen and the lobby:
- * hides the "preparing" loader once the hero image is ready, and eases the
+ * hides the "preparing" portal once the hero image is ready (it only ever
+ * shows when a scene or navigation is genuinely slow), and eases the
  * scene out before following an "enter" link so moving between screens feels
  * like walking through the lobby rather than loading a page.
  *
@@ -14,6 +15,12 @@
  */
 const TOPIC_KEY = 'concierge_pending_topic';
 
+/** Set while the portal loader is on screen as the guest leaves, so the next scene opens on it instead of flashing. */
+const PORTAL_KEY = 'fts_portal';
+
+/** How long a navigation may take before the portal loader is shown at all; quicker ones never see it. */
+const PORTAL_DELAY_MS = 420;
+
 function initStage() {
     const stage = document.querySelector('.stage');
     if (!stage) return;
@@ -22,7 +29,41 @@ function initStage() {
     const image = stage.querySelector('.stage-image');
     const tour = stage.querySelector('[data-stage-tour]');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const showScene = () => loader?.classList.add('is-ready');
+    let portalTimer = null;
+
+    /**
+     * The scene is ready: a loader that never got to show is dropped at once,
+     * one that is on screen fades out from wherever it is.
+     */
+    function showScene() {
+        if (!loader) return;
+
+        const opacity = parseFloat(getComputedStyle(loader).opacity) || 0;
+        document.documentElement.removeAttribute('data-portal');
+        loader.classList.remove('is-active');
+
+        if (opacity < 0.02) {
+            loader.classList.add('is-ready');
+            loader.hidden = true;
+
+            return;
+        }
+
+        loader.style.setProperty('--portal-from', String(opacity));
+        loader.classList.add('is-done');
+        loader.addEventListener('animationend', () => { loader.hidden = true; }, { once: true });
+    }
+
+    /** The next scene is slow to arrive: open the portal over the one being left. */
+    function showPortal() {
+        if (!loader) return;
+
+        loader.hidden = false;
+        loader.classList.remove('is-ready', 'is-done');
+        loader.classList.add('is-active');
+
+        try { sessionStorage.setItem(PORTAL_KEY, '1'); } catch { /* the next scene just opens without it */ }
+    }
 
     if (!image || image.complete) {
         showScene();
@@ -34,6 +75,13 @@ function initStage() {
     window.addEventListener('pageshow', (event) => {
         if (event.persisted) {
             leaving = false;
+            window.clearTimeout(portalTimer);
+            try { sessionStorage.removeItem(PORTAL_KEY); } catch { /* nothing to clear */ }
+            if (loader) {
+                loader.classList.remove('is-active', 'is-done');
+                loader.classList.add('is-ready');
+                loader.hidden = true;
+            }
             stage.classList.remove('is-leaving', 'is-morphing');
             document.querySelectorAll('[data-morph]').forEach((photo) => {
                 photo.style.viewTransitionName = '';
@@ -74,7 +122,10 @@ function initStage() {
         if (chime) window.hotelSound.play('enter');
 
         const hold = reducedMotion ? 0 : line ? 820 : chime ? 560 : 320;
-        window.setTimeout(() => { window.location.href = href; }, hold);
+        window.setTimeout(() => {
+            window.location.href = href;
+            portalTimer = window.setTimeout(showPortal, PORTAL_DELAY_MS);
+        }, hold);
     }
 
     document.querySelectorAll('[data-stage-exit]').forEach((link) => {

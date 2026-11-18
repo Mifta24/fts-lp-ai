@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }}</title>
     <link rel="icon" type="image/png" href="{{ asset('images/fts-mark.png') }}">
+    <script>try { if (sessionStorage.getItem('fts_portal')) { sessionStorage.removeItem('fts_portal'); document.documentElement.dataset.portal = ''; } } catch (e) {}</script>
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="stage-page antialiased">
     <main class="stage">
-        <div class="stage-loader" data-stage-loader role="status"><span class="hotel-monogram" aria-hidden="true"><img src="{{ asset('images/fts-mark.png') }}" alt=""></span><p>{{ $opening['loading'] }}</p></div>
+        <x-stage-loader :logo="asset('images/fts-mark.png')" :label="$opening['loading']" />
         <img src="{{ asset('images/lobby-bg.webp') }}" alt="" class="stage-image" fetchpriority="high">
         <div class="stage-shade"></div>
 

@@ -409,7 +409,7 @@ class HotelPageController extends Controller
         $tour = self::NARRATION[$locale];
         $link = fn (string $route, array $parameters = []) => route($route, ['hotelSlug' => $hotel->slug, ...$parameters, 'lang' => $locale]);
 
-        $stops = [['key' => 'rooms', 'url' => $link('hotel.rooms'), 'line' => $tour['tour_rooms'], 'spot' => '.room-nav']];
+        $stops = [['key' => 'rooms', 'url' => $link('hotel.rooms'), 'line' => $tour['tour_rooms'], 'spot' => '.plan-grid']];
 
         foreach ($roomTypes->take(2) as $roomType) {
             $stops[] = [

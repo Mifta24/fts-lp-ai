@@ -180,11 +180,14 @@ class HotelLobbyTest extends TestCase
             ->assertOk()
             ->assertSee('Deluxe King')
             ->assertSee('Family Suite')
-            // the scene itself is the view now: the concierge greets over the
-            // backdrop and the index on the right carries the rooms
+            // the concierge greets on the left and the plans fill one board in
+            // the middle, not a second copy in a side index
             ->assertDontSee('data-room-card', false)
             ->assertSee('narrator-on-stage', false)
-            ->assertSee('class="room-nav-thumb"', false)
+            ->assertSee('data-plan-board', false)
+            ->assertSee('data-plan="deluxe-king"', false)
+            ->assertSee('https://example.test/one.jpg', false)
+            ->assertDontSee('class="room-nav"', false)
             ->assertSee('href="'.route('hotel.room', ['hotelSlug' => 'demo', 'roomSlug' => 'deluxe-king', 'lang' => 'en']).'"', false)
             ->assertDontSee('Retired Room')
             ->assertDontSee('Foreign Room');
