@@ -92,6 +92,18 @@ class FtsSeederTest extends TestCase
             ->filter(fn ($item) => filled($item->details['demo_url'] ?? null));
 
         $this->assertCount(19, $demos);
+
+        $expectedOrder = [
+            'FTS Wedding Venue AI', 'FTS Hotel AI', 'FTS Restaurant AI', 'Cafe AI',
+            'FTS Apartment AI', 'FTS Car Rental AI', 'Spa AI', 'Beauty Salon AI',
+            'Fitness Gym AI', 'Aurelia Event Hall', 'FTS Training Venue AI',
+            'FTS Recruitment Venue', 'Digital Agency AI', 'IT Company AI',
+            'Software SaaS AI', 'Maju Jaya Studio', 'Wild Mongolia',
+            'Thai Travel Booking', 'FTS Workspace',
+        ];
+        $this->assertSame($expectedOrder, $demos->sortBy('sort_order')->pluck('title')->values()->all());
+        $this->get('/fts/solutions?lang=en')->assertOk()->assertSeeInOrder($expectedOrder);
+
         $this->assertCount(19, $demos->pluck('details.demo_url')->unique());
 
         foreach (['Wild Mongolia' => 'https://wildmongolia-travel2.fts-tech.co.id/', 'Thai Travel Booking' => 'https://thai-travel.fts-tech.co.id/', 'FTS Workspace' => 'https://workspace.fts-tech.co.id/'] as $title => $url) {
