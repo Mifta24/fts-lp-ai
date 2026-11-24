@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Support\Brand;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(Brand::class, fn () => Brand::fromConfig());
     }
 
     /**
@@ -25,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
         $this->stripHotelSlugOnCustomDomains();
+
+        View::composer('*', fn ($view) => $view->with('brand', $this->app->make(Brand::class)));
     }
 
     /**

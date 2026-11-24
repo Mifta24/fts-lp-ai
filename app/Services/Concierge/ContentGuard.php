@@ -2,6 +2,8 @@
 
 namespace App\Services\Concierge;
 
+use App\Support\Brand;
+
 /**
  * Deterministic backstop for the concierge's prompt rules. The local model is
  * an uncensored one, so asking it politely to stay clean is not enough: rude,
@@ -50,9 +52,14 @@ class ContentGuard
         'エロ', 'セックス', 'ポルノ', 'アダルト', '風俗', 'デリヘル', '売春', '麻薬', '覚醒剤', '爆弾',
     ];
 
+    /**
+     * Without a brand (a plain unit test) the refusal names FTS, the default.
+     */
+    public function __construct(private readonly ?Brand $brand = null) {}
+
     private const REFUSALS = [
-        'id' => 'Maaf, saya tidak bisa membantu dengan hal itu. Saya siap membantu soal paket website, layanan, permintaan proyek, atau menghubungkan Anda dengan tim FTS.',
-        'en' => 'Sorry, I cannot help with that. I am happy to help with website plans, services, project requests, or connecting you with the FTS team.',
+        'id' => 'Maaf, saya tidak bisa membantu dengan hal itu. Saya siap membantu soal paket website, layanan, permintaan proyek, atau menghubungkan Anda dengan tim :brand.',
+        'en' => 'Sorry, I cannot help with that. I am happy to help with website plans, services, project requests, or connecting you with the :brand team.',
         'ja' => '申し訳ございませんが、そのご依頼にはお応えできません。Webサイトのプラン、サービス、プロジェクトのご相談、スタッフへのご連絡でしたらお手伝いいたします。',
     ];
 
@@ -113,6 +120,8 @@ class ContentGuard
      */
     public function refusal(string $locale): string
     {
-        return self::REFUSALS[$locale] ?? self::REFUSALS['en'];
+        $refusal = self::REFUSALS[$locale] ?? self::REFUSALS['en'];
+
+        return $this->brand?->fill($refusal) ?? str_replace(':brand', 'FTS', $refusal);
     }
 }

@@ -22,6 +22,7 @@
             @endif
 
             {{-- Check-in / check-out, read like the two halves of a keycard sleeve. --}}
+            @if ($brand->showsOfficeHours())
             <div class="info-stay">
                 <div class="info-stay-item">
                     <span class="info-stay-label">{{ $lobby['check_in'] }}</span>
@@ -33,6 +34,7 @@
                     <span class="info-stay-time">{{ substr($hotel->check_out_time ?? '', 0, 5) ?: '—' }}</span>
                 </div>
             </div>
+            @endif
 
             <div class="info-facts">
                 <a href="{{ $mapUrl }}" target="_blank" rel="noopener" class="info-fact">
@@ -46,7 +48,7 @@
                 @endif
             </div>
 
-            <p class="info-address">{{ $hotel->address }}, {{ $hotel->city }}, {{ $hotel->country }}</p>
+            <p class="info-address">{{ collect([$hotel->address, $hotel->city, $hotel->country])->filter()->implode(', ') }}</p>
 
             @if ($sections->count() > 1)
                 <div class="info-tabs">

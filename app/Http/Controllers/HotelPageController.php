@@ -8,6 +8,7 @@ use App\Models\HotelKnowledgeItem;
 use App\Models\RoomType;
 use App\Services\Reservation\MemberBookings;
 use App\Services\Reservation\ReservationHandover;
+use App\Support\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -35,6 +36,7 @@ class HotelPageController extends Controller
     public function __construct(
         private readonly ReservationHandover $handover,
         private readonly MemberBookings $memberBookings,
+        private readonly Brand $brand,
     ) {}
 
     /**
@@ -59,7 +61,7 @@ class HotelPageController extends Controller
             'info_more' => 'Below you will find the address, our terms and frequently asked questions — or just ask me.',
             'tour_rooms' => 'This way — let me show you our website plans.',
             'tour_facilities' => 'Come, let me show you our services.',
-            'tour_info' => 'Let me tell you more about FTS.',
+            'tour_info' => 'Let me tell you more about :brand.',
             'tour_staff' => 'Let me bring you to our team.',
             'solutions' => 'Here are our AI solutions. We offer :count, including :examples. Choose one to read the details, or ask me anything.',
             'solutions_one' => 'We offer :examples. Open it to read the details, or ask me anything.',
@@ -87,7 +89,7 @@ class HotelPageController extends Controller
             'info_more' => 'Di bawah ini ada alamat, ketentuan, dan pertanyaan yang sering diajukan — atau tanyakan langsung kepada saya.',
             'tour_rooms' => 'Mari, saya antar ke paket website kami.',
             'tour_facilities' => 'Mari, saya antar melihat layanan kami.',
-            'tour_info' => 'Mari, saya ceritakan lebih lanjut tentang FTS.',
+            'tour_info' => 'Mari, saya ceritakan lebih lanjut tentang :brand.',
             'tour_staff' => 'Mari, saya antar Anda bertemu tim kami.',
             'solutions' => 'Inilah solusi AI kami. Ada :count solusi, di antaranya :examples. Pilih salah satu untuk membaca detailnya, atau tanyakan apa saja kepada saya.',
             'solutions_one' => 'Kami memiliki :examples. Buka untuk membaca detailnya, atau tanyakan apa saja kepada saya.',
@@ -115,7 +117,7 @@ class HotelPageController extends Controller
             'info_more' => '以下に、所在地、ご利用条件、よくあるご質問をご案内しています。お気軽にお尋ねください。',
             'tour_rooms' => 'こちらへどうぞ。Webサイトのプランへご案内します。',
             'tour_facilities' => 'こちらへどうぞ。サービスへご案内します。',
-            'tour_info' => 'FTSについてご案内します。',
+            'tour_info' => ':brandについてご案内します。',
             'tour_staff' => 'スタッフのもとへご案内します。',
             'solutions' => 'こちらがAIソリューションです。:count件、:examples などをご用意しています。選ぶと詳細をご覧いただけます。ご質問もどうぞ。',
             'solutions_one' => ':examples をご用意しています。詳細をご覧ください。ご質問もどうぞ。',
@@ -129,6 +131,16 @@ class HotelPageController extends Controller
             'listen' => '音声で聞く', 'stop' => '停止', 'skip' => 'スキップ', 'speaks' => '話しています',
         ],
     ];
+
+    /**
+     * The narration in the guest's language, worded for this deployment's brand.
+     *
+     * @return array<string, string>
+     */
+    private function narration(string $locale): array
+    {
+        return $this->brand->copy('narration', $locale, self::NARRATION[$locale]);
+    }
 
     /**
      * Guest-facing names for the coded room values stored in the database.
@@ -383,7 +395,7 @@ class HotelPageController extends Controller
             'roomTerms' => self::ROOM_TERMS[$locale],
             'wizard' => $this->wizardLabels($locale),
             'tourStops' => $this->tourStops($hotel, $roomTypes, $locale),
-            'narration' => self::NARRATION[$locale],
+            'narration' => $this->narration($locale),
             'roomNarrations' => $this->roomNarrations($hotel, $roomTypes, $locale),
             'staffLinks' => $this->handover->forStaff($hotel, $locale),
             'today' => now($hotel->timezone)->toDateString(),
@@ -406,7 +418,7 @@ class HotelPageController extends Controller
      */
     private function tourStops(Hotel $hotel, Collection $roomTypes, string $locale): array
     {
-        $tour = self::NARRATION[$locale];
+        $tour = $this->narration($locale);
         $link = fn (string $route, array $parameters = []) => route($route, ['hotelSlug' => $hotel->slug, ...$parameters, 'lang' => $locale]);
 
         $stops = [['key' => 'rooms', 'url' => $link('hotel.rooms'), 'line' => $tour['tour_rooms'], 'spot' => '.plan-grid']];
@@ -571,7 +583,7 @@ class HotelPageController extends Controller
             $artwork = [...$artwork, ...$artwork['upgrade']];
         }
 
-        $characterImage = $artwork['character'] ?? self::CHARACTER_IMAGE;
+        $characterImage = $this->brand->characterImage($artwork['character'] ?? self::CHARACTER_IMAGE);
         $character = file_exists(public_path($characterImage)) ? $characterImage : null;
         $background = $character && file_exists(public_path($artwork['background'])) ? $artwork['background'] : null;
 
@@ -620,7 +632,7 @@ class HotelPageController extends Controller
         $solutionsUrl = route('hotel.solutions', ['hotelSlug' => $hotel->slug, 'lang' => $locale]);
         $portfolioUrl = route('hotel.portfolio', ['hotelSlug' => $hotel->slug, 'lang' => $locale]);
         $roomsUrl = route('hotel.rooms', ['hotelSlug' => $hotel->slug, 'lang' => $locale]);
-        $tour = self::NARRATION[$locale];
+        $tour = $this->narration($locale);
 
         $facilitiesUrl = route('hotel.facilities', ['hotelSlug' => $hotel->slug, 'lang' => $locale]);
         $infoUrl = route('hotel.info', ['hotelSlug' => $hotel->slug, 'lang' => $locale]);
@@ -647,7 +659,7 @@ class HotelPageController extends Controller
      */
     private function sceneNarrations(Hotel $hotel, Collection $facilities, string $locale, string $sectionKey = 'facilities'): array
     {
-        $templates = self::NARRATION[$locale];
+        $templates = $this->narration($locale);
         $separator = $locale === 'ja' ? '、' : '; ';
         $time = fn (?string $value) => $value ? substr($value, 0, 5) : null;
 
@@ -669,7 +681,7 @@ class HotelPageController extends Controller
             $parts[] = str_replace(':location', $location, $templates['info_place']);
         }
 
-        if ($time($hotel->check_in_time) && $time($hotel->check_out_time)) {
+        if ($this->brand->showsOfficeHours() && $time($hotel->check_in_time) && $time($hotel->check_out_time)) {
             $parts[] = str_replace([':in', ':out'], [$time($hotel->check_in_time), $time($hotel->check_out_time)], $templates['info_hours']);
         }
 
@@ -684,7 +696,7 @@ class HotelPageController extends Controller
      */
     private function roomNarrations(Hotel $hotel, Collection $roomTypes, string $locale): array
     {
-        $templates = self::NARRATION[$locale];
+        $templates = $this->narration($locale);
         $terms = self::ROOM_TERMS[$locale];
         $money = fn ($value) => $hotel->currency.' '.number_format((float) $value, 0, ',', '.');
         $sentence = fn (string $text) => preg_match('/[.!?。！？]$/u', $text) ? $text : $text.($locale === 'ja' ? '。' : '.');
@@ -727,23 +739,23 @@ class HotelPageController extends Controller
      */
     private function openingLabels(string $locale): array
     {
-        return match ($locale) {
+        return $this->brand->copy('opening', $locale, ['tagline' => $this->brand->tagline($locale), ...match ($locale) {
             'en' => [
-                'welcome' => 'Welcome to', 'tagline' => 'Your AI concierge for web development, AI automation, and offshore development.',
+                'welcome' => 'Welcome to',
                 'enter' => 'Enter :name', 'empty' => 'The virtual lobby is being prepared. Please come back soon.',
-                'loading' => 'Preparing the FTS experience…', 'sound_on' => 'Sound on', 'sound_off' => 'Sound off', 'rooms' => 'Explore website plans', 'facilities' => 'See our services', 'reservation' => 'Start a project', 'staff' => 'Talk to our team',
+                'loading' => 'Preparing the :brand experience…', 'sound_on' => 'Sound on', 'sound_off' => 'Sound off', 'rooms' => 'Explore website plans', 'facilities' => 'See our services', 'reservation' => 'Start a project', 'staff' => 'Talk to our team',
             ],
             'ja' => [
-                'welcome' => 'ようこそ', 'tagline' => 'AIコンシェルジュが、Web開発・AI自動化・オフショア開発のご相談をお手伝いします。',
+                'welcome' => 'ようこそ',
                 'enter' => ':name に入る', 'empty' => 'バーチャルロビーは準備中です。しばらくしてからお越しください。',
-                'loading' => 'FTSの体験を準備しています…', 'sound_on' => 'サウンドオン', 'sound_off' => 'サウンドオフ', 'rooms' => 'プランを見る', 'facilities' => 'サービスを見る', 'reservation' => 'プロジェクトを相談', 'staff' => 'チームに相談',
+                'loading' => ':brandの体験を準備しています…', 'sound_on' => 'サウンドオン', 'sound_off' => 'サウンドオフ', 'rooms' => 'プランを見る', 'facilities' => 'サービスを見る', 'reservation' => 'プロジェクトを相談', 'staff' => 'チームに相談',
             ],
             default => [
-                'welcome' => 'Selamat datang di', 'tagline' => 'AI Concierge siap membantu kebutuhan web development, AI automation, dan offshore development Anda.',
+                'welcome' => 'Selamat datang di',
                 'enter' => 'Masuk ke :name', 'empty' => 'Lobi virtual sedang dipersiapkan. Silakan kembali lagi nanti.',
-                'loading' => 'Menyiapkan pengalaman FTS…', 'sound_on' => 'Suara aktif', 'sound_off' => 'Suara mati', 'rooms' => 'Jelajahi paket website', 'facilities' => 'Lihat layanan', 'reservation' => 'Mulai proyek', 'staff' => 'Bicara dengan tim',
+                'loading' => 'Menyiapkan pengalaman :brand…', 'sound_on' => 'Suara aktif', 'sound_off' => 'Suara mati', 'rooms' => 'Jelajahi paket website', 'facilities' => 'Lihat layanan', 'reservation' => 'Mulai proyek', 'staff' => 'Bicara dengan tim',
             ],
-        };
+        }]);
     }
 
     /**
@@ -751,7 +763,7 @@ class HotelPageController extends Controller
      */
     private function wizardLabels(string $locale): array
     {
-        return [...ReservationController::MESSAGES[$locale], 'member_discount' => MemberLabels::for($locale)['member_discount'], ...match ($locale) {
+        return $this->brand->copy('wizard', $locale, [...ReservationController::MESSAGES[$locale], 'member_discount' => MemberLabels::for($locale)['member_discount'], ...match ($locale) {
             'en' => [
                 'title' => 'Project request', 'intro' => 'A few quick steps. Final scope and rates are confirmed by our team.',
                 'step_of' => 'Step :current of :total', 'steps' => ['Plan & start', 'Your details', 'Summary'], 'period_hint' => 'Each request covers 30 days, the same as one monthly fee.',
@@ -762,10 +774,10 @@ class HotelPageController extends Controller
                 'special' => 'Notes (optional)', 'special_placeholder' => 'e.g. preferred start date, existing website',
                 'next' => 'Next', 'back' => 'Back', 'edit' => 'Edit', 'submit' => 'Submit project request', 'sending' => 'Sending…',
                 'checking' => 'Checking availability…', 'estimated_total' => 'Estimated total', 'guests' => 'Users', 'room' => 'Plan', 'dates' => 'Period',
-                'contact' => 'Contact', 'disclaimer' => 'This is a project request. Final scope and rates are confirmed by the FTS team. No payment is taken now.',
+                'contact' => 'Contact', 'disclaimer' => 'This is a project request. Final scope and rates are confirmed by the :brand team. No payment is taken now.',
                 'available_instead' => 'Available for your period instead:', 'done_title' => 'Request received', 'reference' => 'Your reference',
-                'awaiting' => 'Awaiting FTS confirmation', 'done_hint' => 'Send your request to our team to speed up confirmation.',
-                'send_whatsapp' => 'Send to WhatsApp', 'call_hotel' => 'Call FTS', 'email_hotel' => 'Email FTS', 'new_request' => 'New request',
+                'awaiting' => 'Awaiting :brand confirmation', 'done_hint' => 'Send your request to our team to speed up confirmation.',
+                'send_whatsapp' => 'Send to WhatsApp', 'call_hotel' => 'Call :brand', 'email_hotel' => 'Email :brand', 'new_request' => 'New request',
                 'error_network' => 'Connection problem. Your details are saved — please try again or contact our team.',
                 'error_generic' => 'Something went wrong. Please try again or contact our team.', 'select_room' => 'Please choose a plan.',
                 'contact_staff' => 'Contact our team',
@@ -780,10 +792,10 @@ class HotelPageController extends Controller
                 'special' => 'ご要望（任意）', 'special_placeholder' => '例：希望の開始日、既存のWebサイト',
                 'next' => '次へ', 'back' => '戻る', 'edit' => '編集', 'submit' => 'プロジェクトの相談を送信', 'sending' => '送信中…',
                 'checking' => '空室を確認中…', 'estimated_total' => '概算合計', 'guests' => '利用者', 'room' => 'プラン', 'dates' => '期間',
-                'contact' => 'ご連絡先', 'disclaimer' => 'これはプロジェクトのご相談リクエストです。範囲と料金はFTSのスタッフが最終確認します。現時点でお支払いは発生しません。',
+                'contact' => 'ご連絡先', 'disclaimer' => 'これはプロジェクトのご相談リクエストです。範囲と料金は:brandのスタッフが最終確認します。現時点でお支払いは発生しません。',
                 'available_instead' => 'ご希望の期間で空いているプラン：', 'done_title' => 'リクエストを受け付けました', 'reference' => '受付番号',
-                'awaiting' => 'FTSの確認待ち', 'done_hint' => 'リクエストをスタッフに送ると、確認がスムーズです。',
-                'send_whatsapp' => 'WhatsAppで送る', 'call_hotel' => 'FTSに電話', 'email_hotel' => 'FTSにメール', 'new_request' => '新しいリクエスト',
+                'awaiting' => ':brandの確認待ち', 'done_hint' => 'リクエストをスタッフに送ると、確認がスムーズです。',
+                'send_whatsapp' => 'WhatsAppで送る', 'call_hotel' => ':brandに電話', 'email_hotel' => ':brandにメール', 'new_request' => '新しいリクエスト',
                 'error_network' => '接続に問題があります。入力内容は保存されています。もう一度お試しいただくか、スタッフにご連絡ください。',
                 'error_generic' => 'エラーが発生しました。もう一度お試しいただくか、スタッフにご連絡ください。', 'select_room' => 'プランを選択してください。',
                 'contact_staff' => 'スタッフに連絡',
@@ -798,110 +810,107 @@ class HotelPageController extends Controller
                 'special' => 'Catatan (opsional)', 'special_placeholder' => 'mis. tanggal mulai yang diinginkan, website yang sudah ada',
                 'next' => 'Lanjut', 'back' => 'Kembali', 'edit' => 'Ubah', 'submit' => 'Kirim permintaan proyek', 'sending' => 'Mengirim…',
                 'checking' => 'Memeriksa ketersediaan…', 'estimated_total' => 'Perkiraan total', 'guests' => 'Pengguna', 'room' => 'Paket', 'dates' => 'Periode',
-                'contact' => 'Kontak', 'disclaimer' => 'Ini adalah permintaan proyek. Lingkup dan biaya final dikonfirmasi oleh tim FTS. Belum ada pembayaran yang diambil.',
+                'contact' => 'Kontak', 'disclaimer' => 'Ini adalah permintaan proyek. Lingkup dan biaya final dikonfirmasi oleh tim :brand. Belum ada pembayaran yang diambil.',
                 'available_instead' => 'Tersedia di periode Anda:', 'done_title' => 'Permintaan diterima', 'reference' => 'Nomor referensi',
-                'awaiting' => 'Menunggu konfirmasi FTS', 'done_hint' => 'Kirim permintaan ke tim kami agar konfirmasi lebih cepat.',
-                'send_whatsapp' => 'Kirim ke WhatsApp', 'call_hotel' => 'Telepon FTS', 'email_hotel' => 'Email FTS', 'new_request' => 'Permintaan baru',
+                'awaiting' => 'Menunggu konfirmasi :brand', 'done_hint' => 'Kirim permintaan ke tim kami agar konfirmasi lebih cepat.',
+                'send_whatsapp' => 'Kirim ke WhatsApp', 'call_hotel' => 'Telepon :brand', 'email_hotel' => 'Email :brand', 'new_request' => 'Permintaan baru',
                 'error_network' => 'Koneksi bermasalah. Data Anda tersimpan — coba lagi atau hubungi tim kami.',
                 'error_generic' => 'Terjadi kesalahan. Coba lagi atau hubungi tim kami.', 'select_room' => 'Silakan pilih paket.',
                 'contact_staff' => 'Hubungi tim kami',
             ],
-        }];
+        }]);
     }
 
     private function lobbyLabels(string $locale): array
     {
-        return match ($locale) {
+        return $this->brand->copy('lobby', $locale, ['intro' => $this->brand->intro($locale), ...match ($locale) {
             'en' => [
                 'welcome' => 'Welcome to', 'lobby' => ':name.',
-                'intro' => 'Japanese quality, Indonesian excellence. Web development and AI automation for businesses in Indonesia. Let me show you around.',
-                'home' => 'Lobby', 'explore' => 'Explore FTS', 'reservation' => 'Start a project',
+                'home' => 'Lobby', 'explore' => 'Explore :brand', 'reservation' => 'Start a project',
                 'reservation_intro' => 'Tell your AI Concierge about your project and preferred dates. We will help you choose a plan and submit a project request.',
                 'reservation_q' => 'I would like to start a project. Please help me choose a plan.',
                 'start_booking' => 'Plan my project', 'available' => 'Here to help, 24/7',
                 'assistant' => 'Your virtual host', 'illustration' => 'AI illustration',
-                'staff_intro' => 'Need a personal touch? Send a message and we will connect you with the FTS team.',
+                'staff_intro' => 'Need a personal touch? Send a message and we will connect you with the :brand team.',
                 'empty' => 'Ask your AI Concierge for more information.', 'back' => 'Back to lobby',
                 'check_in' => 'Opens', 'check_out' => 'Closes', 'location' => 'Find us',
                 'connection_error' => 'Chat could not connect. Please reload to try again.',
                 'rooms_empty' => 'Plan information will be available soon. Please ask our team.',
-                'menu_info' => 'About FTS', 'info_about' => 'About FTS', 'info_policies' => 'Terms', 'info_faq' => 'Frequently asked questions', 'info_tab_about' => 'About', 'info_tab_faq' => 'FAQ',
-                'info_address' => 'Address', 'info_hours' => 'Opening hours', 'info_contact' => 'Contact', 'info_map' => 'Open in Maps', 'info_ask' => 'Ask about FTS',
+                'menu_info' => 'About :brand', 'info_about' => 'About :brand', 'info_policies' => 'Terms', 'info_faq' => 'Frequently asked questions', 'info_tab_about' => 'About', 'info_tab_faq' => 'FAQ',
+                'info_address' => 'Address', 'info_hours' => 'Opening hours', 'info_contact' => 'Contact', 'info_map' => 'Open in Maps', 'info_ask' => 'Ask about :brand',
                 'facility_counter' => 'Service', 'prev_facility' => 'Previous', 'next_facility' => 'Next', 'ask_facility' => 'Ask about this service', 'back_facilities' => 'All services', 'open_facility' => 'Read more', 'ask_facility_q' => 'Tell me more about :name.',
                 'try_demo' => 'Try the demo', 'live_demo' => 'Live demo', 'counter_solutions' => 'Solution', 'back_solutions' => 'All AI solutions', 'ask_solutions' => 'Ask about this solution', 'ask_solutions_q' => 'Tell me more about :name.',
                 'counter_portfolio' => 'Project', 'back_portfolio' => 'All projects', 'ask_portfolio' => 'Ask about this project', 'ask_portfolio_q' => 'Tell me more about the :name project.',
-                'loading' => 'Preparing the FTS experience…',
+                'loading' => 'Preparing the :brand experience…',
                 'sound_on' => 'Sound on', 'sound_off' => 'Sound off', 'theme_dark' => 'Dark theme', 'theme_light' => 'Light theme',
                 'room_scene' => 'Plan details', 'room_counter' => 'Plan', 'gallery' => 'Photo gallery', 'photo' => 'Photo',
                 'no_photo' => 'Photos coming soon', 'prev_room' => 'Previous plan', 'next_room' => 'Next plan',
                 'ask_room' => 'Ask about this plan', 'reserve_room' => 'Request this plan', 'breakfast_excluded' => 'Design & development free', 'breakfast' => 'Included',
                 'size' => 'Size', 'bed' => 'Bed', 'guests' => 'Users', 'view' => 'View', 'extra_bed' => 'Extra bed',
                 'extra_bed_yes' => 'Available', 'extra_bed_no' => 'Not available', 'amenities' => 'Included',
-                'availability_note' => 'Final scope and rates are confirmed by the FTS team.',
+                'availability_note' => 'Final scope and rates are confirmed by the :brand team.',
                 'ask_room_q' => 'Tell me more about the :name.',
             ],
             'ja' => [
                 'welcome' => 'ようこそ', 'lobby' => ':nameへ。',
-                'intro' => '日本の品質と、インドネシアの力。インドネシアの企業に向けたWeb開発とAI自動化を、私がご案内します。',
-                'home' => 'ロビー', 'explore' => 'FTSをご案内', 'reservation' => 'プロジェクトのご相談',
+                'home' => 'ロビー', 'explore' => ':brandをご案内', 'reservation' => 'プロジェクトのご相談',
                 'reservation_intro' => 'プロジェクトの内容とご希望の日程をAIコンシェルジュにお伝えください。プランの選択とご相談リクエストをお手伝いします。',
                 'reservation_q' => 'プロジェクトを始めたいです。プランの選び方を教えてください。',
                 'start_booking' => 'プロジェクトを計画する', 'available' => '24時間お手伝いします',
                 'assistant' => 'バーチャルホスト', 'illustration' => 'AIイラスト',
-                'staff_intro' => 'FTSのスタッフがお手伝いします。メッセージを送ってご相談ください。',
+                'staff_intro' => ':brandのスタッフがお手伝いします。メッセージを送ってご相談ください。',
                 'empty' => '詳しくはAIコンシェルジュにお尋ねください。', 'back' => 'ロビーに戻る',
                 'check_in' => '開始', 'check_out' => '終了', 'location' => 'アクセス',
                 'connection_error' => 'チャットに接続できませんでした。再読み込みしてください。',
                 'rooms_empty' => 'プラン情報は準備中です。スタッフにお尋ねください。',
-                'menu_info' => 'FTSについて', 'info_about' => 'FTSについて', 'info_policies' => 'ご利用条件', 'info_faq' => 'よくあるご質問', 'info_tab_about' => 'FTSについて', 'info_tab_faq' => 'FAQ',
-                'info_address' => '所在地', 'info_hours' => '営業時間', 'info_contact' => 'お問い合わせ', 'info_map' => '地図で開く', 'info_ask' => 'FTSについて聞く',
+                'menu_info' => ':brandについて', 'info_about' => ':brandについて', 'info_policies' => 'ご利用条件', 'info_faq' => 'よくあるご質問', 'info_tab_about' => ':brandについて', 'info_tab_faq' => 'FAQ',
+                'info_address' => '所在地', 'info_hours' => '営業時間', 'info_contact' => 'お問い合わせ', 'info_map' => '地図で開く', 'info_ask' => ':brandについて聞く',
                 'facility_counter' => 'サービス', 'prev_facility' => '前へ', 'next_facility' => '次へ', 'ask_facility' => 'このサービスについて聞く', 'back_facilities' => 'サービス一覧', 'open_facility' => '詳しく見る', 'ask_facility_q' => ':name について詳しく教えてください。',
                 'try_demo' => 'デモを試す', 'live_demo' => 'ライブデモ', 'counter_solutions' => 'ソリューション', 'back_solutions' => 'AIソリューション一覧', 'ask_solutions' => 'このソリューションについて聞く', 'ask_solutions_q' => ':name について詳しく教えてください。',
                 'counter_portfolio' => '制作実績', 'back_portfolio' => '実績一覧', 'ask_portfolio' => 'この実績について聞く', 'ask_portfolio_q' => ':name の制作について詳しく教えてください。',
-                'loading' => 'FTSの体験を準備しています…',
+                'loading' => ':brandの体験を準備しています…',
                 'sound_on' => 'サウンドオン', 'sound_off' => 'サウンドオフ', 'theme_dark' => 'ダークテーマ', 'theme_light' => 'ライトテーマ',
                 'room_scene' => 'プランのご案内', 'room_counter' => 'プラン', 'gallery' => 'フォトギャラリー', 'photo' => '写真',
                 'no_photo' => '写真は準備中です', 'prev_room' => '前のプラン', 'next_room' => '次のプラン',
                 'ask_room' => 'このプランについて聞く', 'reserve_room' => 'このプランを相談', 'breakfast_excluded' => '設計・開発は無料', 'breakfast' => '含む',
                 'size' => '広さ', 'bed' => 'ベッド', 'guests' => '利用者', 'view' => '眺望', 'extra_bed' => 'エキストラベッド',
                 'extra_bed_yes' => '利用可', 'extra_bed_no' => '利用不可', 'amenities' => '含まれるもの',
-                'availability_note' => '範囲と料金は、FTSのスタッフが最終確認いたします。',
+                'availability_note' => '範囲と料金は、:brandのスタッフが最終確認いたします。',
                 'ask_room_q' => ':name について詳しく教えてください。',
             ],
             default => [
                 'welcome' => 'Selamat datang di', 'lobby' => ':name.',
-                'intro' => 'Kualitas Jepang, keunggulan Indonesia. Web development dan AI automation untuk bisnis di Indonesia. Mari saya antar berkeliling.',
-                'home' => 'Beranda', 'explore' => 'Jelajahi FTS', 'reservation' => 'Mulai proyek',
+                'home' => 'Beranda', 'explore' => 'Jelajahi :brand', 'reservation' => 'Mulai proyek',
                 'reservation_intro' => 'Ceritakan proyek dan tanggal mulai yang Anda inginkan kepada AI Concierge. Kami bantu memilih paket hingga pengajuan permintaan proyek.',
                 'reservation_q' => 'Saya ingin memulai proyek. Bantu saya memilih paket.',
                 'start_booking' => 'Rencanakan proyek', 'available' => 'Siap membantu, 24 jam',
                 'assistant' => 'Resepsionis virtual Anda', 'illustration' => 'Ilustrasi AI',
-                'staff_intro' => 'Butuh bantuan langsung? Kirim pesan untuk terhubung dengan tim FTS.',
+                'staff_intro' => 'Butuh bantuan langsung? Kirim pesan untuk terhubung dengan tim :brand.',
                 'empty' => 'Tanyakan informasi selengkapnya kepada AI Concierge.', 'back' => 'Kembali ke lobi',
                 'check_in' => 'Buka', 'check_out' => 'Tutup', 'location' => 'Lokasi kantor',
                 'connection_error' => 'Chat belum tersambung. Muat ulang halaman untuk mencoba lagi.',
                 'rooms_empty' => 'Informasi paket segera tersedia. Silakan tanyakan kepada tim kami.',
-                'menu_info' => 'Tentang FTS', 'info_about' => 'Tentang FTS', 'info_policies' => 'Ketentuan', 'info_faq' => 'Pertanyaan yang sering diajukan', 'info_tab_about' => 'Tentang', 'info_tab_faq' => 'FAQ',
-                'info_address' => 'Alamat', 'info_hours' => 'Jam buka', 'info_contact' => 'Kontak', 'info_map' => 'Buka di Maps', 'info_ask' => 'Tanya tentang FTS',
+                'menu_info' => 'Tentang :brand', 'info_about' => 'Tentang :brand', 'info_policies' => 'Ketentuan', 'info_faq' => 'Pertanyaan yang sering diajukan', 'info_tab_about' => 'Tentang', 'info_tab_faq' => 'FAQ',
+                'info_address' => 'Alamat', 'info_hours' => 'Jam buka', 'info_contact' => 'Kontak', 'info_map' => 'Buka di Maps', 'info_ask' => 'Tanya tentang :brand',
                 'facility_counter' => 'Layanan', 'prev_facility' => 'Sebelumnya', 'next_facility' => 'Berikutnya', 'ask_facility' => 'Tanya tentang layanan ini', 'back_facilities' => 'Semua layanan', 'open_facility' => 'Selengkapnya', 'ask_facility_q' => 'Ceritakan lebih banyak tentang :name.',
                 'try_demo' => 'Coba demo', 'live_demo' => 'Demo live', 'counter_solutions' => 'Solusi', 'back_solutions' => 'Semua solusi AI', 'ask_solutions' => 'Tanya tentang solusi ini', 'ask_solutions_q' => 'Ceritakan lebih banyak tentang :name.',
                 'counter_portfolio' => 'Proyek', 'back_portfolio' => 'Semua proyek', 'ask_portfolio' => 'Tanya tentang proyek ini', 'ask_portfolio_q' => 'Ceritakan lebih banyak tentang proyek :name.',
-                'loading' => 'Menyiapkan pengalaman FTS…',
+                'loading' => 'Menyiapkan pengalaman :brand…',
                 'sound_on' => 'Suara aktif', 'sound_off' => 'Suara mati', 'theme_dark' => 'Tema gelap', 'theme_light' => 'Tema terang',
                 'room_scene' => 'Detail paket', 'room_counter' => 'Paket', 'gallery' => 'Galeri foto', 'photo' => 'Foto',
                 'no_photo' => 'Foto segera tersedia', 'prev_room' => 'Paket sebelumnya', 'next_room' => 'Paket berikutnya',
                 'ask_room' => 'Tanya tentang paket ini', 'reserve_room' => 'Ajukan paket ini', 'breakfast_excluded' => 'Desain & pengembangan gratis', 'breakfast' => 'Termasuk',
                 'size' => 'Ukuran', 'bed' => 'Tempat tidur', 'guests' => 'Pengguna', 'view' => 'Pemandangan', 'extra_bed' => 'Extra bed',
                 'extra_bed_yes' => 'Tersedia', 'extra_bed_no' => 'Tidak tersedia', 'amenities' => 'Termasuk',
-                'availability_note' => 'Lingkup dan biaya final dikonfirmasi oleh tim FTS.',
+                'availability_note' => 'Lingkup dan biaya final dikonfirmasi oleh tim :brand.',
                 'ask_room_q' => 'Ceritakan lebih banyak tentang :name.',
             ],
-        };
+        }]);
     }
 
     private function labels(string $locale): array
     {
-        return match ($locale) {
+        return $this->brand->copy('labels', $locale, match ($locale) {
             'en' => [
                 'from' => 'from',
                 'per_night' => '/ month',
@@ -919,7 +928,7 @@ class HotelPageController extends Controller
                 'chat_voice_off' => 'Stop reading aloud',
                 'chat_open' => 'Chat with AI Concierge',
                 'chat_close' => 'Close conversation',
-                'chat_intro' => 'Hi! I\'m the FTS AI Concierge. Ask me about website plans, services, or your project.',
+                'chat_intro' => 'Hi! I\'m the :brand AI Concierge. Ask me about website plans, services, or your project.',
                 'breakfast_included' => 'Breakfast included',
                 'max_guests' => 'users',
                 'chat_room_only' => 'Design & development free',
@@ -956,7 +965,7 @@ class HotelPageController extends Controller
                 'chat_photo_close' => 'Close photo',
                 'quick_facilities_q' => 'Show me your services.',
                 'quick_location' => 'Location & map',
-                'quick_location_q' => 'Where is the FTS office and how do I get there?',
+                'quick_location_q' => 'Where is the :brand office and how do I get there?',
                 'quick_menu' => 'Service details',
                 'quick_menu_q' => 'What does each service include?',
                 'chat_close_showcase' => 'Close',
@@ -978,15 +987,15 @@ class HotelPageController extends Controller
                 'menu_rooms' => 'Find a plan',
                 'menu_rooms_q' => 'I would like to see the website plans.',
                 'menu_facilities' => 'Our services',
-                'menu_facilities_q' => 'What services does FTS offer?',
+                'menu_facilities_q' => 'What services does :brand offer?',
                 'menu_solutions' => 'AI Solutions',
-                'menu_solutions_q' => 'What AI solutions does FTS offer?',
+                'menu_solutions_q' => 'What AI solutions does :brand offer?',
                 'menu_portfolio' => 'Portfolio',
-                'menu_portfolio_q' => 'Can I see the projects FTS has built?',
+                'menu_portfolio_q' => 'Can I see the projects :brand has built?',
                 'menu_policies' => 'Terms & FAQ',
                 'menu_policies_q' => 'What are the contract terms and response times?',
                 'menu_staff' => 'Talk to our team',
-                'menu_staff_q' => 'I would like to speak with the FTS team.',
+                'menu_staff_q' => 'I would like to speak with the :brand team.',
             ],
             'ja' => [
                 'from' => '',
@@ -1005,7 +1014,7 @@ class HotelPageController extends Controller
                 'chat_voice_off' => '読み上げを止める',
                 'chat_open' => 'AIコンシェルジュに相談',
                 'chat_close' => '会話を閉じる',
-                'chat_intro' => 'こんにちは。FTSのAIコンシェルジュです。Webサイトのプランやサービス、プロジェクトについて何でもお尋ねください。',
+                'chat_intro' => 'こんにちは。:brandのAIコンシェルジュです。Webサイトのプランやサービス、プロジェクトについて何でもお尋ねください。',
                 'breakfast_included' => '朝食付き',
                 'max_guests' => '名まで',
                 'chat_room_only' => '設計・開発は無料',
@@ -1042,7 +1051,7 @@ class HotelPageController extends Controller
                 'chat_photo_close' => '写真を閉じる',
                 'quick_facilities_q' => 'サービスを見せてください。',
                 'quick_location' => '所在地・地図',
-                'quick_location_q' => 'FTSのオフィスはどこにあり、どう行けばいいですか？',
+                'quick_location_q' => ':brandのオフィスはどこにあり、どう行けばいいですか？',
                 'quick_menu' => 'サービスの内容',
                 'quick_menu_q' => '各サービスには何が含まれますか？',
                 'chat_close_showcase' => '閉じる',
@@ -1064,15 +1073,15 @@ class HotelPageController extends Controller
                 'menu_rooms' => 'プランを探す',
                 'menu_rooms_q' => 'Webサイトのプランを見せてください。',
                 'menu_facilities' => 'サービス',
-                'menu_facilities_q' => 'FTSにはどんなサービスがありますか？',
+                'menu_facilities_q' => ':brandにはどんなサービスがありますか？',
                 'menu_solutions' => 'AIソリューション',
-                'menu_solutions_q' => 'FTSにはどんなAIソリューションがありますか？',
+                'menu_solutions_q' => ':brandにはどんなAIソリューションがありますか？',
                 'menu_portfolio' => '制作実績',
-                'menu_portfolio_q' => 'FTSがこれまでに手がけたプロジェクトを見せてください。',
+                'menu_portfolio_q' => ':brandがこれまでに手がけたプロジェクトを見せてください。',
                 'menu_policies' => '条件・よくある質問',
                 'menu_policies_q' => '契約条件と対応時間を教えてください。',
                 'menu_staff' => 'チームに相談',
-                'menu_staff_q' => 'FTSのスタッフと話したいです。',
+                'menu_staff_q' => ':brandのスタッフと話したいです。',
             ],
             default => [
                 'from' => 'mulai dari',
@@ -1091,7 +1100,7 @@ class HotelPageController extends Controller
                 'chat_voice_off' => 'Hentikan suara',
                 'chat_open' => 'Chat dengan AI Concierge',
                 'chat_close' => 'Tutup percakapan',
-                'chat_intro' => 'Halo! Saya AI Concierge FTS. Tanyakan apa saja soal paket website, layanan, atau proyek Anda.',
+                'chat_intro' => 'Halo! Saya AI Concierge :brand. Tanyakan apa saja soal paket website, layanan, atau proyek Anda.',
                 'breakfast_included' => 'Termasuk sarapan',
                 'max_guests' => 'pengguna',
                 'chat_room_only' => 'Desain & pengembangan gratis',
@@ -1126,9 +1135,9 @@ class HotelPageController extends Controller
                 'chat_photo_prev' => 'Foto sebelumnya',
                 'chat_photo_next' => 'Foto berikutnya',
                 'chat_photo_close' => 'Tutup foto',
-                'quick_facilities_q' => 'Tunjukkan layanan FTS.',
+                'quick_facilities_q' => 'Tunjukkan layanan :brand.',
                 'quick_location' => 'Lokasi & peta',
-                'quick_location_q' => 'Di mana kantor FTS dan bagaimana cara ke sana?',
+                'quick_location_q' => 'Di mana kantor :brand dan bagaimana cara ke sana?',
                 'quick_menu' => 'Detail layanan',
                 'quick_menu_q' => 'Apa saja yang termasuk di setiap layanan?',
                 'chat_close_showcase' => 'Tutup',
@@ -1139,7 +1148,7 @@ class HotelPageController extends Controller
                 'picker_title' => 'Kapan Anda ingin mulai?', 'picker_message' => 'Saya ingin mulai:',
                 'picker_pick_start' => 'Pilih tanggal mulai', 'picker_pick_end' => 'Pilih tanggal selesai', 'picker_continue' => 'Lanjut',
                 'tour_progress' => 'Tur :current / :total', 'tour_next' => 'Lewati ›', 'tour_stop' => 'Berhenti',
-                'tour_done' => 'Itu tadi sekilas tentang FTS. Kapan Anda ingin mulai?',
+                'tour_done' => 'Itu tadi sekilas tentang :brand. Kapan Anda ingin mulai?',
                 'chat_add_calendar' => 'Tambahkan ke kalender', 'chat_share' => 'Bagikan', 'chat_share_text' => 'Proyek saya dengan :hotel: :room, :in → :out. Ref :ref',
                 'chat_new' => 'Chat baru',
                 'chat_new_title' => 'Mulai chat baru?',
@@ -1150,16 +1159,16 @@ class HotelPageController extends Controller
                 'menu_rooms' => 'Cari paket',
                 'menu_rooms_q' => 'Saya ingin melihat paket website yang tersedia.',
                 'menu_facilities' => 'Layanan kami',
-                'menu_facilities_q' => 'Apa saja layanan yang ditawarkan FTS?',
+                'menu_facilities_q' => 'Apa saja layanan yang ditawarkan :brand?',
                 'menu_solutions' => 'AI Solutions',
-                'menu_solutions_q' => 'Solusi AI apa saja yang ditawarkan FTS?',
+                'menu_solutions_q' => 'Solusi AI apa saja yang ditawarkan :brand?',
                 'menu_portfolio' => 'Portofolio',
-                'menu_portfolio_q' => 'Boleh saya lihat proyek yang pernah dibuat FTS?',
+                'menu_portfolio_q' => 'Boleh saya lihat proyek yang pernah dibuat :brand?',
                 'menu_policies' => 'Ketentuan & FAQ',
                 'menu_policies_q' => 'Apa ketentuan kontrak dan waktu responsnya?',
                 'menu_staff' => 'Bicara dengan tim',
-                'menu_staff_q' => 'Saya ingin bicara dengan tim FTS.',
+                'menu_staff_q' => 'Saya ingin bicara dengan tim :brand.',
             ],
-        };
+        });
     }
 }

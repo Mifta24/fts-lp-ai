@@ -10,16 +10,19 @@
                 <button type="button" data-hero-quick-message="{{ $labels['menu_staff_q'] }}" class="lobby-action">{{ $labels['menu_staff'] }} <span aria-hidden="true">↗</span></button>
                 @if($staffLinks['whatsapp_url'])<a href="{{ $staffLinks['whatsapp_url'] }}" target="_blank" rel="noopener" class="wizard-secondary">{{ $wizard['whatsapp'] }}</a>@endif
                 @if($staffLinks['phone_url'])<a href="{{ $staffLinks['phone_url'] }}" class="wizard-secondary">{{ $wizard['call_hotel'] }}</a>@endif
-                <a href="{{ route('hotel.booking', ['hotelSlug' => $hotel->slug, 'lang' => $locale]) }}" class="wizard-secondary">{{ \App\Http\Controllers\GuestBookingController::LABELS[$locale]['title'] }}</a>
+                <a href="{{ route('hotel.booking', ['hotelSlug' => $hotel->slug, 'lang' => $locale]) }}" class="wizard-secondary">{{ \App\Http\Controllers\GuestBookingController::labels($locale)['title'] }}</a>
                 @if($hotel->supportsMembers())<a href="{{ route('member.account', ['hotelSlug' => $hotel->slug, 'lang' => $locale]) }}" class="wizard-secondary">{{ \App\Core\Member\Support\MemberLabels::for($locale)['member_link'] }}</a>@endif
                 @if($staffLinks['email_url'])<a href="{{ $staffLinks['email_url'] }}" class="wizard-secondary">{{ $wizard['email_hotel'] }}</a>@endif
             </div>
 
             <div class="staff-location">
                 <h3>{{ $lobby['location'] }}</h3>
-                <p>{{ $hotel->address }}, {{ $hotel->city }}, {{ $hotel->country }}</p>
+                <p>{{ collect([$hotel->address, $hotel->city, $hotel->country])->filter()->implode(', ') }}</p>
                 @if($hotel->phone)<p>{{ $hotel->phone }}</p>@endif
                 @if($hotel->email)<p>{{ $hotel->email }}</p>@endif
+                @foreach ($brand->contactLinks() as $linkLabel => $linkUrl)
+                    <p><a href="{{ $linkUrl }}" target="_blank" rel="noopener" class="underline">{{ $linkLabel }}</a></p>
+                @endforeach
             </div>
         </section>
     </div>

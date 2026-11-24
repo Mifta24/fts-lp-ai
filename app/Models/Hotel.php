@@ -6,6 +6,7 @@ use App\Core\Member\Contracts\MemberTenant;
 use App\Core\Member\Models\Member;
 use App\Core\Member\Support\LoyaltyProgram;
 use App\Core\Member\Support\LoyaltyTier;
+use App\Support\Brand;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -187,7 +188,7 @@ class Hotel extends Model implements MemberTenant
             '@type' => 'Organization',
             'name' => $this->name,
             'url' => $url,
-            'logo' => $this->logoUrl() ?: asset('images/logo.webp'),
+            'logo' => $this->logoUrl() ?: asset(app(Brand::class)->fullLogo()),
             'description' => $this->translatedDescription($locale),
             'email' => $this->email,
             'telephone' => $this->phone,

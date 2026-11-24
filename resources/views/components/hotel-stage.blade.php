@@ -45,7 +45,7 @@
         <header class="stage-header">
             <a href="{{ route('hotel.show', ['hotelSlug' => $hotel->slug, 'lang' => $locale]) }}" @if($scene !== 'lobby') data-stage-exit data-tour-line="{{ $narration['tour_lobby'] }}" @endif class="flex min-w-0 items-center gap-3">
                 <span class="hotel-monogram" aria-hidden="true">@if ($hotel->logoUrl())<img src="{{ $hotel->logoUrl() }}" alt="">@else{{ mb_substr($hotel->name, 0, 1) }}@endif</span>
-                <span class="min-w-0"><span class="block truncate font-semibold tracking-tight">{{ $hotel->name }}</span><span class="block truncate text-xs opacity-75">{{ $hotel->city }} · {{ $hotel->country }}</span></span>
+                <span class="min-w-0"><span class="block truncate font-semibold tracking-tight">{{ $hotel->name }}</span><span class="block truncate text-xs opacity-75">{{ collect([$hotel->city, $hotel->country])->filter()->implode(' · ') }}</span></span>
             </a>
             <nav class="stage-nav" aria-label="{{ $lobby['explore'] }}">
                 <span class="stage-nav-glider" aria-hidden="true" data-nav-glider></span>

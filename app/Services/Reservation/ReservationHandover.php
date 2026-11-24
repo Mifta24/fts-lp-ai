@@ -4,6 +4,7 @@ namespace App\Services\Reservation;
 
 use App\Models\Booking;
 use App\Models\Hotel;
+use App\Support\Brand;
 
 /**
  * Builds the WhatsApp / phone / email hand-over links that carry a
@@ -11,6 +12,8 @@ use App\Models\Hotel;
  */
 class ReservationHandover
 {
+    public function __construct(private readonly Brand $brand) {}
+
     /**
      * @return array{whatsapp_url: ?string, phone_url: ?string, email_url: ?string}
      */
@@ -73,10 +76,10 @@ class ReservationHandover
 
     private function subject(string $key, string $locale): string
     {
-        return [
-            'en' => ['reservation' => 'Project request', 'staff' => 'Question for the FTS team', 'staff_message' => 'Hello, I would like to speak with the FTS team.'],
-            'ja' => ['reservation' => 'プロジェクトのご相談', 'staff' => 'スタッフへのご相談', 'staff_message' => 'こんにちは。FTSのスタッフとお話ししたいです。'],
-            'id' => ['reservation' => 'Permintaan proyek', 'staff' => 'Pertanyaan untuk tim FTS', 'staff_message' => 'Halo, saya ingin bicara dengan tim FTS.'],
-        ][$locale][$key];
+        return $this->brand->fill([
+            'en' => ['reservation' => 'Project request', 'staff' => 'Question for the :brand team', 'staff_message' => 'Hello, I would like to speak with the :brand team.'],
+            'ja' => ['reservation' => 'プロジェクトのご相談', 'staff' => 'スタッフへのご相談', 'staff_message' => 'こんにちは。:brandのスタッフとお話ししたいです。'],
+            'id' => ['reservation' => 'Permintaan proyek', 'staff' => 'Pertanyaan untuk tim :brand', 'staff_message' => 'Halo, saya ingin bicara dengan tim :brand.'],
+        ][$locale][$key]);
     }
 }
