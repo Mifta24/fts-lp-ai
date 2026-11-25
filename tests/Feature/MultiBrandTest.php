@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Conversation;
 use App\Models\Hotel;
 use App\Models\HotelKnowledgeItem;
 use App\Services\Concierge\ContentGuard;
+use App\Services\Concierge\HotelConciergeTools;
 use App\Services\Reservation\ReservationHandover;
 use App\Support\Brand;
 use Database\Seeders\FtsSeeder;
@@ -230,6 +232,23 @@ class MultiBrandTest extends TestCase
         $this->assertStringNotContainsString('Jakarta, Indonesia that offers', $prompt);
 
         $this->assertStringContainsString('the Apricot team', app(ContentGuard::class)->refusal('en'));
+    }
+
+    public function test_a_japanese_question_finds_the_company_profile(): void
+    {
+        $this->seed(FtsSeeder::class);
+        $this->useBrand('apricot');
+        $this->artisan('brand:apply')->assertSuccessful();
+        $hotel = Hotel::where('slug', 'fts')->firstOrFail();
+        $tools = new HotelConciergeTools($hotel, new Conversation(['locale' => 'ja', 'hotel_id' => $hotel->id]), 'ja');
+
+        // The exact searches the model made when Mr Yoshi asked 「アプリコットの業務内容を教えてください」.
+        foreach (['業務内容 サービス', 'アプリコットの業務内容を教えてください', '事業内容'] as $query) {
+            $result = $tools->dispatch('search_knowledge', ['query' => $query, 'category' => 'general']);
+
+            $this->assertArrayNotHasKey('miss', $result, $query);
+            $this->assertStringContainsString('アプリコットについて', $result['text'], $query);
+        }
     }
 
     public function test_hand_over_links_use_the_brand_name_and_contacts(): void

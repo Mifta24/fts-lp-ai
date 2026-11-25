@@ -88,7 +88,7 @@ return [
                 'en' => ['title' => 'About Edepaworld', 'body' => 'Edepaworld Co., Ltd. (イーデパ・ワールド株式会社) was founded on 3 March 2014 and is headquartered in Fussa, Tokyo. It runs e-commerce sites and restaurant and travel information services, and builds websites, smartphone apps and information processing services, including a multilingual automatic translation system. Together with its technology partner FTS, Edepaworld brings AI automation and AI agents to businesses.'],
                 'ja' => ['title' => 'イーデパ・ワールドについて', 'body' => 'イーデパ・ワールド株式会社は平成26年3月3日に設立され、東京都福生市に本社を置いています。インターネット通販サイトの運営、レストランや旅行の情報提供サービス、ホームページ制作、スマホアプリ制作及び情報処理サービスを手がけ、多言語自動翻訳システムも開発しています。技術パートナーのFTSとともに、AI自動化とAIエージェントを企業にお届けします。'],
             ],
-            'tags' => ['about', 'edepaworld', 'company', 'overview'],
+            'tags' => ['about', 'edepaworld', 'company', 'overview', '事業内容', '業務内容', '会社概要'],
         ],
 
         'Yoshihiro Nakagawa, Founder / President Director' => [

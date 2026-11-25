@@ -296,14 +296,18 @@ class HotelConciergeTools
     }
 
     /**
-     * Active knowledge entries whose title, body or tags mention the query.
+     * Active knowledge entries whose title, body, translations or tags mention
+     * the query. Japanese and Chinese are written without spaces, so a run of
+     * those characters also counts as a word from two characters up.
      *
      * @return Collection<int, HotelKnowledgeItem>
      */
     private function matchingKnowledge(string $query, ?string $category = null): Collection
     {
         $query = trim($query);
-        $words = collect(preg_split('/\s+/', Str::lower($query)))->filter(fn ($word) => mb_strlen($word) >= 3);
+        // Japanese particles and politeness endings split a sentence the way spaces do.
+        $words = collect(preg_split('/[\s、。・，,？?！!「」]+|(?<=[\p{Han}\p{Katakana}ー])(?:について|を教えて|を|の|は|が|に|で|と|へ|や|も|です|ください)+/u', Str::lower($query)))
+            ->filter(fn ($word) => mb_strlen($word) >= (preg_match('/[\p{Han}\p{Hiragana}\p{Katakana}]/u', $word) ? 2 : 3));
 
         return $this->hotel->knowledgeItems()
             ->where('is_active', true)
@@ -315,12 +319,29 @@ class HotelConciergeTools
                     return true;
                 }
 
-                $haystack = Str::lower($item->title.' '.$item->body.' '.implode(' ', $item->tags ?? []));
+                $translations = collect($item->translations ?? [])->flatten()->filter(fn ($value) => is_string($value))->implode(' ');
+                $haystack = Str::lower($item->title.' '.$item->body.' '.$translations.' '.implode(' ', $item->tags ?? []));
 
                 return Str::contains($haystack, Str::lower($query))
-                    || $words->contains(fn ($word) => Str::contains($haystack, $word));
+                    || $words->contains(fn ($word) => Str::contains($haystack, $word))
+                    || $words->contains(fn ($word) => $this->sharesKanjiCompound($haystack, $word));
             })
             ->values();
+    }
+
+    /**
+     * A four-kanji word such as 業務内容 also matches text that says 事業内容:
+     * Japanese builds compounds from two-kanji parts, so either half counts.
+     */
+    private function sharesKanjiCompound(string $haystack, string $word): bool
+    {
+        if (! preg_match('/^\p{Han}{4,}$/u', $word)) {
+            return false;
+        }
+
+        $parts = array_map(fn (int $start) => mb_substr($word, $start, 2), range(0, mb_strlen($word) - 2, 2));
+
+        return collect($parts)->filter(fn (string $part) => mb_strlen($part) === 2)->contains(fn (string $part) => Str::contains($haystack, $part));
     }
 
     private function showFacilityPhotos(array $input): array

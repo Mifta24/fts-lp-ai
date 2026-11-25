@@ -84,7 +84,7 @@ return [
                 'en' => ['title' => 'About Apricot', 'body' => 'APRICOT INC. (株式会社アプリコット) was founded on 20 April 1989 and is based in Shinagawa, Tokyo, with capital of 35 million yen. It plans, designs and develops computer systems, software and web systems, sells computers and office equipment, provides IT consulting, and plans, designs and builds websites. Its strengths: a long record in system development, support for using AI to improve operations, and work with overseas talent and partners.'],
                 'ja' => ['title' => 'アプリコットについて', 'body' => '株式会社アプリコット（APRICOT INC.）は平成元年4月20日に創立し、東京都品川区に拠点を置いています（資本金3,500万円）。コンピュータシステム・ソフトウェア・WEB系システムの企画・設計・開発、コンピュータ等の事務機器の販売、IT技術に関するコンサルティング、ホームページの企画・デザイン・制作を手がけています。長年のシステム開発実績、AI活用・業務改善への対応、海外人材・グローバル連携が強みです。'],
             ],
-            'tags' => ['about', 'apricot', 'company', 'overview'],
+            'tags' => ['about', 'apricot', 'company', 'overview', '事業内容', '業務内容', '会社概要'],
         ],
 
         'Yoshihiro Nakagawa, Founder / President Director' => [
