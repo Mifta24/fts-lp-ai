@@ -21,7 +21,7 @@ class MultiBrandTest extends TestCase
 {
     use RefreshDatabase;
 
-    private const BRANDS = ['fts', 'edepaworld', 'apricot'];
+    private const BRANDS = ['fts', 'edepaworld', 'apricot', 'laila'];
 
     private function useBrand(string $key): Brand
     {
@@ -147,12 +147,13 @@ class MultiBrandTest extends TestCase
         return [
             'edepaworld' => ['edepaworld', 'Edepaworld', '042-593-0707', '東京都福生市加美平'],
             'apricot' => ['apricot', 'Apricot', '03-6264-8940', '東京都品川区上大崎3-5-3'],
+            'laila' => ['laila', 'Office Laila', '090-3905-5695', '埼玉県岩槻区金重'],
         ];
     }
 
     private function officialHost(string $key): string
     {
-        return ['edepaworld' => 'edepaworld.co.jp', 'apricot' => 'apricot-j.co.jp'][$key];
+        return ['edepaworld' => 'edepaworld.co.jp', 'apricot' => 'apricot-j.co.jp', 'laila' => 'office-laila.biz'][$key];
     }
 
     public function test_applying_a_brand_is_idempotent_and_keeps_the_rest_of_the_data(): void
